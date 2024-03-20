@@ -25,9 +25,9 @@ The example data has been uploaded to Open Science Framework. And [current link]
 
 | Overall                                                | Before 2000                                                |
 | ------------------------------------------------------ | ---------------------------------------------------------- |
-| ![wordcloud_total](images/wordcloud_total.png)         | ![wordcloud_before 2000](images/wordcloud_before 2000.png) |
+| ![wordcloud_total](images/wordcloud_total.png)         | ![wordcloud_before 2000](images/wordcloud_before_2000.png) |
 | **2000-2010**                                          | **After 2010**                                             |
-| ![wordcloud_2000-2010](images/wordcloud_2000-2010.png) | ![wordcloud_after 2010](images/wordcloud_after 2010.png)   |
+| ![wordcloud_2000-2010](images/wordcloud_2000-2010.png) | ![wordcloud_after 2010](images/wordcloud_after_2010.png)   |
 
 
 
