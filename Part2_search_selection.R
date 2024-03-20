@@ -17,6 +17,14 @@ library(litsearchr)
 library(igraph)
 
 #Import .bib or .ris database
+
+#### initial search expression on scopus:
+# TITLE-ABS-KEY ( effect OR caus* ) AND TITLE-ABS-KEY ( urban OR neighborhood OR city OR residential OR regional OR housing ) AND ( EXCLUDE ( DOCTYPE , "re" ) )
+# retrieval of 1000 first scopus results out of 735,674 documents found on 15/02/2024
+
+### adapted from litsearchr (deprecated) documentation 
+# https://elizagrames.github.io/litsearchr/introduction_vignette_v010.html
+
 refs <- litsearchr::import_results("data")
 
 # identify frequent terms
