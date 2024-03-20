@@ -343,4 +343,36 @@ dev.off()
 
 ### 2.2 Create a word could for each time period
 
+Divide the time range into 3 periods: before 2000, 2000-2010, and after 2010.
+
 ```{r}
+time_range <- range(df_kw$Year)
+
+# Divide the time range into 3 periods: before 2000, 2000-2010, and after 2010
+periods <- cut(df_kw$Year, breaks = c(time_range[1]-1, 2000, 2010, time_range[2]), labels = c("before 2000", "2000-2010", "after 2010"))
+
+df_kw$periods <- periods
+```
+
+Generate the word cloud for each time period.
+
+```{r}
+for (i in unique(df_kw$periods)) {
+  dfkw_feq <- data.frame()
+  corpus <- Corpus(VectorSource(df_kw[df_kw$periods == i, ]$Keywords))
+  corpus <- tm_map(corpus, tolower)
+  corpus <- tm_map(corpus, removePunctuation)
+  corpus <- tm_map(corpus, removeNumbers)
+  corpus <- tm_map(corpus, stripWhitespace)
+  corpus <- tm_map(corpus, removeWords, stop_words)
+  dtm <- TermDocumentMatrix(corpus)
+  m <- as.matrix(dtm)
+  words <- sort(rowSums(m), decreasing = TRUE)
+  dfkw_feq <- data.frame(word = names(words), freq = words)
+  png(paste("images/wordcloud_", i, ".png", sep = ""), width=6,height=5, units='in', res=300)
+  set.seed(1234) # for reproducibility 
+  wordcloud(words = dfkw_feq$word, freq = dfkw_feq$freq, min.freq = 2, max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+  title(main = paste("Word Cloud of Keywords in", i))
+  dev.off()
+}
+```
