@@ -125,7 +125,7 @@ prisma(found = 750,
        quantitative = 319,
        width = 800, height = 800)
 
-## ----prismadupesbox------------------------------------------------------
+## ----prismadupesbox------------------------------------------------------ Ideally, you will stick closely to the PRISMA statement, but small deviations are common. PRISMAstatement gives the option of adding a box which simply calculates the number of duplicates removed.
 prisma(found = 750,
        found_other = 123,
        no_dupes = 776, 
@@ -137,7 +137,7 @@ prisma(found = 750,
        quantitative = 319,
        extra_dupes_box = TRUE)
 
-## ----labels--------------------------------------------------------------
+## ----labels-------------------------------------------------------------- You can also change the labels, but you will have to insert the number for any label you chang
 prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107,
        labels = list(found = "FOUND", found_other = "OTHER"))
 
