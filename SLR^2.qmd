@@ -1,0 +1,261 @@
+---
+title: "Systematic Literature Review for Urbanism"
+subtitle: "3. Analysing the corpus"
+author:
+ - "Bayi Li"
+ - "Claudiu Forgaci"
+date: "`r Sys.Date()`"
+output: html
+---
+
+This code block contains all the libraries required in this document. You can load them at once or load them on required.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(pdftools)
+library(revtools)
+library(tidytext)
+library(textstem)
+library(topicmodels)
+library(ldatuning)
+library(tsne)
+library(LDAvis)
+library(SnowballC)
+
+library(geojsonio)
+library(leaflet)
+# plot the selected are with sp
+library(sp)
+
+library(wordcloud)
+library(RColorBrewer)
+library(wordcloud2)
+library(tm)
+
+library(widyr)
+library(furrr)
+```
+
+## Load data
+
+(Optional step)
+
+This following step is to extract the extracted text files from the PDF files, and sort them into a structured dataframe.
+
+```{r}
+ids <-  sub('\\.txt$', '', list.files("data/txts/20240130/")) 
+
+text_files <- list.files("data/txts/20240130/", full.names = TRUE, pattern = ".txt")
+texts <- sapply(text_files, read_file)
+
+text_df <- tibble("id" = ids, "text" = texts)
+```
+
+In this case, we prepared the two datasets. The first one is metadata, which is directly extracted from the paper database; the second one is full text, which is extracted from PDF files.
+
+```{r}
+#| message: false
+metadata <- read_csv(file = "data/metadata.csv")
+text_df <- read_csv(file = "data/text_df.csv")
+data <- metadata |> left_join(text_df, by = c("id" = "id"))
+```
+
+## 1. Mapping case study locations
+
+Input:\
+- manual - extracting location from title - extracting location from abstract - if multiple locations are mentioned, multiple records are created
+
+Output:\
+- interactive map with Leaflet - tiled grid map with template available for QGIS as well
+
+Required packages: leaflet, rgdal, sp, rgeos, maptools, ggplot2, ggthemes, ggmap, gridExtra, grid, RColorBrewer, scales, viridis, viridisLite, mapview, tmap, tmaptools, tmapthemes, tmaputi
+
+### 1.1 Prepare the input
+
+The location information normally presented in the text. The computational method is to use the [world cities database](data/world-cities.csv) to conduct a text match from the abstract or full text.
+
+However the reality is there might be spelled in different way. Thus, it is recommended to collect them or, at least, manually check the accuracy of data collection.
+
+Getting the coordinates of the cities could help us easier 
+
+### 1.2 Load the data
+
+
+```{r libraries, echo=FALSE, message=FALSE, warning=FALSE}
+#library(geojsonio)
+#install.packages("geojsonsf")
+library(geojsonsf)
+#library(ggplot2)
+#library(leaflet)
+# plot the selected are with sp
+library(sp)
+library(sf)
+# interactive map:
+library(mapview)
+```
+
+```{r}
+mapping <- st_read("data/map.csv", options=c("X_POSSIBLE_NAMES=lng","Y_POSSIBLE_NAMES=lat"), crs=4326)
+
+# If you wish to plot the boundaries of countries on the canvas
+ggplot() + geom_sf(data = mapping, aes(fill = "black")) + guides(fill = guide_none())
+```
+
+### Spatial join with the countries_bound
+
+2.1 Create a interactive maps with the package "mapview"
+
+```{r}
+mapview(mapping)
+```
+
+2.2 Static map
+
+Plot the location of studied area on top of the world map (countries' boundary).
+
+Load the world map, which will be the base map for the following mapping.
+
+```{r}
+countries_bound <- geojson_sf("data/map_basis/WB_countries_Admin0_10m/WB_countries_Admin0_10m_small.geojson")
+countries_bound <- st_make_valid(countries_bound)
+ 
+# If you wish to plot the boundaries of countries on the canvas
+ggplot(countries_bound) + geom_sf(aes(fill = FORMAL_EN)) + guides(fill = guide_none())
+```
+
+
+```{r}
+ggplot() + geom_sf(data = countries_bound, colour = "white", fill = "black") + geom_sf(data = mapping, colour = "yellow", size = 2) + guides(fill = guide_none())
+
+# Save the plot
+# ggsave("direct_mapping.png")
+```
+
+2.3 Tiled grid map
+
+2.3.1 Summarise the number of papaers within different countries
+
+Using the points to join with the countries' boundary
+
+
+```{r}
+country_tiled_frame <- geojson_sf("data/map_basis/Tile-Grid-Map-Cleaned.geojson")
+
+summary = sf::st_join(mapping, countries_bound, join = st_within, left = TRUE)
+```
+
+Because the tiled grid map does not contain all the countries in the world, we need to check which countries (values of WB_A3) are not included in the column "alpha-3" of country_tiled_frame.
+
+```{r}
+summary$match <- ifelse(summary$WB_A3 %in% country_tiled_frame$"alpha.3", "yeah", "no")
+```
+
+
+```{r}
+summary %>%
+  filter(match == "no") %>%
+  select(c('Geographical.Area', 'FORMAL_EN', 'WB_A3')) %>%
+  distinct()
+```
+
+We can see that the geographical area "Downtown Jerusalem, Israeli", based on it's coordinates, is categorised as "West Bank and Gaza". However, based on the text of the original paper, regardless of the political status, it should be categorised as "Israel".
+
+In this case, we just recode it to Israel.
+
+Specifically, change the value of WB_A3 from "PSE" to ""ISR".
+
+```{r}
+summary$WB_A3[summary$WB_A3 == "PSE"] <- "ISR"
+```
+
+recheck if there is unmatch in the data:
+
+```{r}
+summary$match <- ifelse(summary$WB_A3 %in% country_tiled_frame$"alpha.3", "yeah", "no")
+
+summary %>%
+  filter(match == "no") %>%
+  select(c('Geographical.Area', 'FORMAL_EN', 'WB_A3')) %>%
+  distinct()
+```
+
+Summary the number of papers within different countries:
+
+```{r}
+summary_2 <- as.data.frame(summary) %>%
+  group_by(WB_A3) %>%
+  summarise(n = n())
+```
+
+
+Read the prepared geojson into spatial dataframe:
+
+```{r}
+# join the summary_2 to country_tiled_frame based on the column "WB_A3"(left), and "alpha-3"(right)
+country_tiled_frame <- left_join(country_tiled_frame, summary_2, by = c("alpha-3" = "WB_A3"))
+
+
+# fill the NA with 0 in the column "n"
+country_tiled_frame$n[is.na(country_tiled_frame$n)] <- 0
+```
+
+Plot the tiled grid map:
+
+```{r map, echo=FALSE, message=FALSE, warning=FALSE}
+cvi_colours = list(
+  cvi_purples = c("#381532", "#4b1b42", "#5d2252", "#702963",
+                 "#833074", "#953784", "#a83e95"),
+  cvi_greens = c("#97c797", "#86b386", "#749d74", "#637963", "#506b50", "#3f553f", "#2d3f2d"),
+  my_favourite_colours = c("#702963", "#637029",    "#296370")
+)
+
+cvi_palettes = function(name, n, all_palettes = cvi_colours, type = c("discrete", "continuous")) {
+  palette = all_palettes[[name]]
+  if (missing(n)) {
+    n = length(palette)
+  }
+  type = match.arg(type)
+  out = switch(type,
+               continuous = grDevices::colorRampPalette(palette)(n),
+               discrete = palette[1:n]
+  )
+  structure(out, name = name, class = "palette")
+}
+```
+
+
+```{r}
+scale_fill_cvi_c = function(name) {
+  ggplot2::scale_fill_gradientn(colours = cvi_palettes(name = name,
+                                                     type = "continuous"))
+}
+
+ggplot(country_tiled_frame) +
+  geom_sf(aes(fill = n)) +
+  geom_label(x= country_tiled_frame$coord_x, y = country_tiled_frame$coord_y ,aes(label = country_tiled_frame$`alpha-2`), label.size = NA) +
+  scale_fill_cvi_c("cvi_greens") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  labs(title = "Number of papers within different countries")
+```
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).

@@ -2,8 +2,44 @@
 
 
 # Section 1: Retrieve references from WoS and Scopus (Shuyu) 
-library(wosr)
+# install and library packages for retrieving references from scopus (l did not find the wosr or rwos package for web of science.)
+install.packages("rscopus")
 library(rscopus)
+install.packages("RefManageR")
+library(RefManageR)
+install.packages("dplyr")
+library(dplyr)
+
+# Set your API key, if you do not have, please go to the website of Elsevier Developer Portal: https://dev.elsevier.com/ to apply, and you will get the key.
+options(elsevier_api_key = "Your_scopus_api_key")
+
+# Set your research query
+query <- "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND 
+          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND 
+          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND 
+          ( TITLE-ABS-KEY ( urban OR neighborhood OR city OR residential OR regional OR housing ) W/0 ( development OR redevelopment OR regeneration OR restructuring OR revitalization OR construction OR governance ) ) AND 
+          ( LIMIT-TO ( DOCTYPE , \"ar\" ) ) AND 
+          ( LIMIT-TO ( LANGUAGE , \"English\" ) )"
+
+# search on scopus if you get the api key, you can modify the max_count for each searching
+if (have_api_key()) {
+  res <- scopus_search(query = query, max_count = 200, count = 10)
+  search_results <- gen_entries_to_df(res$entries)
+}
+
+# Create an empty list to store search results
+ids <- search_results$df$pii
+search_results_list <- list()
+for (id in ids) {
+  search_results_list[[id]] <- search_results$df
+}
+
+# Convert the list to a data frame
+results_df <- do.call(rbind, search_results$df)
+transposed_results_df <- t(results_df)
+
+# Write the details to a CSV file
+write.csv(transposed_results_df, "scopus_api_results.csv", row.names = FALSE)
 
 # Section 2: Combine tables, deduplicate references and summarise (Kyri?) 
 library(revtools)
