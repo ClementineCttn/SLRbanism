@@ -14,7 +14,7 @@ library(bibtex)
 
 # Retrieving references from scopus:
 # Set your API key, if you do not have, please go to the website of Elsevier Developer Portal: https://dev.elsevier.com/ to apply, and you will get the key.
-options(elsevier_api_key = "2c0614ca818c346334428faf3a859374") #"Your_scopus_api_key"
+options(elsevier_api_key = "") #"Your_scopus_api_key"
 
 # Set your research query
 query <- "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND 
