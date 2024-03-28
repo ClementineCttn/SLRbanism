@@ -48,7 +48,7 @@ Query scopus if you get the api key. Note that you can modify the max_count for 
 
 ```{r}
 if (have_api_key()) {
-  res <- scopus_search(query = query, max_count = 200, count = 10)
+  res <- scopus_search(query = query, max_count = 200, count = 10, view = "COMPLETE")
   search_results <- gen_entries_to_df(res$entries)
 }
 ```
@@ -96,17 +96,6 @@ Export a into a .bib file
 #   if (x$get_statement$status_code!=200){raw_results[[i]]<- paste(EIDtoget[i],"had error",x$get_statement$status_code )}
 # }
 #  
-#  x = abstract_retrieval("S1053811915002700", identifier = "pii",
-#    verbose = FALSE)
-# x
-# res = bibtex_core_data(x)
-# cat(res)
-# 
-# x = abstract_retrieval("S1053811915002700", identifier = "pii",
-# verbose = FALSE)
-# res2 = bibtex_core_data(x)
-# cat(res2)
-# }
 #  
 ```
 
@@ -128,6 +117,7 @@ utf8tolatin1(here("data", "scopus200.ris"),
              here("output", "scopus200-latin1.ris"))
 
 # utf8tolatin1 fix taken from https://github.com/mjwestgate/revtools/issues/42
+
 library(synthesisr)
 scopus_data <- synthesisr::read_refs(here("output", "scopus200-latin1.ris"))
 
