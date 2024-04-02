@@ -82,32 +82,50 @@ write.csv(transposed_results_df, "scopus_api_results.csv", row.names = FALSE)
 
 Export a into a .bib file
 ```{r}
-# 
-# EIDtoget <- data.frame(transposed_results_df)$eid
-#  
-# #these files get HUGE so you probably want to break this up
-# raw_results <- list()
-# #btw, I do know that for loops aren't "cool" but whatever
-# i <- 1
-# for (i in 1:length((EIDtoget))){
-#   x<- abstract_retrieval(EIDtoget[i],identifier = "eid", verbose=F)
-#   if (x$get_statement$status_code==200){
-#     raw_results[[i]]<-x}
-#   if (x$get_statement$status_code!=200){raw_results[[i]]<- paste(EIDtoget[i],"had error",x$get_statement$status_code )}
-# }
-#  
-#  x = abstract_retrieval("S1053811915002700", identifier = "pii",
-#    verbose = FALSE)
-# x
-# res = bibtex_core_data(x)
-# cat(res)
-# 
-# x = abstract_retrieval("S1053811915002700", identifier = "pii",
-# verbose = FALSE)
-# res2 = bibtex_core_data(x)
-# cat(res2)
-# }
-#  
+df <- read.csv("scopus_api_results.csv")
+data <- data.frame(
+  Author = df$dc.creator,
+  Title = df$dc.title,
+  Year = sub(".*\\s(\\d{4})$", "\\1", df$prism.coverDisplayDate),
+  Journal = df$prism.publicationName,
+  Volume = df$prism.volume,
+  Number = df$article.number,
+  Pages = df$prism.pageRange,
+  DOI = df$prism.doi
+)
+```
+
+Create a list of BibEntry objects
+```{r}
+bib_entries <- lapply(1:nrow(data), function(i) {
+  BibEntry(
+    bibtype = "Article",        # Add the bibtype argument
+    key = paste0(substr(data$Author[i], 1, 1), data$Year[i]),
+    author = data$Author[i],    # Add author field
+    title = data$Title[i],      # Add title field
+    year = data$Year[i],        # Add year field
+    journal = data$Journal[i],  # Add journal field
+    volume = data$Volume[i],    # Add volume field
+    number = data$Number[i],    # Add number field
+    pages = data$Pages[i],      # Add pages field
+    doi = data$DOI[i]           # Add DOI field
+  )
+})
+```
+
+Convert each BibEntry object to BibTeX format individually
+```{r}
+bib_texts <- lapply(bib_entries, toBibtex)
+```
+
+Combine the BibTeX texts into a single character vector
+```{r}
+bib_text <- unlist(bib_texts, use.names = FALSE)
+```
+
+Write BibTeX file
+```{r}
+writeLines(bib_text, "scopus_references.bib")
 ```
 
 ### Combining tables, deduplicating references and summarising the results
