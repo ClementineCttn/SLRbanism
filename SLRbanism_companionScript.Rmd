@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-Your_scopus_api_key <- readLines(con = "ignore.md")
+Your_scopus_api_key <- readLines(con = "personal_scopus_api_key.md")
 ```
 
 ## Section 2: Search strategy & selection of references
@@ -27,11 +27,13 @@ library(glue)
 
 Set your API key, if you do not have, please go to the website of [Elsevier Developer Portal](https://dev.elsevier.com/) to apply, and you will get the key.
 
+In that case, replace `Your_scopus_api_key` by the key value, and add quotes, for instance: options(elsevier_api_key = "my8personal4key")
+
 ```{r}
 options(elsevier_api_key = Your_scopus_api_key)
 ```
 
- Set your research query
+Set your research query
 
 ```{r}
 query <- "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND 
@@ -80,32 +82,50 @@ write.csv(transposed_results_df, "scopus_api_results.csv", row.names = FALSE)
 
 Export a into a .bib file
 ```{r}
-# 
-# EIDtoget <- data.frame(transposed_results_df)$eid
-#  
-# #these files get HUGE so you probably want to break this up
-# raw_results <- list()
-# #btw, I do know that for loops aren't "cool" but whatever
-# i <- 1
-# for (i in 1:length((EIDtoget))){
-#   x<- abstract_retrieval(EIDtoget[i],identifier = "eid", verbose=F)
-#   if (x$get_statement$status_code==200){
-#     raw_results[[i]]<-x}
-#   if (x$get_statement$status_code!=200){raw_results[[i]]<- paste(EIDtoget[i],"had error",x$get_statement$status_code )}
-# }
-#  
-#  x = abstract_retrieval("S1053811915002700", identifier = "pii",
-#    verbose = FALSE)
-# x
-# res = bibtex_core_data(x)
-# cat(res)
-# 
-# x = abstract_retrieval("S1053811915002700", identifier = "pii",
-# verbose = FALSE)
-# res2 = bibtex_core_data(x)
-# cat(res2)
-# }
-#  
+df <- read.csv("scopus_api_results.csv")
+data <- data.frame(
+  Author = df$dc.creator,
+  Title = df$dc.title,
+  Year = sub(".*\\s(\\d{4})$", "\\1", df$prism.coverDisplayDate),
+  Journal = df$prism.publicationName,
+  Volume = df$prism.volume,
+  Number = df$article.number,
+  Pages = df$prism.pageRange,
+  DOI = df$prism.doi
+)
+```
+
+Create a list of BibEntry objects
+```{r}
+bib_entries <- lapply(1:nrow(data), function(i) {
+  BibEntry(
+    bibtype = "Article",        # Add the bibtype argument
+    key = paste0(substr(data$Author[i], 1, 1), data$Year[i]),
+    author = data$Author[i],    # Add author field
+    title = data$Title[i],      # Add title field
+    year = data$Year[i],        # Add year field
+    journal = data$Journal[i],  # Add journal field
+    volume = data$Volume[i],    # Add volume field
+    number = data$Number[i],    # Add number field
+    pages = data$Pages[i],      # Add pages field
+    doi = data$DOI[i]           # Add DOI field
+  )
+})
+```
+
+Convert each BibEntry object to BibTeX format individually
+```{r}
+bib_texts <- lapply(bib_entries, toBibtex)
+```
+
+Combine the BibTeX texts into a single character vector
+```{r}
+bib_text <- unlist(bib_texts, use.names = FALSE)
+```
+
+Write BibTeX file
+```{r}
+writeLines(bib_text, "scopus_references.bib")
 ```
 
 ### Combining tables, deduplicating references and summarising the results
@@ -117,21 +137,23 @@ library(here)
 
 Read a bib or ris file 
 ```{r}
-
 utf8tolatin1 <- function(infile, outfile) {
   content <- readLines(infile, encoding = "UTF-8")
   latin1 <- iconv(content, from = "UTF-8", to = "us-ascii")
   writeLines(latin1, outfile)
 }
-
 utf8tolatin1(here("data", "scopus200.ris"), 
-             here("data", "scopus200-latin1.ris"))
+             here("output", "scopus200-latin1.ris"))
 
 # utf8tolatin1 fix taken from https://github.com/mjwestgate/revtools/issues/42
+library(synthesisr)
+scopus_data <- synthesisr::read_refs(here("output", "scopus200-latin1.ris"))
 
-scopus_data <- read_bibliography(here("data", "scopus200-latin1.ris"))
+ scopus_data$journal <- ifelse(scopus_data$source_type == "JOUR",
+                               scopus_data$source,NA)
+ scopus_data$label <- paste(scopus_data$author, scopus_data$year, scopus_data$title)
 
-wos_data <-read_bibliography(here("Data", "lprln.bib"))
+wos_data <-read_bibliography(here("output", "lprln.bib"))
 ```
 
 Save variable names of dataframes is object
@@ -159,7 +181,7 @@ print(unique_vars_only_wos)
 
 ```
 
-Rename the column in the wos_data from "issue" to "number"
+Rename the column in the scopus_data from "issue" to "number"
 ```{r}
 colnames(scopus_data)[colnames(scopus_data) == "issue"] <- "number"
 
@@ -168,13 +190,15 @@ colnames(scopus_data)[colnames(scopus_data) == "issue"] <- "number"
 Select only the variables: `label`, `author`, `type`, `title`, `year`, `volume` and `number` 
 
 ```{r}
+selected_vars <- c("label", "title", "year", "journal", "volume", "number")
+
 scopus_selection <- scopus_data %>%
-  select(c("label",  "title", "year", "journal", "volume", "number"))
+  dplyr::select(selected_vars)
 
 head(scopus_selection)
 
 wos_selection <- wos_data %>%
-  select(c("label", "title", "year", "journal", "volume", "number"))
+  dplyr::select(selected_vars)
 
 head(wos_selection)
 
@@ -229,7 +253,7 @@ all_references <- rbind(wos_selection, scopus_selection)
 Locate and extract unique references
 
 ```{r}
-check_duplicates <- find_duplicates(all_references)
+check_duplicates <- revtools::find_duplicates(all_references)
 unique_references <- extract_unique_references(all_references, matches = check_duplicates)
 ```
 
@@ -245,7 +269,6 @@ unique_references$year <- as.numeric(unique_references$year)
 ```
 
 ### Summarise references:
-There are $nrow(unique_references)$ unique references.
 Distribution of publication years
 ```{r}
 ggplot(unique_references) +
@@ -353,15 +376,15 @@ litsearchr::write_search(grouped,
 ```{r}
 library(PRISMAstatement)
 
-prisma(found = 750,
-       found_other = 123,
-       no_dupes = 776, 
-       screened = 776, 
-       screen_exclusions = 13, 
-       full_text = 763,
-       full_text_exclusions = 17, 
-       qualitative = 746, 
-       quantitative = 319,
+prisma(found = nrow(all_references),
+       found_other = 0,
+       no_dupes = nrow(unique_references), 
+       screened = nrow(unique_references), 
+       screen_exclusions = 0, 
+       full_text = nrow(unique_references),
+       full_text_exclusions = 0, 
+       qualitative = nrow(unique_references), 
+       quantitative = nrow(unique_references),
        width = 800, height = 800)
 ```
 

@@ -2,16 +2,19 @@
 
 
 # Section 1: Retrieve references from WoS and Scopus (Shuyu) 
-# install and library packages for retrieving references from scopus (l did not find the wosr or rwos package for web of science.)
+# install and library packages for retrieving references from scopus
 install.packages("rscopus")
 library(rscopus)
 install.packages("RefManageR")
 library(RefManageR)
 install.packages("dplyr")
 library(dplyr)
+install.packages("bibtex")
+library(bibtex)
 
+# Retrieving references from scopus:
 # Set your API key, if you do not have, please go to the website of Elsevier Developer Portal: https://dev.elsevier.com/ to apply, and you will get the key.
-options(elsevier_api_key = "Your_scopus_api_key")
+options(elsevier_api_key = Your_scopus_api_key)
 
 # Set your research query
 query <- "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND 
@@ -26,6 +29,18 @@ if (have_api_key()) {
   res <- scopus_search(query = query, max_count = 200, count = 10)
   search_results <- gen_entries_to_df(res$entries)
 }
+# get all the authors and keywords from api (not work)
+#x = abstract_retrieval("S1053811915002700", identifier = "pii",
+#                       view = "REF",
+#                       verbose = FALSE)
+#s = generic_elsevier_api(query = query,
+#                         type = "search", search_type = "author",
+#                         api_key = Your_scopus_api_key,
+#                         verbose = FALSE)
+#s = generic_elsevier_api(query = query,
+#                         type = "abstract", http_end = "pii/S1053811915002700",
+#                         api_key = Your_scopus_api_key,
+#                         verbose = FALSE)
 
 # Create an empty list to store search results
 ids <- search_results$df$pii
@@ -40,6 +55,199 @@ transposed_results_df <- t(results_df)
 
 # Write the details to a CSV file
 write.csv(transposed_results_df, "scopus_api_results.csv", row.names = FALSE)
+df <- read.csv("scopus_api_results.csv")
+
+# Example dataframe with additional fields
+data <- data.frame(
+  Author = df$dc.creator,
+  Title = df$dc.title,
+  Year = sub(".*\\s(\\d{4})$", "\\1", df$prism.coverDisplayDate),
+  Journal = df$prism.publicationName,
+  Volume = df$prism.volume,
+  Number = df$article.number,
+  Pages = df$prism.pageRange,
+  DOI = df$prism.doi
+)
+
+# Convert the dataframe to a BibEntryList object
+# Create a list of BibEntry objects
+bib_entries <- lapply(1:nrow(data), function(i) {
+  BibEntry(
+    bibtype = "Article",        # Add the bibtype argument
+    key = paste0(substr(data$Author[i], 1, 1), data$Year[i]),
+    author = data$Author[i],    # Add author field
+    title = data$Title[i],      # Add title field
+    year = data$Year[i],        # Add year field
+    journal = data$Journal[i],  # Add journal field
+    volume = data$Volume[i],    # Add volume field
+    number = data$Number[i],    # Add number field
+    pages = data$Pages[i],      # Add pages field
+    doi = data$DOI[i]           # Add DOI field
+  )
+})
+
+# Convert each BibEntry object to BibTeX format individually
+bib_texts <- lapply(bib_entries, toBibtex)
+
+# Combine the BibTeX texts into a single character vector
+bib_text <- unlist(bib_texts, use.names = FALSE)
+
+# Write BibTeX file
+writeLines(bib_text, "scopus_references.bib")
+
+
+# Retrieving references from web of science:
+# wosr package is not working now? l tried many times with the username and password but could not connect to the server.
+
+# l found a another solution with the python: https://github.com/clarivate/wosstarter_python_client
+
+# Run the wosstarter_api.ipynb in the repository and you will get four api_response_page1.txt to api_response_page4.txt
+
+# Method1: create bib file with single txt file
+# Read content from the file
+content <- readLines("api_response_page2.txt", warn = FALSE)
+
+# Define regular expression patterns to extract information
+author_pattern <- "DocumentNames\\(authors=\\[AuthorName\\(display_name=['\"](.*?)['\"]"
+title_pattern <- " title=['\"](.*?)['\"]"
+source_title_pattern <- "source_title=['\"](.*?)['\"]"
+publish_year_pattern <- "publish_year=(\\d+)"
+volume_pattern <- "volume=('\\d+'|None)"
+article_number_pattern <- "article_number=('\\S+'|None)"
+pages_pattern <- "pages=DocumentSourcePages\\(range=('\\d+-\\d+'|None)"
+doi_pattern <- "doi=('\\S+'|None)"
+
+# Extract information using regular expressions
+author <- regmatches(content, gregexpr(author_pattern, content))[[1]]
+title <- regmatches(content, gregexpr(title_pattern, content))[[1]]
+source_title <- regmatches(content, gregexpr(source_title_pattern, content))[[1]]
+publish_year <- regmatches(content, gregexpr(publish_year_pattern, content))[[1]]
+volume <- regmatches(content, gregexpr(volume_pattern, content))[[1]]
+article_number <- regmatches(content, gregexpr(article_number_pattern, content))[[1]]
+pages <- regmatches(content, gregexpr(pages_pattern, content))[[1]]
+doi <- regmatches(content, gregexpr(doi_pattern, content))[[1]]
+
+# Combine extracted information into a data frame
+bib_data <- data.frame(
+  Author = gsub(author_pattern, "\\1", author),
+  Title = gsub(title_pattern, "\\1", title),
+  Year = gsub(source_title_pattern, "\\1", source_title),
+  Journal = gsub(publish_year_pattern, "\\1", publish_year),
+  Volume = gsub(volume_pattern, "\\1", volume),
+  Number = gsub(article_number_pattern, "\\1", article_number),
+  Pages = gsub(pages_pattern, "\\1", pages),
+  DOI = gsub("doi='|'", "", doi)
+)
+
+# Delete ''in the some columns
+bib_data$Volume <- gsub("'", "", bib_data$Volume)
+bib_data$Number <- gsub("'", "", bib_data$Number)
+bib_data$Pages <- gsub("'", "", bib_data$Pages)
+
+# Create a list of BibEntry objects 
+# (l got problems that l cannot extract title from those cases:title="'Inner-city is not the place for social housing' - State-led gentrification in Lodz" and '"Freeways without futures": Urban highway removal in the United States and Spain as socio-ecological fix?' )
+bib_wos_entries <- lapply(1:nrow(bib_data), function(i) {
+  BibEntry(
+    bibtype = "Article",        # Add the bibtype argument
+    key = paste0(substr(bib_data$Author[i], 1, 1), bib_data$Year[i]),
+    author = bib_data$Author[i],    # Add author field
+    title = bib_data$Title[i],      # Add title field
+    year = bib_data$Year[i],        # Add year field
+    journal = bib_data$Journal[i],  # Add journal field
+    volume = bib_data$Volume[i],    # Add volume field
+    number = bib_data$Number[i],    # Add number field
+    pages = bib_data$Pages[i],      # Add pages field
+    doi = bib_data$DOI[i]           # Add DOI field
+  )
+})
+
+# Convert each BibEntry object to BibTeX format individually
+bib_wos_texts <- lapply(bib_wos_entries, toBibtex)
+
+# Combine the BibTeX texts into a single character vector
+bib_wos_text <- unlist(bib_wos_texts, use.names = FALSE)
+
+# Write BibTeX file
+writeLines(bib_wos_text, "wos_references.bib")
+
+# Method2: create bib file with multiple txt files
+library(stringr)
+
+# Function to read content from a text file and extract information
+read_and_extract <- function(file_path) {
+  # Read content from the file
+  content <- readLines(file_path, warn = FALSE)
+  
+  # Define regular expression patterns to extract information
+  author_pattern <- "DocumentNames\\(authors=\\[AuthorName\\(display_name=['\"](.*?)['\"]"
+  title_pattern <- " title=['\"](.*?)['\"]"
+  source_title_pattern <- "source_title=['\"](.*?)['\"]"
+  publish_year_pattern <- "publish_year=(\\d+)"
+  volume_pattern <- "volume=('\\d+'|None)"
+  article_number_pattern <- "article_number=('\\S+'|None)"
+  pages_pattern <- "pages=DocumentSourcePages\\(range=('\\d+-\\d+'|None)"
+  doi_pattern <- "doi=('\\S+'|None)"
+  
+  # Extract information using regular expressions
+  author <- regmatches(content, gregexpr(author_pattern, content))[[1]]
+  title <- regmatches(content, gregexpr(title_pattern, content))[[1]]
+  source_title <- regmatches(content, gregexpr(source_title_pattern, content))[[1]]
+  publish_year <- regmatches(content, gregexpr(publish_year_pattern, content))[[1]]
+  volume <- regmatches(content, gregexpr(volume_pattern, content))[[1]]
+  article_number <- regmatches(content, gregexpr(article_number_pattern, content))[[1]]
+  pages <- regmatches(content, gregexpr(pages_pattern, content))[[1]]
+  doi <- regmatches(content, gregexpr(doi_pattern, content))[[1]]
+  
+  # Combine extracted information into a data frame
+  bib_data <- data.frame(
+    Author = gsub(author_pattern, "\\1", author),
+    Title = gsub(title_pattern, "\\1", title),
+    Year = gsub(source_title_pattern, "\\1", source_title),
+    Journal = gsub(publish_year_pattern, "\\1", publish_year),
+    Volume = gsub(volume_pattern, "\\1", volume),
+    Number = gsub(article_number_pattern, "\\1", article_number),
+    Pages = gsub(pages_pattern, "\\1", pages),
+    DOI = gsub("doi='|'", "", doi)
+  )
+  
+  # Delete '' in some columns
+  bib_data$Volume <- gsub("'", "", bib_data$Volume)
+  bib_data$Number <- gsub("'", "", bib_data$Number)
+  bib_data$Pages <- gsub("'", "", bib_data$Pages)
+  
+  return(bib_data)
+}
+
+# List of file paths
+file_paths <- c("api_response_page1.txt", "api_response_page2.txt", "api_response_page3.txt", "api_response_page4.txt")
+
+# Read data from each file and combine them into one data frame
+combined_data <- do.call(rbind, lapply(file_paths, read_and_extract))
+
+# Create a list of BibEntry objects
+bib_entries <- lapply(1:nrow(combined_data), function(i) {
+  BibEntry(
+    bibtype = "Article",
+    key = paste0(substr(combined_data$Author[i], 1, 1), combined_data$Year[i]),
+    author = combined_data$Author[i],
+    title = combined_data$Title[i],
+    year = combined_data$Year[i],
+    journal = combined_data$Journal[i],
+    volume = combined_data$Volume[i],
+    number = combined_data$Number[i],
+    pages = combined_data$Pages[i],
+    doi = combined_data$DOI[i]
+  )
+})
+
+# Convert each BibEntry object to BibTeX format individually
+bib_texts <- lapply(bib_entries, toBibtex)
+
+# Combine the BibTeX texts into a single character vector
+bib_text <- unlist(bib_texts, use.names = FALSE)
+
+# Write BibTeX file
+writeLines(bib_text, "wos_references.bib")
 
 # Section 2: Combine tables, deduplicate references and summarise (Kyri?) 
 library(revtools)
