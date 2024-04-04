@@ -40,7 +40,7 @@ library(furrr)
 
 ## Load data
 
-(Optional step)
+**(Optional step)**
 
 This following step is to extract the extracted text files from the PDF files, and sort them into a structured dataframe.
 
@@ -53,7 +53,7 @@ texts <- sapply(text_files, read_file)
 text_df <- tibble("id" = ids, "text" = texts)
 ```
 
-In this case, we prepared the two datasets. The first one is metadata, which is directly extracted from the paper database; the second one is full text, which is extracted from PDF files.
+In this case, we prepared the two datasets. The first one is **metadata**, which is directly extracted from the paper database; the second one is **full text**, which is extracted from PDF files.
 
 ```{r}
 #| message: false
@@ -64,7 +64,7 @@ data <- metadata |> left_join(text_df, by = c("id" = "id"))
 
 ## 0. Basic summary chart
 
-Read the data. 
+Read the data.
 
 To explore the keywords, we need to extract the three columns "id", "Keywords.Plus", "Year" from the data frame.
 
@@ -102,6 +102,54 @@ ggplot(df_year, aes(x = Year, y = count)) +
   theme_minimal()
 # save the plot
 ggsave("images/number_of_papers_by_year.png")
+```
+
+High-citation papers analysis
+
+```{r}
+# get the top 10 high-citation papers
+df_cites <- df_kw %>%
+  arrange(desc(Cites)) %>%
+  head(10)
+```
+
+Add the number of high-citation papers to the plot of number of papers by year.
+
+```{r}
+# add the number of high-citation papers to the plot with dual y axis
+ggplot(df_year, aes(x = Year, y = count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  scale_y_continuous(breaks = seq(0, 100, 1), name = "Number of papers") +
+  labs(title = "Number of papers by year", x = "Year") +
+  geom_point(data = df_cites, aes(x = Year, y = Cites/10, group = 1), color = "red") +
+  scale_y_continuous(sec.axis = sec_axis(~.*10, name = "High-citation papers")) +
+  theme_minimal()
+
+# save the plot
+ggsave("images/number_of_papers_by_year_high_citations.png")
+```
+
+Find the high-citation papers in recent 5 years.
+
+```{r}
+# get the high-citation papers in recent 5 years
+df_cites_recent <- df_kw %>%
+  filter(Year >= 2017) %>%
+  arrange(desc(Cites)) %>%
+  head(10)
+```
+
+Get their article titles.
+
+```{r}
+# get the titles of high-citation papers in recent 5 years
+df_cites_recent_titles <- df_cites_recent %>%
+  left_join(df, by = "id") %>%
+  select(id, Article.Title)
+
+# save it as excel
+write.csv(df_cites_recent_titles, "output/high_citation_papers_recent_5_years.csv")
+
 ```
 
 ## 1. Mapping case study locations
@@ -402,3 +450,510 @@ for (i in unique(df_kw$periods)) {
   dev.off()
 }
 ```
+
+## 3. Text mining
+
+Input: Full text, machine readable, extracted from PDFs prior to analysis
+
+### 3.1 Word Embeddings
+
+What questions co-occur with a specific word of interest, e.g., segregation?
+
+-   using the LDA model and top words
+
+```{r}
+# TODO
+# install irlba
+install.packages("irlba")
+```
+
+-   using word embeddings
+
+Issues to consider: - as a rule of thumb, the dataset should have above 1 mil. tokens for reliable results
+
+```{r}
+tidy_data <- data %>% 
+  select(id, text) %>% 
+  unnest_tokens(word, text) %>% 
+  add_count(word) %>% 
+  filter(n >= 50) %>% 
+  select(-n)
+
+nested_words <- tidy_data %>% 
+  nest(words = c(word))
+
+nested_words
+```
+
+The following code defines a function to slide a window over the words.
+
+```{r}
+slide_windows <- function(tbl, window_size) {
+  skipgrams <- slider::slide(
+    tbl,
+    ~.x,
+    .after = window_size - 1,
+    .step = 1,
+    .complete = TRUE
+  )
+  
+  safe_mutate = safely(mutate)
+  
+  out <- map2(skipgrams,
+              1:length(skipgrams),
+              ~ safe_mutate(.x, window_id = .y))
+  out %>% 
+    transpose() %>% 
+    pluck("result") %>% 
+    compact() %>% 
+    bind_rows()
+}
+```
+
+The following code calculates the pointwise mutual information (PMI) between words and windows.
+
+```{r}
+library(widyr)
+library(furrr)
+
+plan(multisession)  ## for parallel processing
+
+tidy_pmi <- nested_words %>% 
+  mutate(words = future_map(words, slide_windows, 4L)) %>% 
+  unnest(words) %>% 
+  unite(window_id, id, window_id) %>% 
+  pairwise_pmi(word, window_id)
+
+tidy_pmi
+```
+
+The following code calculates the word vectors using the singular value decomposition (SVD) method.
+
+```{r}
+tidy_word_vectors <- tidy_pmi %>% 
+  widely_svd(
+    item1, item2, pmi,
+    nv = 100, maxit = 1000
+  )
+
+tidy_word_vectors
+```
+
+```{r}
+nearest_neighbors <- function(df, token) {
+  df %>% 
+    widely(
+      ~ {
+        y <- .[rep(token, nrow(.)), ]
+        res <- rowSums(. * y) /
+          (sqrt(rowSums(. ^ 2)) * sqrt(sum(.[token, ] ^ 2)))
+        
+        matrix(res, ncol = 1, dimnames = list(x = names(res)))
+      },
+      sort = TRUE
+    )(item1, dimension, value) %>% 
+    select(-item2)
+}
+```
+
+```{r}
+tidy_word_vectors %>% 
+  nearest_neighbors("income")
+```
+
+Output: A bar chart with top words related to the word of interest
+
+```{r}
+# Words excluded iteratively while creating the LDA model
+# Custom stop words may contain the words used in the literature search query
+custom_stop_words <- tibble(word = c("income",
+                                     "incomes",
+                                     "segregation",
+                                     "neighbourhood",
+                                     "neighborhood",
+                                     "21",
+                                     "11"))
+
+tidy_word_vectors %>% 
+  nearest_neighbors("income") %>% 
+  filter(!item1 %in% custom_stop_words$word) %>% 
+  slice_max(value, n = 10) %>% 
+  ggplot(aes(reorder(item1, value), value)) +
+  geom_col() +
+  coord_flip() +
+  labs(x = NULL, y = "PMI", title = "Top words related to 'income'")
+```
+
+Output: A word cloud with top words related to the word of interest
+
+```{r}
+top_10_words <- tidy_word_vectors %>% 
+  nearest_neighbors("income") %>% 
+  filter(!item1 %in% custom_stop_words$word) %>%
+  filter(value > 0) %>%
+  mutate(freq = as.integer(value * 1000)) %>%
+  slice_max(value, n = 30)
+```
+
+```{r}
+#png("images/wordcloud_test.png", width=6,height=5, units='in', res=300)
+set.seed(1234) # for reproducibility 
+wordcloud(words = top_10_words$item1, freq = top_10_words$freq, max.words=400, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
+# add a title
+title(main = "Word Cloud of Keywords")
+#dev.off()
+```
+
+### 3.2 Topic model
+
+-   using LDA to identify dominant topics in a corpus of papers
+
+```{r tokenize}
+# Words excluded iteratively while creating the LDA model
+# Custom stop words may contain the words used in the literature search query
+custom_stop_words <- tibble(word = c("income",
+                                     "incomes",
+                                     "segregation",
+                                     "neighbourhood",
+                                     "neighborhood"))
+
+words <- data |>
+  select(id, text, "year" = `Publication Year`) |>
+  unnest_tokens(output = word, input = text) |>  # remove punctuation, convert to lower-case, separate all words
+  anti_join(stop_words, by = "word") |>  # remove stop words
+  anti_join(custom_stop_words, by = "word") |>  # remove custom stop words
+  mutate(word = lemmatize_words(word)) |>  # lemmatise words
+  filter(nchar(word) >= 3)  # keep only words that are at least three letters long
+```
+
+```{r dtm}
+dtm <- words |>
+    count(id, word, sort = TRUE) |>
+    filter(n > 5) |>  # minimum term frequency 5
+    cast_dtm(id, word, n)
+```
+
+```{r k}
+# Set k empirically
+# # This takes around 10 minutes to run and results in a value between 25 and 30
+# # which is rather difficult to interpret
+# # This might be useful and easy to use if combined with hierarchical representation
+# # of topics in a dendrogram - still to be done
+# result <- FindTopicsNumber(
+#   dtm,
+#   topics = seq(from = 2, to = 30, by = 1),
+#   metrics = c("CaoJuan2009",  "Deveaud2014"),
+#   method = "Gibbs",
+#   control = list(seed = 2023),
+#   verbose = TRUE)
+# k = result$topic[which.max(result$Deveaud2014 - result$CaoJuan2009)]
+
+# Set k qualitatively, based on the researcher;s understanding of the literature
+k = 5
+```
+
+```{r lda}
+# Fit LDA model
+lda <- LDA(dtm, k = k, method="Gibbs",
+           control = list(seed = 2023, iter = 500, verbose = 100))
+
+# Extract beta and theta statistics from LDA model
+beta <- posterior(lda)$terms
+theta <- posterior(lda)$topics 
+
+# Add pseudo-names to topics based on the top 5 words in each topic
+topic_names <- c()
+for (i in 1:nrow(beta)) {
+  name <- paste(names(head(sort(beta[i, ], decreasing = TRUE), 5)), collapse = " ")
+  topic_names <- c(topic_names, name)
+}
+```
+
+#### 3.2.1 Topics across the corpus
+
+Output: Bar charts showing top words in the corpus and in each topic
+
+```{r}
+terms <- as.data.frame(posterior(lda)$terms)
+rownames(terms) <- topic_names
+
+terms <- terms |>
+  mutate(topic = rownames(terms)) |>
+  pivot_longer(-topic,
+               names_to = "term",
+               values_to = "prob") |> 
+  group_by(term) |>
+  mutate(max_topic = topic[which.max(prob)]) |>
+  filter(topic == max_topic) |>
+  ungroup()
+
+words_topics <- words |>
+  left_join(terms, by = c("word" = "term"))
+
+top_terms <- words |>
+    group_by(id) |>
+    count(word, sort = TRUE) |>
+    ungroup() |> 
+    slice_max(n, n = 20)
+
+top_terms |>
+  left_join(terms, by = c("word" = "term")) |>
+  ggplot(aes(reorder(word, n), n)) +
+  geom_col(aes(fill = max_topic)) +
+  geom_text(aes(label = n), size = 2, hjust = 1.1) +
+  coord_flip() +
+  xlab("Word") +
+  ylab("Frequency") +
+  labs(title = paste0("Top ", 20, " most used words in the corpus of theses")) +
+  theme_minimal() +
+  theme(panel.grid = element_blank())
+```
+
+```{r}
+# Function to approximate the distance between topics
+svd_tsne <- function(x)
+  tsne(svd(x)$u)
+
+# Convert DTM into JSON required by the LDAvis package
+json <- createJSON(
+  phi = beta,
+  theta = theta,
+  doc.length = rowSums(as.matrix(dtm)),
+  vocab = colnames(dtm),
+  term.frequency = colSums(as.matrix(dtm)),
+  mds.method = svd_tsne,
+  plot.opts = list(xlab = "", ylab = "")
+)
+
+# Visualise topics model with LDAvis
+LDAvis::serVis(json)
+```
+
+#### 3.2.2 Evolution of topics
+
+Output: A line chart showing the change in relative importance of topics for a given period.
+
+```{r evolution-topics}
+topic_prop_per_year <- theta
+colnames(topic_prop_per_year) <- topic_names
+
+viz_df_with_year <-
+  pivot_longer(
+    data = data.frame(topic_prop_per_year,
+                      document = factor(str_sub(
+                        rownames(topic_prop_per_year), 1, 20)),
+                      check.names = FALSE),
+    cols = -document,
+    names_to = "topic",
+    values_to = "value") |> 
+  left_join(mutate(data, id = as.factor(id), "year" = `Publication Year`), by = c("document" = "id"))
+
+# Plot topic proportions per year
+viz_df_with_year |> 
+  ggplot(aes(x = factor(year), y = value, fill = topic)) + 
+  geom_bar(stat = "identity", position = "fill") +
+  scale_fill_viridis_d(name = "Topics") +
+  xlab("Publication year") +
+  ylab("Proportion of topics") +
+  labs(title = "Topic proportions per year")
+```
+
+```{r evolution-top-terms}
+#| warning: false
+top_terms <- words |>
+  group_by(id) |>
+  count(word, sort = TRUE) |>
+  ungroup() |>
+  slice_max(n, n = 5)
+
+word_order <- words |>
+  group_by(word, year) |>
+  count(word, sort = TRUE) |>
+  ungroup() |>
+  arrange(year,-n) |>
+  group_by(year) |>
+  mutate(relative_frequency = n / sum(n) * 100) |>
+  mutate(rank = round(rank(-n), 0)) |>
+  ungroup() |>
+  filter(word %in% top_terms$word)
+
+ggplot(word_order,
+       aes(
+         x = year,
+         y = relative_frequency,
+         color = word,
+         label = rank
+       )) +
+  # aes(fill = "white") +
+  geom_smooth(lwd = 0.5) +
+  # geom_line() +
+  # geom_point(size = 8, shape = 21, fill = "white", stroke = 1.2) +
+  # geom_text(ggplot2::aes(x = grad_year), color = "black") +
+  ggplot2::scale_color_viridis_d() +
+  ggplot2::xlab("Year") + 
+  ggplot2::ylab("Frequency (%)") +
+  facet_wrap(~ word) +
+  theme(
+        title = element_blank(),
+        axis.text = element_text(size = 12),
+        axis.title = element_text(size = 15))
+```
+
+<!-- ```{r extracttxt} -->
+
+<!-- files <- list.files(path = "data/collection/PDFs", pattern = "*.pdf", full.names = TRUE) -->
+
+<!-- my_list_output <- list() -->
+
+<!-- for (file in files){ -->
+
+<!--   # Extract text from the PDF -->
+
+<!--   text <- pdftools::pdf_text(file) -->
+
+<!--   # Split each line of text for every new line -->
+
+<!--   lines <- strsplit(text, "\n")[[1]] -->
+
+<!--   # list to store each new line of information in a key value pair -->
+
+<!--   info_list <- lapply(strsplit(lines, ": "), function(x) setNames(x[1], x[2])) -->
+
+<!--   # take the output lines in a single column of a data frame -->
+
+<!--   df <- do.call(rbind, info_list) -->
+
+<!--   # remove rows with NA -->
+
+<!--   df_cleaned <- na.omit(df) -->
+
+<!--   # select 4th row to end of the data frame -->
+
+<!--   df_rows <- data.frame(df_cleaned[4:nrow(df_cleaned), ]) -->
+
+<!--   # rename single column of the dataframe -->
+
+<!--   names(df_rows) = c("Values") -->
+
+<!--   # remove leading and trailing spaces -->
+
+<!--   df_rows$Values <- trimws(df_rows$Values) -->
+
+<!--   # remove leading and trailing spaces -->
+
+<!--   df_rows$Values <- str_replace_all(df_rows$Values, "\\s+", " ") -->
+
+<!--   # select each row which is currently a character string separated by spaces -->
+
+<!--   # split each character from the string and recombine them with "-" separator -->
+
+<!--   # in the process we need to unlist and list the observations of each row -->
+
+<!--   process_row <- function(row) { -->
+
+<!--     mylist = row["Values"] -->
+
+<!--     mylist1 = paste0(unlist(as.list(unlist(strsplit(mylist, '[[:space:]]')))), collapse = "-") -->
+
+<!--     return(mylist1) -->
+
+<!--   } -->
+
+<!--   # apply the above function for all rows in the data-frame -->
+
+<!--   df_rows$ConcatenatedValues <- apply(df_rows, 1, process_row) -->
+
+<!--   # take 1st row value of df_cleaned which looks like unique identifier of the file -->
+
+<!--   id_value = df_cleaned[[1]] -->
+
+<!--   # extract the metric enclosed within parenthesis () -->
+
+<!--   # find position of the string )- after which the metric value is mentioned for each row -->
+
+<!--   # extract the string of metric value bounded by "-" before and after -->
+
+<!--   # replace "," with decimal dot for each metric value -->
+
+<!--   # convert character string to numeric -->
+
+<!--   # transpose the metric as key and corresponding values grouped by the id variable -->
+
+<!--   # remove the second column which looks to be NA -->
+
+<!--   df_transformed = df_rows %>% -->
+
+<!--     extract(ConcatenatedValues, into = c("Metric"), regex = "\\(([^)]+)\\)", remove = FALSE) %>% -->
+
+<!--     mutate(StringPosition = str_locate(ConcatenatedValues, "\\)-")) %>% -->
+
+<!--     mutate(len = nchar(ConcatenatedValues)) %>% -->
+
+<!--     mutate(string = str_sub(ConcatenatedValues, start=StringPosition[,"end"], end=len)) %>% -->
+
+<!--     extract(string, into = c("Metric_Value"), regex = "\\-([^)]+)\\-", remove = FALSE) %>% -->
+
+<!--     select(Values, Metric, Metric_Value) %>% -->
+
+<!--     mutate(Metric_Value = str_replace(Metric_Value, ",", ".")) %>% -->
+
+<!--     mutate(Metric_Value = as.numeric(Metric_Value)) %>% -->
+
+<!--     mutate(id = id_value) %>% -->
+
+<!--     select(id, Metric, Metric_Value) %>% -->
+
+<!--     pivot_wider(names_from = Metric, values_from = Metric_Value) %>% -->
+
+<!--     select(-2) -->
+
+<!--   # store the output of each file in an empty list which can be accessed based on index -->
+
+<!--   my_list_output[[file]] <- df_transformed -->
+
+<!-- } -->
+
+<!-- ## Remove unwanted objects from environment -->
+
+<!-- rm(file, files, id_value, lines, text) -->
+
+<!-- rm(df_rows, df_cleaned, df, info_list, process_row) -->
+
+<!-- my_list_output <- apply(my_list_output,2,as.character) -->
+
+<!-- # save the list as txt -->
+
+<!-- write.table(my_list_output, file = "data/collection/textdf.txt", sep = "\t", row.names = FALSE) -->
+
+<!-- ``` -->
+
+<!-- ```{r extracttxt} -->
+
+<!-- fs::dir_ls("data/collection/PDFs") %>%  -->
+
+<!--   as.character() %>%  -->
+
+<!--   as_tibble() %>%  -->
+
+<!--   mutate(text = map_chr(value, function(x){ -->
+
+<!--     pdftools::pdf_text(x) %>%  -->
+
+<!--       paste0(collapse = "") %>%  -->
+
+<!--       str_remove_all("[\\s\\n\\t\\d[a-z].]") -->
+
+<!--   })) -> textdf -->
+
+<!-- textdf %>%  -->
+
+<!--   write_csv("data/collection/textdf.csv") -->
+
+<!-- textdf -->
+
+<!-- ``` -->
+
+```{python}
+
+import pandas as pd
+````
