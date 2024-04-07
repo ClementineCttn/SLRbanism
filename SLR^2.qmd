@@ -24,6 +24,8 @@ library(tsne)
 library(LDAvis)
 library(SnowballC)
 
+library(ggrepel)
+
 library(geojsonio)
 library(leaflet)
 # plot the selected are with sp
@@ -36,6 +38,41 @@ library(tm)
 
 library(widyr)
 library(furrr)
+```
+
+## Extract text from PDF files
+
+The following code block will create a virtual environment "myenv" and install the Python package "PyMuPDF" for extracting text from PDF files. The Python script "extract-text-from-pdf.py" is used to extract text from PDF files.
+
+Notes:
+
+-   Our knowledge is that Python has a better library for extracting text from PDF files. Therefore, we use Python to extract text from PDF files.
+
+-   After first time running the code block locally, it will automatically detect the Python environment and install it if not found.
+
+```{r extract-text-from-pdf, message=FALSE}
+# Set up and use Python for PDF text extraction
+reticulate::virtualenv_create(envname = "myenv", python = install_python())
+reticulate::py_install("PyMuPDF == 1.21.0", envname = "myenv")
+reticulate::use_virtualenv("myenv")
+reticulate::source_python("py/extract-text-from-pdf.py")
+```
+
+The following code block will extract text from PDF files and structure them into a R dataframe. 
+
+```{r}
+data_root <- "data/collection/PDFs/"
+
+# Get PDF file paths
+pdf_paths <- list.files(data_root, full.names = TRUE, pattern = "*.pdf$")
+
+# Extract text from PDFs
+text <- convert_pdf(pdf_paths) |> unlist()
+
+doc_names <- list.files(data_root, full.names = TRUE, pattern = "*.pdf")
+
+df <- tibble(doc = str_sub(list.files(data_root, pattern = "*.pdf"), 1, -5L), text) |> 
+  mutate(text = str_replace_all(text, "^[0-9]*$", ""))
 ```
 
 ## Load data
@@ -57,72 +94,55 @@ In this case, we prepared the two datasets. The first one is **metadata**, which
 
 ```{r}
 #| message: false
-metadata <- read_csv(file = "data/metadata.csv")
+metadata <- read.csv("data/metadata.csv", header = TRUE, sep = ",")
+# take only the last name of first author
+metadata$refnames <- sapply(strsplit(metadata$Author.Full.Names, " "), function(x) x[1])
+metadata$ref <- paste(metadata$refnames, metadata$Year, sep = "")
 text_df <- read_csv(file = "data/text_df.csv")
 data <- metadata |> left_join(text_df, by = c("id" = "id"))
 ```
 
-## 0. Basic summary chart
+## 0. Basic exploration of the meta information
 
 Read the data.
 
 To explore the keywords, we need to extract the three columns "id", "Keywords.Plus", "Year" from the data frame.
 
 ```{r data, echo=FALSE, message=FALSE, warning=FALSE}
-df <- read.csv("data/final_combined.csv", header = TRUE, sep = ",")
-
 # extract the three columns "id", "Keywords.Plus", "Year"
-df_kw <- df[, c("id", "Keywords.Plus", "Year", "Cited.Reference.Count")]
+meta_basics <- metadata[, c("id", "Keywords.Plus", "Year", "Cited.Reference.Count", "ref")]
 
 # rename "Keywords.Plus" to "Keywords"
-names(df_kw)[names(df_kw) == "Keywords.Plus"] <- "Keywords"
-names(df_kw)[names(df_kw) == "Cited.Reference.Count"] <- "Cites"
+names(meta_basics)[names(meta_basics) == "Keywords.Plus"] <- "Keywords"
+names(meta_basics)[names(meta_basics) == "Cited.Reference.Count"] <- "Cites"
 
-df_kw
+meta_basics
 ```
 
-Get the number of papers by year.
+Get **the number of papers by year** overlay with **High-citation papers**.
 
 ```{r}
 # count the number of papers by year
-df_year <- df_kw %>%
+meta_basics_year <- meta_basics %>%
   group_by(Year) %>%
   summarise(count = n()) %>%
   arrange(desc(count))
-```
 
-Generate a bar chart to show the count of papers by year.
-
-```{r}
-# bar chart with y axis only integer
-ggplot(df_year, aes(x = Year, y = count)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
-  scale_y_continuous(breaks = seq(0, 100, 1)) +
-  labs(title = "Number of papers by year", x = "Year", y = "Count") +
-  theme_minimal()
-# save the plot
-ggsave("images/number_of_papers_by_year.png")
-```
-
-High-citation papers analysis
-
-```{r}
 # get the top 10 high-citation papers
-df_cites <- df_kw %>%
+meta_basics_cites <- meta_basics %>%
   arrange(desc(Cites)) %>%
   head(10)
 ```
 
-Add the number of high-citation papers to the plot of number of papers by year.
 
 ```{r}
 # add the number of high-citation papers to the plot with dual y axis
-ggplot(df_year, aes(x = Year, y = count)) +
+ggplot(meta_basics_year, aes(x = Year, y = count)) +
   geom_bar(stat = "identity", fill = "steelblue") +
-  scale_y_continuous(breaks = seq(0, 100, 1), name = "Number of papers") +
   labs(title = "Number of papers by year", x = "Year") +
-  geom_point(data = df_cites, aes(x = Year, y = Cites/10, group = 1), color = "red") +
-  scale_y_continuous(sec.axis = sec_axis(~.*10, name = "High-citation papers")) +
+  geom_point(data = meta_basics_cites, aes(x = Year, y = Cites/10, group = 1), color = "red") +
+  geom_text_repel(data = meta_basics_cites, aes(x = Year, y = Cites/10, label = ref), vjust = -0.5, color = "red") +
+  scale_y_continuous(breaks = seq(0, 100, 1), name = "Number of papers", sec.axis = sec_axis(~.*10, name = "High-citation papers")) +
   theme_minimal()
 
 # save the plot
@@ -452,6 +472,22 @@ for (i in unique(df_kw$periods)) {
 ```
 
 ## 3. Text mining
+
+```{r tokens, warning=FALSE}
+words <- unnest_tokens(df, word, text) |>
+  filter(is.na(readr::parse_number(word))) |>  # Remove numbers
+  anti_join(stop_words, by = "word") |>  # Remove English stop words
+  # anti_join(custom_stop_words, by = "word") |>  # Remove custom stop words
+  dplyr::filter(nchar(word) >= 4)  # remove words of max. 3 characters
+```
+
+```{r tokens-rank}
+words_count <- words |> 
+  count(word) |> 
+  arrange(desc(n))
+
+words_count
+```
 
 Input: Full text, machine readable, extracted from PDFs prior to analysis
 
@@ -953,7 +989,6 @@ ggplot(word_order,
 
 <!-- ``` -->
 
-```{python}
+\`\`\`{python}
 
-import pandas as pd
-````
+import pandas as pd \`\`\`\`
