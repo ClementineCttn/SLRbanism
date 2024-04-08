@@ -404,29 +404,45 @@ litsearchr::write_search(grouped,
 
 
 ## Drawing the PRISMA figure
+```{r}
+library(dplyr)
+
+# Assuming 'all_references' and 'previous_results' are your data frames
+# containing references and previous results respectively
+
+# Combine 'all_references' with previous results
+combined_data <- bind_rows(all_references, previous_results)
+
+# Now 'combined_data' contains both 'all_references' and 'previous_results'
+```
+
 
 ```{r}
 library(PRISMAstatement)
 
-prisma(found = nrow(all_references),
-       found_other = 0,
-       no_dupes = nrow(all_unique_references), 
-       screened = nrow(all_unique_references), 
-       screen_exclusions = 0, 
-       full_text = nrow(all_unique_references),
-       full_text_exclusions = 0, 
-       qualitative = nrow(all_unique_references), 
-       quantitative = nrow(all_unique_references),
-       width = 800, height = 800)
+# Call the prisma() function to generate the PRISMA flowchart
+# Replace the values with the actual counts from your study
+prisma(
+  found = nrow(all_references), # Total number of references found
+  found_other = 0,               # Number of additional references found through other sources (if any)
+  no_dupes = nrow(all_unique_references), # Number of unique references after removing duplicates
+  screened = nrow(all_unique_references),  # Number of references screened
+  screen_exclusions = 0,         # Number of references excluded during screening
+  full_text = nrow(all_unique_references), # Number of references obtained in full text
+  full_text_exclusions = 0,      # Number of references excluded during full-text assessment
+  qualitative = nrow(all_unique_references), # Number of studies included in qualitative synthesis
+  quantitative = nrow(all_unique_references), # Number of studies included in quantitative synthesis
+  width = 800, height = 800      # Specify width and height for the generated PRISMA flowchart
+)
 ```
 
 Ideally, you will stick closely to the PRISMA statement, but small deviations are common. PRISMAstatement gives the option of adding a box which simply calculates the number of duplicates removed.
 
 ```{r}
 
-prisma(found = 750,
-       found_other = 123,
-       no_dupes = 776, 
+prisma(found = nrow(all_references),
+       found_other = 0,
+       no_dupes = nrow(all_unique_references), 
        screened = 776, 
        screen_exclusions = 13, 
        full_text = 763,
@@ -470,10 +486,9 @@ prisma_plot <- prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 60)
 
 
 
-
-ggsave(here("figures", "prisma_diagram.jpeg"), plot = prisma_plot, width = 10, height =6)
-install.packages("webshot")
-library(webshot)
-webshot::webshot(here("figures", "prisma_diagram.jpeg"), prisma_plot)
-```
+# Save as PNG format
+png("prisma_flowchart.png", width = 800, height = 800)
+# Execute the code to generate PRISMA flowchart (if not already displayed in graphics device)
+# prisma_flowchart()
+dev.off()
 
