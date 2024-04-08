@@ -23,7 +23,22 @@ library(RefManageR)
 library(tidyverse)
 library(brio)
 library(glue)
+library(revtools)
+library(here)
+library(remotes)
+library(litsearchr)#check the package, maybe it is too old for recent version of r. 
+library(igraph)
+library(PRISMAstatement)
 ```
+before we start, we need to organize our repository 
+```{r}
+dir.create("data") #for raw data
+dir.create("data_output") #for the unique references 
+dir.create("figures")
+```
+
+
+
 
 Set your API key, if you do not have, please go to the website of [Elsevier Developer Portal](https://dev.elsevier.com/) to apply, and you will get the key.
 
@@ -77,7 +92,7 @@ head(transposed_results_df)
 Write the details to a CSV file
 
 ```{r}
-write.csv(transposed_results_df, "scopus_api_results.csv", row.names = FALSE)
+write.csv(transposed_results_df, here("data", "scopus_api_results.csv"), row.names = FALSE)
 ```
 
 Export a into a .bib file
@@ -125,35 +140,17 @@ bib_text <- unlist(bib_texts, use.names = FALSE)
 
 Write BibTeX file
 ```{r}
-writeLines(bib_text, "scopus_references.bib")
+writeLines(bib_text, here("data","scopus_references.bib"))
 ```
 
 ### Combining tables, deduplicating references and summarising the results
 
+
+
 ```{r}
-library(revtools)
-library(here)
-```
 
-Read a bib or ris file 
-```{r}
-utf8tolatin1 <- function(infile, outfile) {
-  content <- readLines(infile, encoding = "UTF-8")
-  latin1 <- iconv(content, from = "UTF-8", to = "us-ascii")
-  writeLines(latin1, outfile)
-}
-utf8tolatin1(here("data", "scopus200.ris"), 
-             here("output", "scopus200-latin1.ris"))
-
-# utf8tolatin1 fix taken from https://github.com/mjwestgate/revtools/issues/42
-library(synthesisr)
-scopus_data <- synthesisr::read_refs(here("output", "scopus200-latin1.ris"))
-
- scopus_data$journal <- ifelse(scopus_data$source_type == "JOUR",
-                               scopus_data$source,NA)
- scopus_data$label <- paste(scopus_data$author, scopus_data$year, scopus_data$title)
-
-wos_data <-read_bibliography(here("output", "lprln.bib"))
+wos_data <-read_bibliography(here("data", "wos_reference.bib"))
+scopus_data <- read_bibliography(here("data", "scopus_references.bib"))
 ```
 
 Save variable names of dataframes is object
@@ -181,31 +178,41 @@ print(unique_vars_only_wos)
 
 ```
 
-Rename the column in the scopus_data from "issue" to "number"
-```{r}
-colnames(scopus_data)[colnames(scopus_data) == "issue"] <- "number"
 
-```
-
-Select only the variables: `label`, `author`, `type`, `title`, `year`, `volume` and `number` 
+Select only the variables that appear in both dataframes and the ones you deem relevant. In our case, we select: `label`, `author`, `type`, `title`, `year`, `volume`,  `number`, `doi` 
 
 ```{r}
-selected_vars <- c("label", "title", "year", "journal", "volume", "number")
+selected_vars <- c("label","author",  "title", "year", "journal", "volume", "number", "doi")
 
 scopus_selection <- scopus_data %>%
   dplyr::select(selected_vars)
 
-head(scopus_selection)
-
 wos_selection <- wos_data %>%
   dplyr::select(selected_vars)
 
-head(wos_selection)
+```
+Now lets check the number of variables (columns) in our dataframes
+
+```{r}
+ncol(scopus_selection)
+
+ncol(wos_selection)
+```
+
+now lets combine the wos dataframe with the scopus dataframe
+
+```{r}
+all_references <- rbind(wos_selection, scopus_selection)
 
 ```
-To make sure that our variables in the scopus and wos dataframes are represented in a similar way, we can remove all punctuations and capital letters from relevant character variables
 
-First create function called `preprocess` where
+##Locate and extract unique references
+
+In order to be able to identify if there are duplicates in our `all_references` dataframe and examine summary statistics of the references-dataset, we need to make sure that variables in the scopus and wos dataframes are represented in a similar way. Sometimes variables differ too much, such that comparison even after alteration becomes difficult (i.e. in our example the variable "author"). However,  for others we we can remove all punctuations and capital letters in order to make the variable structure of the wos refences and scopus refences more similar.
+
+Lets see how we can do that
+
+First create function called `preprocess` which removes all capital letters and punctuations
 
 ```{r}
 preprocess <- function(text) {
@@ -216,45 +223,27 @@ preprocess <- function(text) {
 
 ```
 
-Apply this function to the scopus_selection dataframe
+Now lets apply this function on relevant variables in our `all_references` dataframe
 
 ```{r}
-scopus_selection$journal <- sapply(scopus_selection$journal, preprocess)
-scopus_selection$title <- sapply(scopus_selection$title, preprocess)
-scopus_selection$label <- sapply(scopus_selection$label, preprocess)
+all_references$journal <- sapply(all_references$journal, preprocess)
+all_references$title <- sapply(all_references$title, preprocess)
+all_references$label <- sapply(all_references$label, preprocess)
+all_references$author <- sapply(all_references$author, preprocess)
 
 ```
 
 Examine the scopus_selection dataframe
 
 ```{r}
-head(scopus_selection)
+view(all_references)
 ```
 
-Do the same with wos dataframe
+as you can see, all the capital and punctuations are removed from the assigned variables 
 
 ```{r}
-wos_selection$journal <- sapply(wos_selection$journal, preprocess)
-wos_selection$title <- sapply(wos_selection$title, preprocess)
-wos_selection$label <- sapply(wos_selection$label, preprocess)
-
-#examine the wos_selection dataframe
-head(wos_selection)
-
-```
-
-Combine the wos dataframe with the scopus dataframe
-
-```{r}
-all_references <- rbind(wos_selection, scopus_selection)
-
-```
-
-Locate and extract unique references
-
-```{r}
-check_duplicates <- revtools::find_duplicates(all_references)
-unique_references <- extract_unique_references(all_references, matches = check_duplicates)
+check_duplicates <- revtools::find_duplicates(all_references, match_variable = "doi")
+all_unique_references <- extract_unique_references(all_references, matches = check_duplicates)
 ```
 
 Compare the total number of references to the total number of unique references
@@ -263,36 +252,54 @@ Compare the total number of references to the total number of unique references
 #count the number of rows in the all_references dataframe
 nrow(all_references)
 #do the same for the references_unique dataframe
-nrow(unique_references)
+nrow(all_unique_references)
 
-unique_references$year <- as.numeric(unique_references$year)
+
 ```
+
+Something else we might want to consider, is if our literature search also identified one or more key articles that we know should be in the SLR. So, lets take a target article. In our case, the author of this specific literature review stated that the articles `Urban governance and social cohesion: Effects of urban restructuring policies in two Dutch cities` by `van Marissing et al. (2006)` and `Rethinking China’s urban governance: The role of the state in neighbourhoods, cities and regions` by `Wu and Zang (2022)` should be considered as a target references. So lets examine, if this article is present in our `all_unique_references` dataframe.  
+We do this copying doi from the target references and identifying if this doi is present in the `all_unique_references` dataframe
+
+```{r}
+#create a vector with the doi's of van Marissing et al. (2006) and Wu and Zang (2022)
+target_references <- c("doi.org/10.1016/j.cities.2005.11.001", "doi.org/10.1177/03091325211062171")
+
+
+all_unique_references%>%
+  filter(doi %in% target_references)
+
+```
+the outcome from after filtering the `all_unique_references` dataframe is 0, suggesting that both target references are not prevalent in our `all_unique_references` dataframe. This means that our search query did not identify our target references, suggesting that we need to change our query such that these references are included. Please note, that as we working with a sample of 200 articles from each database, it is most likely that we did not identify the target references due to the 200 reference threshold.  
 
 ### Summarise references:
 Distribution of publication years
 ```{r}
-ggplot(unique_references) +
+
+all_unique_references$year <- as.numeric(all_unique_references$year)
+
+ggplot(all_unique_references) +
   geom_histogram(aes(x=year), fill = "orange")
 ```
 
 Top 10 journals publishing on topic:
 
 ```{r}
-unique_references$journal <- as.factor(unique_references$journal)
-head(summary(unique_references$journal),10)
+all_unique_references$journal <- as.factor(all_unique_references$journal)
+head(summary(all_unique_references$journal),10)
 
 ```
 
+
+Save the remaining references
+```{r}
+
+writeLines(all_unique_references, here("data_output","all_unique_references.bib"))
+
+
+```
 
 ## Suggesting new keywords
 
-```{r}
-library(remotes)
-#install_github("elizagrames/litsearchr", ref="main")
-library(litsearchr)
-library(igraph)
-
-```
 
 Import .bib or .ris database
 ```{r}
@@ -378,13 +385,13 @@ library(PRISMAstatement)
 
 prisma(found = nrow(all_references),
        found_other = 0,
-       no_dupes = nrow(unique_references), 
-       screened = nrow(unique_references), 
+       no_dupes = nrow(all_unique_references), 
+       screened = nrow(all_unique_references), 
        screen_exclusions = 0, 
-       full_text = nrow(unique_references),
+       full_text = nrow(all_unique_references),
        full_text_exclusions = 0, 
-       qualitative = nrow(unique_references), 
-       quantitative = nrow(unique_references),
+       qualitative = nrow(all_unique_references), 
+       quantitative = nrow(all_unique_references),
        width = 800, height = 800)
 ```
 
@@ -430,3 +437,18 @@ prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 6)
 prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 60)
 
 ```
+
+
+save the Prisma diagram as an object and export it as jpeg 
+```{r}
+prisma_plot <- prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 60)
+
+
+
+
+ggsave(here("figures", "prisma_diagram.jpeg"), plot = prisma_plot, width = 10, height =6)
+install.packages("webshot")
+library(webshot)
+webshot::webshot(here("figures", "prisma_diagram.jpeg"), prisma_plot)
+```
+
