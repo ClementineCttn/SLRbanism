@@ -140,8 +140,8 @@ meta_basics_cites <- meta_basics %>%
 ggplot(meta_basics_year, aes(x = Year, y = count)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   labs(title = "Number of papers by year", x = "Year") +
+  geom_text_repel(data = meta_basics_cites, aes(x = Year, y = Cites/10, label = ref), vjust = -0.5, color = "#feb237") +
   geom_point(data = meta_basics_cites, aes(x = Year, y = Cites/10, group = 1), color = "red") +
-  geom_text_repel(data = meta_basics_cites, aes(x = Year, y = Cites/10, label = ref), vjust = -0.5, color = "red") +
   scale_y_continuous(breaks = seq(0, 100, 1), name = "Number of papers", sec.axis = sec_axis(~.*10, name = "High-citation papers")) +
   theme_minimal()
 
@@ -153,23 +153,20 @@ Find the high-citation papers in recent 5 years.
 
 ```{r}
 # get the high-citation papers in recent 5 years
-df_cites_recent <- df_kw %>%
+papers_cites_recent <- meta_basics %>%
   filter(Year >= 2017) %>%
   arrange(desc(Cites)) %>%
   head(10)
-```
 
-Get their article titles.
-
-```{r}
 # get the titles of high-citation papers in recent 5 years
-df_cites_recent_titles <- df_cites_recent %>%
-  left_join(df, by = "id") %>%
+papers_cites_recent_titles <- papers_cites_recent %>%
+  left_join(metadata, by = "id") %>%
   select(id, Article.Title)
 
 # save it as excel
-write.csv(df_cites_recent_titles, "output/high_citation_papers_recent_5_years.csv")
+write.csv(papers_cites_recent_titles, "output/high_citation_papers_recent_5_years.csv")
 
+papers_cites_recent_titles
 ```
 
 ## 1. Mapping case study locations

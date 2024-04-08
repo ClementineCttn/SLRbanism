@@ -25,10 +25,17 @@ The example data has been uploaded to Open Science Framework. And [current link]
 | ------------------------------------------------------------ |
 | <img src="images/analysis_framework.jpg" alt="analysis_framework" style="zoom:50%;" /> |
 
+## Visulisation Examples
+
+### Meta Data
+
+#### Papers published by the year and overlaid with highly cited papers
 
 | Number of papers by year                                     | Overlay with High Citation Papers                            |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | ![number_of_papers_by_year](images/number_of_papers_by_year.png) | ![number_of_papers_by_year_high_citations](images/number_of_papers_by_year_high_citations.png) |
+
+- Generated table of highly cited papers in recent 5 years
 
 | High citation papers in recent 5 years (automatically extracted) |
 | ------------------------------------------------------------ |
@@ -44,9 +51,7 @@ The example data has been uploaded to Open Science Framework. And [current link]
 | Technology, talent and economic  segregation in cities       |
 
 
-| Geographical Mapping                         | Tiled Mapping                                |
-| -------------------------------------------- | -------------------------------------------- |
-| ![direct_mapping](images/direct_mapping.png) | ![tiled_grid_map](images/tiled_grid_map.jpg) |
+#### Interest of keywords overtime
 
 | Overall                                                | Before 2000                                                |
 | ------------------------------------------------------ | ---------------------------------------------------------- |
@@ -54,7 +59,15 @@ The example data has been uploaded to Open Science Framework. And [current link]
 | **2000-2010**                                          | **After 2010**                                             |
 | ![wordcloud_2000-2010](images/wordcloud_2000-2010.png) | ![wordcloud_after 2010](images/wordcloud_after_2010.png)   |
 
+### Full Text Mining
 
+#### Geospatial location
+
+| Geographical Mapping                         | Tiled Mapping                                |
+| -------------------------------------------- | -------------------------------------------- |
+| ![direct_mapping](images/direct_mapping.png) | ![tiled_grid_map](images/tiled_grid_map.jpg) |
+
+#### Co-occurance of word of interests
 
 
 
