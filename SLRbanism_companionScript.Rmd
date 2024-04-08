@@ -87,6 +87,7 @@ transposed_results_df <- t(results_df)
 What does it look like?
 ```{r}
 head(transposed_results_df)
+
 ```
 
 Write the details to a CSV file
@@ -97,24 +98,11 @@ write.csv(transposed_results_df, here("data", "scopus_api_results.csv"), row.nam
 
 Export a into a .bib file
 ```{r}
-<<<<<<< HEAD
-# 
-# EIDtoget <- data.frame(transposed_results_df)$eid
-#  
-# #these files get HUGE so you probably want to break this up
-# raw_results <- list()
-# #btw, I do know that for loops aren't "cool" but whatever
-# i <- 1
-# for (i in 1:length((EIDtoget))){
-#   x<- abstract_retrieval(EIDtoget[i],identifier = "eid", verbose=F)
-#   if (x$get_statement$status_code==200){
-#     raw_results[[i]]<-x}
-#   if (x$get_statement$status_code!=200){raw_results[[i]]<- paste(EIDtoget[i],"had error",x$get_statement$status_code )}
-# }
-#  
-#  
-=======
-df <- read.csv("scopus_api_results.csv")
+df <- read.csv(here("data", "scopus_api_results.csv"))
+for (i in 1:nrow(df)) {
+  df$authkeywords[i] <- paste(unlist(strsplit(df$authkeywords[i], "\\s*\\|\\s*")), collapse = ", ")
+}
+
 data <- data.frame(
   Author = df$dc.creator,
   Title = df$dc.title,
@@ -123,13 +111,14 @@ data <- data.frame(
   Volume = df$prism.volume,
   Number = df$article.number,
   Pages = df$prism.pageRange,
-  DOI = df$prism.doi
+  DOI = df$prism.doi,
+  Keyword = df$authkeywords
 )
->>>>>>> 934540d6d89079c217122bd5e570a672fec5cc07
 ```
 
 Create a list of BibEntry objects
 ```{r}
+# Format the Keywords field
 bib_entries <- lapply(1:nrow(data), function(i) {
   BibEntry(
     bibtype = "Article",        # Add the bibtype argument
@@ -141,7 +130,8 @@ bib_entries <- lapply(1:nrow(data), function(i) {
     volume = data$Volume[i],    # Add volume field
     number = data$Number[i],    # Add number field
     pages = data$Pages[i],      # Add pages field
-    doi = data$DOI[i]           # Add DOI field
+    doi = data$DOI[i],         # Add DOI field
+    url = data$Keyword[i]      # Add Keyword field (because BibEntry function does not provide keyword indicator, use url for keywords as an example.)
   )
 })
 ```
@@ -156,17 +146,10 @@ Combine the BibTeX texts into a single character vector
 bib_text <- unlist(bib_texts, use.names = FALSE)
 ```
 
-<<<<<<< HEAD
-# utf8tolatin1 fix taken from https://github.com/mjwestgate/revtools/issues/42
-
-library(synthesisr)
-scopus_data <- synthesisr::read_refs(here("output", "scopus200-latin1.ris"))
-=======
 Write BibTeX file
 ```{r}
 writeLines(bib_text, here("data","scopus_references.bib"))
 ```
->>>>>>> 934540d6d89079c217122bd5e570a672fec5cc07
 
 ### Combining tables, deduplicating references and summarising the results
 
