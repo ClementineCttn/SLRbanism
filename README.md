@@ -7,11 +7,19 @@ This repository is used to collaboratively exemplify our guidelines on how to co
 - “output” – this is where you will store fake data generated in this class
 - “images” – this is where image files are stored
 
+## Preparation
+
+### API keys
+
+Create a new file named **personal_scopus_api_key.md**, and input 
+
+### Data
+
 Example data:
 
 Github does not handle well with dataset that is larger than 100mb.
 
-The example data has been uploaded to Open Science Framework. And [current link](https://osf.io/emxqy/?view_only=70fab91afab747d685eca7ed5b8d88f8) is for view and download only. 
+The example data has been uploaded to Open Science Framework. And [current link](https://osf.io/ds83p) is for view and download only. 
 
 | The analysis Framework                                       |
 | ------------------------------------------------------------ |
