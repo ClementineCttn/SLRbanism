@@ -2,7 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-data/
 *DS_Store
+*dtmp
 tmp_files
 personal_scopus_api_key.md

@@ -547,7 +547,9 @@ The following code calculates the pointwise mutual information (PMI) between wor
 ```{r}
 library(widyr)
 library(furrr)
+```
 
+```{r}
 plan(multisession)  ## for parallel processing
 
 tidy_pmi <- nested_words %>% 
@@ -650,7 +652,7 @@ custom_stop_words <- tibble(word = c("income",
                                      "neighborhood"))
 
 words <- data |>
-  select(id, text, "year" = `Publication Year`) |>
+  select(id, text, "year" = `Publication.Year`) |>
   unnest_tokens(output = word, input = text) |>  # remove punctuation, convert to lower-case, separate all words
   anti_join(stop_words, by = "word") |>  # remove stop words
   anti_join(custom_stop_words, by = "word") |>  # remove custom stop words
