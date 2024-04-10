@@ -25,8 +25,12 @@ library(brio)
 library(glue)
 library(revtools)
 library(here)
+### Do not install litsearchr from the CRAN but from Github repository:
+install.packages("remotes")
 library(remotes)
-library(litsearchr)#check the package, maybe it is too old for recent version of r. 
+install_github("elizagrames/litsearchr", ref="main")
+library(litsearchr)
+####
 library(igraph)
 library(PRISMAstatement)
 ```
