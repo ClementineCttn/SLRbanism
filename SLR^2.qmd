@@ -132,10 +132,7 @@ meta_basics_year <- meta_basics %>%
 meta_basics_cites <- meta_basics %>%
   arrange(desc(Cites)) %>%
   head(10)
-```
 
-
-```{r}
 # add the number of high-citation papers to the plot with dual y axis
 ggplot(meta_basics_year, aes(x = Year, y = count)) +
   geom_bar(stat = "identity", fill = "steelblue") +
@@ -214,15 +211,20 @@ library(mapview)
 ```
 
 ```{r}
-mapping <- st_read("data/map.csv", options=c("X_POSSIBLE_NAMES=lng","Y_POSSIBLE_NAMES=lat"), crs=4326)
+mapping <- st_read("data/map.csv",
+                   options=c("X_POSSIBLE_NAMES=lng",
+                             "Y_POSSIBLE_NAMES=lat"), 
+                   crs=4326)
 
 # If you wish to plot the boundaries of countries on the canvas
-ggplot() + geom_sf(data = mapping, aes(fill = "black")) + guides(fill = guide_none())
+ggplot() + 
+  geom_sf(data = mapping, aes(fill = "black")) + 
+  guides(fill = guide_none())
 ```
 
 1.2 Visulising the data
 
-mapping.1 Create a interactive maps with the package "mapview"
+mapping.1 Create a interactive maps with the package `mapview`
 
 ```{r}
 mapview(mapping)
@@ -239,11 +241,16 @@ countries_bound <- geojson_sf("data/map_basis/WB_countries_Admin0_10m/WB_countri
 countries_bound <- st_make_valid(countries_bound)
  
 # If you wish to plot the boundaries of countries on the canvas
-ggplot(countries_bound) + geom_sf(aes(fill = FORMAL_EN)) + guides(fill = guide_none())
+ggplot(countries_bound) + 
+  geom_sf(aes(fill = FORMAL_EN)) + 
+  guides(fill = guide_none())
 ```
 
 ```{r}
-ggplot() + geom_sf(data = countries_bound, colour = "white", fill = "black") + geom_sf(data = mapping, colour = "yellow", size = 2) + guides(fill = guide_none())
+ggplot() + 
+  geom_sf(data = countries_bound, colour = "white", fill = "black") + 
+  geom_sf(data = mapping, colour = "yellow", size = 2) + 
+  guides(fill = guide_none())
 
 # Save the plot
 # ggsave("direct_mapping.png")
@@ -251,17 +258,17 @@ ggplot() + geom_sf(data = countries_bound, colour = "white", fill = "black") + g
 
 mapping.3 Tiled grid map
 
-mapping.3.1 Summarise the number of papaers within different countries
+mapping.3.1 Summarise the number of papers within different countries
 
 Using the points to join with the countries' boundary
 
 ```{r}
 country_tiled_frame <- geojson_sf("data/map_basis/Tile-Grid-Map-Cleaned.geojson")
 
-summary = sf::st_join(mapping, countries_bound, join = st_within, left = TRUE)
+summary <- st_join(mapping, countries_bound, join = st_within, left = TRUE)
 ```
 
-Because the tiled grid map does not contain all the countries in the world, we need to check which countries (values of WB_A3) are not included in the column "alpha-3" of country_tiled_frame.
+Because the tiled grid map does not contain all the countries in the world, we need to check which countries (values of `WB_A3`) are not included in the column `alpha-3` of country_tiled_frame.
 
 ```{r}
 summary$match <- ifelse(summary$WB_A3 %in% country_tiled_frame$"alpha.3", "yeah", "no")
@@ -306,7 +313,7 @@ summary_2 <- as.data.frame(summary) %>%
 Read the prepared geojson into spatial dataframe:
 
 ```{r}
-# join the summary_2 to country_tiled_frame based on the column "WB_A3"(left), and "alpha-3"(right)
+# join the summary_2 to country_tiled_frame based on the column `WB_A3` (left), and `alpha-3` (right)
 country_tiled_frame <- left_join(country_tiled_frame, summary_2, by = c("alpha-3" = "WB_A3"))
 
 
@@ -327,7 +334,8 @@ Plot the tiled grid map:
 cvi_colours = list(
   cvi_purples = c("#381532", "#4b1b42", "#5d2252", "#702963",
                  "#833074", "#953784", "#a83e95"),
-  cvi_greens = c("#c7eec9", "#86b386", "#749d74", "#637963", "#506b50", "#3f553f", "#2d3f2d"),
+  cvi_greens = c("#c7eec9", "#86b386", "#749d74", "#637963", 
+                 "#506b50", "#3f553f", "#2d3f2d"),
   my_favourite_colours = c("#702963", "#637029",    "#296370")
 )
 
@@ -477,10 +485,10 @@ for (i in unique(df_kw$periods)) {
 
 ```{r tokens, warning=FALSE}
 words <- unnest_tokens(df, word, text) |>
-  filter(is.na(readr::parse_number(word))) |>  # Remove numbers
-  anti_join(stop_words, by = "word") |>  # Remove English stop words
+  filter(is.na(readr::parse_number(word))) |>     # Remove numbers
+  anti_join(stop_words, by = "word") |>           # Remove English stop words
   # anti_join(custom_stop_words, by = "word") |>  # Remove custom stop words
-  dplyr::filter(nchar(word) >= 4)  # remove words of max. 3 characters
+  dplyr::filter(nchar(word) > 3)                 # remove words of max. 3 characters
 ```
 
 ```{r tokens-rank}
@@ -556,7 +564,7 @@ The following code calculates the pointwise mutual information (PMI) between wor
 library(widyr)
 library(furrr)
 
-plan(multisession)  ## for parallel processing
+plan(multisession)  # for parallel processing
 
 tidy_pmi <- nested_words %>% 
   mutate(words = future_map(words, slide_windows, 4L)) %>% 
@@ -646,25 +654,24 @@ title(main = "Word Cloud of Keywords")
 
 ### 3.2 Topic model
 
--   using LDA to identify dominant topics in a corpus of papers
+We use an LDA topic model to identify dominant topics in a corpus of papers. We start by pre-processing the data and splitting it into words.
 
 ```{r tokenize}
 # Words excluded iteratively while creating the LDA model
 # Custom stop words may contain the words used in the literature search query
-custom_stop_words <- tibble(word = c("income",
-                                     "incomes",
-                                     "segregation",
-                                     "neighbourhood",
-                                     "neighborhood"))
+custom_stop_words <- tibble(word = c("income", "incomes", "segregation",
+                                     "neighbourhood", "neighborhood"))
 
 words <- data |>
   select(id, text, "year" = `Publication Year`) |>
-  unnest_tokens(output = word, input = text) |>  # remove punctuation, convert to lower-case, separate all words
-  anti_join(stop_words, by = "word") |>  # remove stop words
-  anti_join(custom_stop_words, by = "word") |>  # remove custom stop words
-  mutate(word = lemmatize_words(word)) |>  # lemmatise words
-  filter(nchar(word) >= 3)  # keep only words that are at least three letters long
+  unnest_tokens(output = word, input = text) |>  # remove punctuation, make lower case
+  anti_join(stop_words, by = "word") |>          # remove stop words
+  anti_join(custom_stop_words, by = "word") |>   # remove custom stop words
+  mutate(word = lemmatize_words(word)) |>        # lemmatise words
+  filter(nchar(word) >= 3)                       # keep words longer than 3 letters
 ```
+
+The LDA model requires a Document Term Matrix (DTM) as input.
 
 ```{r dtm}
 dtm <- words |>
@@ -672,6 +679,8 @@ dtm <- words |>
     filter(n > 5) |>  # minimum term frequency 5
     cast_dtm(id, word, n)
 ```
+
+We choose the value for the `k` hyperparameter either empirically or qualitatively.
 
 ```{r k}
 # Set k empirically
@@ -688,9 +697,11 @@ dtm <- words |>
 #   verbose = TRUE)
 # k = result$topic[which.max(result$Deveaud2014 - result$CaoJuan2009)]
 
-# Set k qualitatively, based on the researcher;s understanding of the literature
+# Set k qualitatively, based on the researcher's understanding of the literature
 k = 5
 ```
+
+We fit the LDA model and extract topic distributions over terms represented by the $\beta$ statistic and the topic document distributions over topics represented by the $\theta$ statistic. For each topic, we also generate a pseudo-name from the top 5 words.
 
 ```{r lda}
 # Fit LDA model
@@ -838,161 +849,3 @@ ggplot(word_order,
         axis.text = element_text(size = 12),
         axis.title = element_text(size = 15))
 ```
-
-<!-- ```{r extracttxt} -->
-
-<!-- files <- list.files(path = "data/collection/PDFs", pattern = "*.pdf", full.names = TRUE) -->
-
-<!-- my_list_output <- list() -->
-
-<!-- for (file in files){ -->
-
-<!--   # Extract text from the PDF -->
-
-<!--   text <- pdftools::pdf_text(file) -->
-
-<!--   # Split each line of text for every new line -->
-
-<!--   lines <- strsplit(text, "\n")[[1]] -->
-
-<!--   # list to store each new line of information in a key value pair -->
-
-<!--   info_list <- lapply(strsplit(lines, ": "), function(x) setNames(x[1], x[2])) -->
-
-<!--   # take the output lines in a single column of a data frame -->
-
-<!--   df <- do.call(rbind, info_list) -->
-
-<!--   # remove rows with NA -->
-
-<!--   df_cleaned <- na.omit(df) -->
-
-<!--   # select 4th row to end of the data frame -->
-
-<!--   df_rows <- data.frame(df_cleaned[4:nrow(df_cleaned), ]) -->
-
-<!--   # rename single column of the dataframe -->
-
-<!--   names(df_rows) = c("Values") -->
-
-<!--   # remove leading and trailing spaces -->
-
-<!--   df_rows$Values <- trimws(df_rows$Values) -->
-
-<!--   # remove leading and trailing spaces -->
-
-<!--   df_rows$Values <- str_replace_all(df_rows$Values, "\\s+", " ") -->
-
-<!--   # select each row which is currently a character string separated by spaces -->
-
-<!--   # split each character from the string and recombine them with "-" separator -->
-
-<!--   # in the process we need to unlist and list the observations of each row -->
-
-<!--   process_row <- function(row) { -->
-
-<!--     mylist = row["Values"] -->
-
-<!--     mylist1 = paste0(unlist(as.list(unlist(strsplit(mylist, '[[:space:]]')))), collapse = "-") -->
-
-<!--     return(mylist1) -->
-
-<!--   } -->
-
-<!--   # apply the above function for all rows in the data-frame -->
-
-<!--   df_rows$ConcatenatedValues <- apply(df_rows, 1, process_row) -->
-
-<!--   # take 1st row value of df_cleaned which looks like unique identifier of the file -->
-
-<!--   id_value = df_cleaned[[1]] -->
-
-<!--   # extract the metric enclosed within parenthesis () -->
-
-<!--   # find position of the string )- after which the metric value is mentioned for each row -->
-
-<!--   # extract the string of metric value bounded by "-" before and after -->
-
-<!--   # replace "," with decimal dot for each metric value -->
-
-<!--   # convert character string to numeric -->
-
-<!--   # transpose the metric as key and corresponding values grouped by the id variable -->
-
-<!--   # remove the second column which looks to be NA -->
-
-<!--   df_transformed = df_rows %>% -->
-
-<!--     extract(ConcatenatedValues, into = c("Metric"), regex = "\\(([^)]+)\\)", remove = FALSE) %>% -->
-
-<!--     mutate(StringPosition = str_locate(ConcatenatedValues, "\\)-")) %>% -->
-
-<!--     mutate(len = nchar(ConcatenatedValues)) %>% -->
-
-<!--     mutate(string = str_sub(ConcatenatedValues, start=StringPosition[,"end"], end=len)) %>% -->
-
-<!--     extract(string, into = c("Metric_Value"), regex = "\\-([^)]+)\\-", remove = FALSE) %>% -->
-
-<!--     select(Values, Metric, Metric_Value) %>% -->
-
-<!--     mutate(Metric_Value = str_replace(Metric_Value, ",", ".")) %>% -->
-
-<!--     mutate(Metric_Value = as.numeric(Metric_Value)) %>% -->
-
-<!--     mutate(id = id_value) %>% -->
-
-<!--     select(id, Metric, Metric_Value) %>% -->
-
-<!--     pivot_wider(names_from = Metric, values_from = Metric_Value) %>% -->
-
-<!--     select(-2) -->
-
-<!--   # store the output of each file in an empty list which can be accessed based on index -->
-
-<!--   my_list_output[[file]] <- df_transformed -->
-
-<!-- } -->
-
-<!-- ## Remove unwanted objects from environment -->
-
-<!-- rm(file, files, id_value, lines, text) -->
-
-<!-- rm(df_rows, df_cleaned, df, info_list, process_row) -->
-
-<!-- my_list_output <- apply(my_list_output,2,as.character) -->
-
-<!-- # save the list as txt -->
-
-<!-- write.table(my_list_output, file = "data/collection/textdf.txt", sep = "\t", row.names = FALSE) -->
-
-<!-- ``` -->
-
-<!-- ```{r extracttxt} -->
-
-<!-- fs::dir_ls("data/collection/PDFs") %>%  -->
-
-<!--   as.character() %>%  -->
-
-<!--   as_tibble() %>%  -->
-
-<!--   mutate(text = map_chr(value, function(x){ -->
-
-<!--     pdftools::pdf_text(x) %>%  -->
-
-<!--       paste0(collapse = "") %>%  -->
-
-<!--       str_remove_all("[\\s\\n\\t\\d[a-z].]") -->
-
-<!--   })) -> textdf -->
-
-<!-- textdf %>%  -->
-
-<!--   write_csv("data/collection/textdf.csv") -->
-
-<!-- textdf -->
-
-<!-- ``` -->
-
-\`\`\`{python}
-
-import pandas as pd \`\`\`\`
