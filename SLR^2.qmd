@@ -8,7 +8,7 @@ date: "`r Sys.Date()`"
 output: html
 ---
 
-This code block contains all the libraries required in this document. You can load them at once or load them on required.
+This code block contains all the packages required in this document.
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -42,7 +42,7 @@ library(furrr)
 
 ## Extract text from PDF files
 
-The following code block will create a virtual environment "myenv" and install the Python package "PyMuPDF" for extracting text from PDF files. The Python script "extract-text-from-pdf.py" is used to extract text from PDF files.
+The following code block will create a virtual environment `myenv` and install the Python package `PyMuPDF` for extracting text from PDF files. The Python script `extract-text-from-pdf.py` is used to extract text from PDF files.
 
 Notes:
 
@@ -58,7 +58,7 @@ reticulate::use_virtualenv("myenv")
 reticulate::source_python("py/extract-text-from-pdf.py")
 ```
 
-The following code block will extract text from PDF files and structure them into a R dataframe. 
+The following code block will extract text from PDF files and structure them into an R data frame. 
 
 ```{r}
 data_root <- "data/collection/PDFs/"
@@ -79,10 +79,10 @@ df <- tibble(doc = str_sub(list.files(data_root, pattern = "*.pdf"), 1, -5L), te
 
 **(Optional step)**
 
-This following step is to extract the extracted text files from the PDF files, and sort them into a structured dataframe.
+This following step is to extract the extracted text files from the PDF files, and sort them into a structured data frame.
 
 ```{r}
-ids <-  sub('\\.txt$', '', list.files("data/txts/20240130/")) 
+ids <- sub('\\.txt$', '', list.files("data/txts/20240130/")) 
 
 text_files <- list.files("data/txts/20240130/", full.names = TRUE, pattern = ".txt")
 texts <- sapply(text_files, read_file)
@@ -106,20 +106,20 @@ data <- metadata |> left_join(text_df, by = c("id" = "id"))
 
 Read the data.
 
-To explore the keywords, we need to extract the three columns "id", "Keywords.Plus", "Year" from the data frame.
+To explore the keywords, we need to extract the three columns "id", "Keywords.Plus", and "Year" from the data frame.
 
 ```{r data, echo=FALSE, message=FALSE, warning=FALSE}
-# extract the three columns "id", "Keywords.Plus", "Year"
+# keep subset of relevant columns
 meta_basics <- metadata[, c("id", "Keywords.Plus", "Year", "Cited.Reference.Count", "ref")]
 
-# rename "Keywords.Plus" to "Keywords"
+# rename columns
 names(meta_basics)[names(meta_basics) == "Keywords.Plus"] <- "Keywords"
 names(meta_basics)[names(meta_basics) == "Cited.Reference.Count"] <- "Cites"
 
 meta_basics
 ```
 
-Get **the number of papers by year** overlay with **High-citation papers**.
+Plot **the number of papers by year** overlayed with **high-citation papers**.
 
 ```{r}
 # count the number of papers by year
@@ -175,17 +175,22 @@ Objectives:
 
 1.  Introduce different types of mapping for visualising paper count in the literature database.
 
-2.  Discuss a optimal way to collect data for mapping.
+2.  Discuss an optimal way to collect data for mapping.
 
 3.  Provide an automatic mapping method (abstract typology of country boundary) for mapping.
 
-Input:\
-- manual - extracting location from title - extracting location from abstract - if multiple locations are mentioned, multiple records are created
+Input:
+
+- manual 
+- extracting location from title 
+- extracting location from abstract 
+- if multiple locations are mentioned, multiple records are created
 
 Output:\
-- interactive map with Leaflet - tiled grid map with template available for QGIS as well
+- interactive map with Leaflet 
+- tiled grid map with template available for QGIS as well
 
-Required packages: leaflet, rgdal, sp, rgeos, maptools, ggplot2, ggthemes, ggmap, gridExtra, grid, RColorBrewer, scales, viridis, viridisLite, mapview, tmap, tmaptools, tmapthemes, tmaputi
+<!-- Required packages: `leaflet`, `rgdal`, `sp`, `rgeos`, `maptools`, `ggplot2`, `ggthemes`, `ggmap`, `gridExtra`, `grid`, `RColorBrewer`, `scales`, `viridis`, `viridisLite`, `mapview`, `tmap`, `tmaptools`, `tmapthemes`, `tmaputi` -->
 
 ### 1.1 Preparing the data
 
@@ -363,7 +368,7 @@ ggsave("images/tiled_grid_map.jpg", width = 10, height = 8, units = "in", dpi = 
 
 Input: keywords
 
-Output: Word clouds - can be overall or per time period
+Output: Word clouds - overall or per time period
 
 Required packages: wordcloud, (wordcloud2), RColorBrewer, tm
 
@@ -490,7 +495,7 @@ Input: Full text, machine readable, extracted from PDFs prior to analysis
 
 ### 3.1 Word Embeddings
 
-What questions co-occur with a specific word of interest, e.g., segregation?
+What questions co-occur with a specific word of interest, e.g., "segregation"?
 
 -   using the LDA model and top words
 
@@ -502,7 +507,9 @@ install.packages("irlba")
 
 -   using word embeddings
 
-Issues to consider: - as a rule of thumb, the dataset should have above 1 mil. tokens for reliable results
+Issues to consider:
+
+- as a rule of thumb, the dataset should have above 1 mil. tokens for reliable results
 
 ```{r}
 tidy_data <- data %>% 
