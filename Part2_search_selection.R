@@ -1,9 +1,12 @@
 ### Code to exemplify Part 2 with Xiaoxia's query
 
 # Install and load packages ----
+## List pacakges used in the script
 packages <- c("rscopus", "RefManageR", "dplyr", "stringr", "bibtex",
               "revtools", "remotes", "igraph", "litsearchr",
               "PRISMA2020", "PRISMAstatement")
+
+## Load packages and install them if needed
 for (package in packages) {
   if (!require(package, character.only = TRUE)) {
     if (package == "litsearchr") remotes::install_github("elizagrames/litsearchr", ref="main")
@@ -13,8 +16,10 @@ for (package in packages) {
 
 # Section 1: Retrieve references from WoS and Scopus (Shuyu) ----
 
-# Retrieving references from scopus:
-# Set your API key, if you do not have, please go to the website of Elsevier Developer Portal: https://dev.elsevier.com/ to apply, and you will get the key.
+# Retrieving references from Scopus:
+## Set API key by running Sys.setenv(Your_scopus_api_key = "YOUR_API_KEY_HERE") 
+## in the console. If you do not have an API key, get one from 
+## https://dev.elsevier.com/
 options(elsevier_api_key = Sys.getenv("Your_scopus_api_key"))
 
 # Set your research query
@@ -25,7 +30,8 @@ query <- "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR 
           ( LIMIT-TO ( DOCTYPE , \"ar\" ) ) AND 
           ( LIMIT-TO ( LANGUAGE , \"English\" ) )"
 
-# search on scopus if you get the api key, you can modify the max_count for each searching
+# Search Scopus 
+## You can modify the max_count for each search
 if (have_api_key()) {
   res <- scopus_search(query = query, max_count = 200, count = 10)
   search_results <- gen_entries_to_df(res$entries)
@@ -58,7 +64,7 @@ transposed_results_df <- t(results_df)
 write.csv(transposed_results_df, "scopus_api_results.csv", row.names = FALSE)
 df <- read.csv("scopus_api_results.csv")
 
-# Example dataframe with additional fields
+# Example data frame with additional fields
 data <- data.frame(
   Author = df$dc.creator,
   Title = df$dc.title,
@@ -70,7 +76,7 @@ data <- data.frame(
   DOI = df$prism.doi
 )
 
-# Convert the dataframe to a BibEntryList object
+# Convert the data frame to a BibEntryList object
 # Create a list of BibEntry objects
 bib_entries <- lapply(1:nrow(data), function(i) {
   BibEntry(
@@ -95,7 +101,6 @@ bib_text <- unlist(bib_texts, use.names = FALSE)
 
 # Write BibTeX file
 writeLines(bib_text, "scopus_references.bib")
-
 
 # Retrieving references from web of science:
 # wosr package is not working now? l tried many times with the username and password but could not connect to the server.
