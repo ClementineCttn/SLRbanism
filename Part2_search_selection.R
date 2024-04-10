@@ -1,20 +1,21 @@
 ### Code to exemplify Part 2 with Xiaoxia's query
 
+# Install and load packages ----
+packages <- c("rscopus", "RefManageR", "dplyr", "stringr", "bibtex",
+              "revtools", "remotes", "igraph", "litsearchr",
+              "PRISMA2020", "PRISMAstatement")
+for (package in packages) {
+  if (!require(package, character.only = TRUE)) {
+    if (package == "litsearchr") remotes::install_github("elizagrames/litsearchr", ref="main")
+    else install.packages(package)
+  }
+}
 
-# Section 1: Retrieve references from WoS and Scopus (Shuyu) 
-# install and library packages for retrieving references from scopus
-install.packages("rscopus")
-library(rscopus)
-install.packages("RefManageR")
-library(RefManageR)
-install.packages("dplyr")
-library(dplyr)
-install.packages("bibtex")
-library(bibtex)
+# Section 1: Retrieve references from WoS and Scopus (Shuyu) ----
 
 # Retrieving references from scopus:
 # Set your API key, if you do not have, please go to the website of Elsevier Developer Portal: https://dev.elsevier.com/ to apply, and you will get the key.
-options(elsevier_api_key = Your_scopus_api_key)
+options(elsevier_api_key = Sys.getenv("Your_scopus_api_key"))
 
 # Set your research query
 query <- "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND 
@@ -144,6 +145,9 @@ bib_data$Volume <- gsub("'", "", bib_data$Volume)
 bib_data$Number <- gsub("'", "", bib_data$Number)
 bib_data$Pages <- gsub("'", "", bib_data$Pages)
 
+# Remove entries without a title
+bib_data <- bib_data[bib_data$Title != "", ]
+
 # Create a list of BibEntry objects 
 # (l got problems that l cannot extract title from those cases:title="'Inner-city is not the place for social housing' - State-led gentrification in Lodz" and '"Freeways without futures": Urban highway removal in the United States and Spain as socio-ecological fix?' )
 bib_wos_entries <- lapply(1:nrow(bib_data), function(i) {
@@ -171,7 +175,6 @@ bib_wos_text <- unlist(bib_wos_texts, use.names = FALSE)
 writeLines(bib_wos_text, "wos_references.bib")
 
 # Method2: create bib file with multiple txt files
-library(stringr)
 
 # Function to read content from a text file and extract information
 read_and_extract <- function(file_path) {
@@ -224,6 +227,9 @@ file_paths <- c("api_response_page1.txt", "api_response_page2.txt", "api_respons
 # Read data from each file and combine them into one data frame
 combined_data <- do.call(rbind, lapply(file_paths, read_and_extract))
 
+# Remove entries without a title
+combined_data <- combined_data[combined_data$Title != "", ]
+
 # Create a list of BibEntry objects
 bib_entries <- lapply(1:nrow(combined_data), function(i) {
   BibEntry(
@@ -249,16 +255,9 @@ bib_text <- unlist(bib_texts, use.names = FALSE)
 # Write BibTeX file
 writeLines(bib_text, "wos_references.bib")
 
-# Section 2: Combine tables, deduplicate references and summarise (Kyri?) 
-library(revtools)
+# Section 2: Combine tables, deduplicate references and summarise (Kyri?) ----
 
-# Section 3: Suggest new keywords (Clementine) 
-
-# install.packages("remotes")
-# library(remotes)
-# install_github("elizagrames/litsearchr", ref="main")
-library(litsearchr)
-library(igraph)
+# Section 3: Suggest new keywords (Clementine) ----
 
 #Import .bib or .ris database
 
@@ -322,14 +321,8 @@ litsearchr::write_search(grouped,
                          verbose = TRUE,
                          closure = "left")
 
-# Section 4: build PRISMA figure (Xiaoxia)
-library(PRISMA2020)
-
-
-## ----prisma--------------------------------------------------------------
-#install.packages("PRISMAstatement")
-library(PRISMAstatement)
-
+# Section 4: build PRISMA figure (Xiaoxia) ----
+## Prisma
 prisma(found = 750,
        found_other = 123,
        no_dupes = 776, 
@@ -341,7 +334,10 @@ prisma(found = 750,
        quantitative = 319,
        width = 800, height = 800)
 
-## ----prismadupesbox------------------------------------------------------ Ideally, you will stick closely to the PRISMA statement, but small deviations are common. PRISMAstatement gives the option of adding a box which simply calculates the number of duplicates removed.
+## Prismadupesbox
+### Ideally, you will stick closely to the PRISMA statement, but small deviations 
+### are common. PRISMAstatement gives the option of adding a box which simply 
+### calculates the number of duplicates removed.
 prisma(found = 750,
        found_other = 123,
        no_dupes = 776, 
@@ -353,24 +349,29 @@ prisma(found = 750,
        quantitative = 319,
        extra_dupes_box = TRUE)
 
-## ----labels-------------------------------------------------------------- You can also change the labels, but you will have to insert the number for any label you chang
+## Labels
+### You can also change the labels, but you will have to insert the number for 
+### any label you change
 prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107,
        labels = list(found = "FOUND", found_other = "OTHER"))
 
-## ----errors and warnings-------------------------------------------------
+## Errors and warnings
 tryCatch(
   prisma(1, 2, 3, 4, 5, 6, 7, 8, 9),
   error = function(e) e$message)
+
 prisma(1000, 20, 270, 270, 10, 260, 19, 240, 107, 
        width = 100, height = 100)
+
 prisma(1000, 20, 270, 270, 269, 260, 20, 240, 107, 
        width = 100, height = 100)
 
-## ----font_size-----------------------------------------------------------
+## Font size
 prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 6)
 prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 60)
 
-## ----prismadpi1, fig.cap="just set width and height"---------------------
+## Prismadpi1, 
+### just set width and height
 prisma(found = 750,
        found_other = 123,
        no_dupes = 776, 
@@ -382,7 +383,8 @@ prisma(found = 750,
        quantitative = 319,
        width = 200, height = 200)
 
-## ----prismadpi2, fig.cap="same width and height but DPI increased to 300"----
+## Prismadpi2
+### same width and height but DPI increased to 300
 prisma(found = 750,
        found_other = 123,
        no_dupes = 776, 
@@ -395,7 +397,8 @@ prisma(found = 750,
        width = 200, height = 200,
        dpi = 300)
 
-## ----prismadpi3, fig.cap="same width and height but DPI decreased to 36"----
+## Prismadpi3
+### same width and height but DPI decreased to 36
 prisma(found = 750,
        found_other = 123,
        no_dupes = 776, 
@@ -408,7 +411,7 @@ prisma(found = 750,
        width = 200, height = 200,
        dpi = 36)
 
-## ----prismapdf, echo = TRUE, eval = FALSE--------------------------------
+## Prismapdf
 #  prsm <- prisma(found = 750,
 #                 found_other = 123,
 #                 no_dupes = 776,
