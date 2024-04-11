@@ -26,9 +26,9 @@ library(glue)
 library(revtools)
 library(here)
 ### Do not install litsearchr from the CRAN but from Github repository:
-install.packages("remotes")
-library(remotes)
-install_github("elizagrames/litsearchr", ref="main")
+# install.packages("remotes")
+# library(remotes)
+# install_github("elizagrames/litsearchr", ref="main")
 library(litsearchr)
 ####
 library(igraph)
@@ -157,12 +157,18 @@ writeLines(bib_text, here("data","scopus_references.bib"))
 
 ### Combining tables, deduplicating references and summarising the results
 
+Although a dedicated package exist to retrieve references from the Web of Science API (`wosr`), we have not been able to make it work. Instead, we used the web interface of the (Web of Science)[https://www.webofscience.com/wos/woscc/summary/82f1ef9f-d361-4455-a556-cc37014e5f7a-de2281b0/relevance/1] (through our institutional access) to run the same query:
 
+( ( ( TI= ( govern*  OR  state  OR  decision-making  OR  policy-making OR participat* OR stakeholder ) )  AND  ( TS= ( impact  OR  outcome  OR performance OR  result  OR  differentiation  OR  consequence  OR  change  OR  transformation OR role ) ) )  OR  ( TS= ( governance  NEAR/0  ( mode  OR  model  OR role OR process  )) ) ) AND (TS= ( effect  OR  caus*  OR  explain*  OR  influence  OR  affect  OR  mechanism  OR  restrict  OR  create  OR  impact  OR  drive  OR  role  OR  transform*  OR  relation*  OR  led  OR  improve  OR  interven*  OR  respon* ) ) AND  ( TS= (( urban  OR  neighborhood  OR  city  OR  residential  OR  regional  OR  housing )  NEAR/0 (development  OR  redevelopment OR renewal OR  regeneration  OR  restructuring  OR  revitalization  OR governance ) )  )
+
+We then selected the articles written in English from the results and obtained 3180 results as of 11 April 2024. We downloaded the first 200 records in .bib format for this example: `wos_reference.bib`. Indeed, we want to show that this code can combine bibliographic data from different queries and or different databases.
 
 ```{r}
+wos_data <-synthesisr::read_refs(here("data", "wos_reference.bib"))
+scopus_data <- synthesisr::read_refs(here("data", "scopus_references.bib"))
 
-wos_data <-read_bibliography(here("data", "wos_reference.bib"))
-scopus_data <- read_bibliography(here("data", "scopus_references.bib"))
+# Remember we stored keywords into the url field, let's rename it now:
+scopus_data$keywords <- scopus_data$url
 ```
 
 Save variable names of dataframes is object
@@ -191,16 +197,19 @@ print(unique_vars_only_wos)
 ```
 
 
-Select only the variables that appear in both dataframes and the ones you deem relevant. In our case, we select: `label`, `author`, `type`, `title`, `year`, `volume`,  `number`, `doi` 
+Select only the variables that appear in both dataframes and the ones you deem relevant. In our case, we select: `author`, `type`, `title`, `year`, `volume`,  `number`, `pages`, `doi`, `keywords`
 
 ```{r}
-selected_vars <- c("label","author",  "title", "year", "journal", "volume", "number", "doi")
+selected_vars <- c(
+ # "label",
+  "author",  "title", "year", "journal", 
+  "volume", "number", "pages", "doi", "keywords")
 
 scopus_selection <- scopus_data %>%
-  dplyr::select(selected_vars)
+  dplyr::select(all_of(selected_vars))
 
 wos_selection <- wos_data %>%
-  dplyr::select(selected_vars)
+  dplyr::select(all_of(selected_vars))
 
 ```
 Now lets check the number of variables (columns) in our dataframes
@@ -222,7 +231,7 @@ all_references <- rbind(wos_selection, scopus_selection)
 
 In order to be able to identify if there are duplicates in our `all_references` dataframe and examine summary statistics of the references-dataset, we need to make sure that variables in the scopus and wos dataframes are represented in a similar way. Sometimes variables differ too much, such that comparison even after alteration becomes difficult (i.e. in our example the variable "author"). However,  for others we we can remove all punctuations and capital letters in order to make the variable structure of the wos refences and scopus refences more similar.
 
-Lets see how we can do that
+Lets see how we can do that.
 
 First create function called `preprocess` which removes all capital letters and punctuations
 
@@ -240,7 +249,6 @@ Now lets apply this function on relevant variables in our `all_references` dataf
 ```{r}
 all_references$journal <- sapply(all_references$journal, preprocess)
 all_references$title <- sapply(all_references$title, preprocess)
-all_references$label <- sapply(all_references$label, preprocess)
 all_references$author <- sapply(all_references$author, preprocess)
 
 ```
@@ -302,11 +310,42 @@ head(summary(all_unique_references$journal),10)
 ```
 
 
-Save the remaining references
+Export combined set of unique references into a .bib file:
 ```{r}
+unique_data <- data.frame(
+    Author = all_unique_references$author,
+  Title = all_unique_references$title,
+  Year = all_unique_references$year,
+  Journal = ifelse(is.na(all_unique_references$journal), 
+                     "Unknown",all_unique_references$journal),
+  Volume = all_unique_references$volume,
+  Number = all_unique_references$number,
+  Pages = all_unique_references$pages,
+  DOI = all_unique_references$doi,
+  Keywords = all_unique_references$keywords
+)
 
-writeLines(all_unique_references, here("data_output","all_unique_references.bib"))
+# Format the Keywords field
+unique_bib_entries <- lapply(1:nrow(unique_data)
+                             , function(i) {
+  BibEntry(
+    bibtype = "Article",        # Add the bibtype argument
+    key = i,
+    author = unique_data$Author[i],    # Add author field
+    title = unique_data$Title[i],      # Add title field
+    year = unique_data$Year[i],        # Add year field
+    journal = unique_data$Journal[i],  # Add journal field
+    volume = unique_data$Volume[i],    # Add volume field
+    number = unique_data$Number[i],    # Add number field
+    pages = unique_data$Pages[i],      # Add pages field
+    doi = unique_data$DOI[i],         # Add DOI field
+    url = unique_data$Keywords[i]
+    )
+})
 
+unique_bib_texts <- lapply(unique_bib_entries, toBibtex)
+unique_bib_text <- unlist(unique_bib_texts, use.names = FALSE)
+writeLines(unique_bib_text, here("data_output","all_unique_references.bib"))
 
 ```
 
@@ -315,7 +354,8 @@ writeLines(all_unique_references, here("data_output","all_unique_references.bib"
 
 Import .bib or .ris database
 ```{r}
-refs <- litsearchr::import_results("data")
+
+refs <- litsearchr::import_results(here("data_output"))
 
 ```
 
@@ -329,12 +369,13 @@ raked_terms <- extract_terms(text = refs,
 
 Identify frequent keywords tagged by authors
 ```{r}
+
 keywords <- extract_terms(text = refs,
                           method = "tagged",
-                          keywords = refs$keywords,
+                          keywords = refs$url, # remember: we stored keywords into the url field...
                           ngrams=T,
                           min_n=2)
-
+refs
 ```
 
 Create document-feature matrix
