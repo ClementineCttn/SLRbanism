@@ -439,7 +439,7 @@ library(dplyr)
 # containing references and previous results respectively
 
 # Combine 'all_references' with previous results
-combined_data <- bind_rows(all_references, previous_results)
+#combined_data <- bind_rows(all_references , previous_results)
 
 # Now 'combined_data' contains both 'all_references' and 'previous_results'
 ```
@@ -450,7 +450,7 @@ library(PRISMAstatement)
 
 # Call the prisma() function to generate the PRISMA flowchart
 # Replace the values with the actual counts from your study
-prisma(
+prismaplot <- prisma(
   found = nrow(all_references), # Total number of references found
   found_other = 0,               # Number of additional references found through other sources (if any)
   no_dupes = nrow(all_unique_references), # Number of unique references after removing duplicates
@@ -460,63 +460,18 @@ prisma(
   full_text_exclusions = 0,      # Number of references excluded during full-text assessment
   qualitative = nrow(all_unique_references), # Number of studies included in qualitative synthesis
   quantitative = nrow(all_unique_references), # Number of studies included in quantitative synthesis
-  width = 800, height = 800      # Specify width and height for the generated PRISMA flowchart
+  width = 800, height = 800  ,    # Specify width and height for the generated PRISMA flowchart
+  font_size = 10
 )
-```
 
-Ideally, you will stick closely to the PRISMA statement, but small deviations are common. PRISMAstatement gives the option of adding a box which simply calculates the number of duplicates removed.
-
-```{r}
-
-prisma(found = nrow(all_references),
-       found_other = 0,
-       no_dupes = nrow(all_unique_references), 
-       screened = 776, 
-       screen_exclusions = 13, 
-       full_text = 763,
-       full_text_exclusions = 17, 
-       qualitative = 746, 
-       quantitative = 319,
-       extra_dupes_box = TRUE)
-```
-
-You can also change the labels, but you will have to insert the number for any label you chang
-
-```{r}
-prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107,
-       labels = list(found = "FOUND", found_other = "OTHER"))
-
-```
-
-Errors and warnings
-```{r}
-tryCatch(
-  prisma(1, 2, 3, 4, 5, 6, 7, 8, 9),
-  error = function(e) e$message)
-prisma(1000, 20, 270, 270, 10, 260, 19, 240, 107, 
-       width = 100, height = 100)
-prisma(1000, 20, 270, 270, 269, 260, 20, 240, 107, 
-       width = 100, height = 100)
-```
-
-Font_size
-
-```{r}
-prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 6)
-prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 60)
-
+prismaplot
 ```
 
 
-save the Prisma diagram as an object and export it as jpeg 
+save the Prisma diagram as an object and export it as png 
 ```{r}
-prisma_plot <- prisma(1000, 20, 270, 270, 10, 260, 20, 240, 107, font_size = 60)
-
-
-
 # Save as PNG format
-png("prisma_flowchart.png", width = 800, height = 800)
-# Execute the code to generate PRISMA flowchart (if not already displayed in graphics device)
-# prisma_flowchart()
+png(here("figures","prisma_flowchart.png"), width = 800, height = 800)
+prismaplot
 dev.off()
 
