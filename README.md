@@ -70,6 +70,8 @@ The example data has been uploaded to Open Science Framework. And [current link]
 #### Co-occurance of word of interests
 
 
-
-
+| Bar chat of top words related to the term "income"        | Word cloud of top words related to the term "income"      |
+| --------------------------------------------------------- | --------------------------------------------------------- |
+| ![direct_mapping](images/example_bar_chart_top_words.jpg) | ![tiled_grid_map](images/example_wordcloud_top_words.jpg) |
+| ![direct_mapping](images/example_popular_topics.jpg)      |                                                           |
 

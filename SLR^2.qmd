@@ -211,15 +211,7 @@ library(mapview)
 ```
 
 ```{r}
-mapping <- st_read("data/map.csv",
-                   options=c("X_POSSIBLE_NAMES=lng",
-                             "Y_POSSIBLE_NAMES=lat"), 
-                   crs=4326)
-
-# If you wish to plot the boundaries of countries on the canvas
-ggplot() + 
-  geom_sf(data = mapping, aes(fill = "black")) + 
-  guides(fill = guide_none())
+mapping <- st_read("data/map.csv", options=c("X_POSSIBLE_NAMES=lng","Y_POSSIBLE_NAMES=lat"), crs=4326)
 ```
 
 1.2 Visulising the data
@@ -519,6 +511,8 @@ Issues to consider:
 
 - as a rule of thumb, the dataset should have above 1 mil. tokens for reliable results
 
+**The following code does not work**
+
 ```{r}
 tidy_data <- data %>% 
   select(id, text) %>% 
@@ -563,7 +557,9 @@ The following code calculates the pointwise mutual information (PMI) between wor
 ```{r}
 library(widyr)
 library(furrr)
+```
 
+```{r}
 plan(multisession)  # for parallel processing
 
 tidy_pmi <- nested_words %>% 
