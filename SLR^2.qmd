@@ -94,11 +94,11 @@ In this case, we prepared the two datasets. The first one is **metadata**, which
 
 ```{r}
 #| message: false
-metadata <- read.csv("data/metadata.csv", header = TRUE, sep = ",")
+metadata <- read.csv("data/collection/savedrecs_wdoi.csv", header = TRUE, sep = ",")
 # take only the last name of first author
 metadata$refnames <- sapply(strsplit(metadata$Author.Full.Names, " "), function(x) x[1])
 metadata$ref <- paste(metadata$refnames, metadata$Year, sep = "")
-text_df <- read_csv(file = "data/text_df.csv")
+text_df <- read_csv(file = "data/collection/textdf.csv")
 data <- metadata |> left_join(text_df, by = c("id" = "id"))
 ```
 
@@ -719,6 +719,11 @@ for (i in 1:nrow(beta)) {
   topic_names <- c(topic_names, name)
 }
 ```
+
+```{r}
+mint::topic_words_to_ai_prompt(5, topic_names, 5)
+```
+
 
 #### 3.2.1 Topics across the corpus
 
