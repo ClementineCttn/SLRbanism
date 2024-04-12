@@ -8,54 +8,32 @@ date: "`r Sys.Date()`"
 output: html
 ---
 
-This code block contains all the packages required in this document.
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(tidyverse)
-library(pdftools)
-library(revtools)
-library(tidytext)
-library(textstem)
-library(topicmodels)
-library(ldatuning)
-library(tsne)
-library(LDAvis)
-library(SnowballC)
+## List used packages
+packages <- c("tidyverse", "widyr", "furrr", "pdftools", "ggrepel", 
+              "revtools", "tidytext", "textstem", "tm", "topicmodels", 
+              "ldatuning", "tsne", "LDAvis", "SnowballC", 
+              "geojsonio", "geojsonsf", "leaflet", "sp", "sf", "mapview", 
+              "wordcloud", "wordcloud2", "RColorBrewer", "reticulate")
 
-library(ggrepel)
-
-library(geojsonio)
-library(leaflet)
-# plot the selected are with sp
-library(sp)
-
-library(wordcloud)
-library(RColorBrewer)
-library(wordcloud2)
-library(tm)
-
-library(widyr)
-library(furrr)
+## Load packages and install them if needed
+for (package in packages) {
+  if (!require(package, character.only = TRUE)) install.packages(package)
+}
 ```
 
 ## Extract text from PDF files
 
-The following code block will create a virtual environment `myenv` and install the Python package `PyMuPDF` for extracting text from PDF files. The Python script `extract-text-from-pdf.py` is used to extract text from PDF files.
+The following code chunk will create a Python environment `myenv` and install the Python library `PyMuPDF` for extracting text from PDF files. In subsequent runs, this code chunk will automatically detect the installed environment. The Python script `extract-text-from-pdf.py` is used to extract text from PDF files. 
 
-Notes:
-
--   Our knowledge is that Python has a better library for extracting text from PDF files. Therefore, we use Python to extract text from PDF files.
-
--   After first time running the code block locally, it will automatically detect the Python environment and install it if not found.
-
-```{r extract-text-from-pdf, message=FALSE}
+```{r extract-text-from-pdf, message=FALSE, warning=FALSE}
 # Set up and use Python for PDF text extraction
-reticulate::virtualenv_create(envname = "myenv", python = install_python())
-reticulate::py_install("PyMuPDF == 1.21.0", envname = "myenv")
-reticulate::use_virtualenv("myenv")
-reticulate::source_python("py/extract-text-from-pdf.py")
+virtualenv_create(envname = "myenv", python = install_python())
+py_install("PyMuPDF == 1.21.0", envname = "myenv")
+use_virtualenv("myenv")
+source_python("py/extract-text-from-pdf.py")
 ```
 
 The following code block will extract text from PDF files and structure them into an R data frame. 
@@ -69,28 +47,13 @@ pdf_paths <- list.files(data_root, full.names = TRUE, pattern = "*.pdf$")
 # Extract text from PDFs
 text <- convert_pdf(pdf_paths) |> unlist()
 
-doc_names <- list.files(data_root, full.names = TRUE, pattern = "*.pdf")
+# doc_names <- list.files(data_root, full.names = TRUE, pattern = "*.pdf")
 
-df <- tibble(doc = str_sub(list.files(data_root, pattern = "*.pdf"), 1, -5L), text) |> 
+text_df <- tibble(doc = str_sub(list.files(data_root, pattern = "*.pdf"), 1, -5L), text) |> 
   mutate(text = str_replace_all(text, "^[0-9]*$", ""))
 ```
 
-## Load data
-
-**(Optional step)**
-
-This following step is to extract the extracted text files from the PDF files, and sort them into a structured data frame.
-
-```{r}
-ids <- sub('\\.txt$', '', list.files("data/txts/20240130/")) 
-
-text_files <- list.files("data/txts/20240130/", full.names = TRUE, pattern = ".txt")
-texts <- sapply(text_files, read_file)
-
-text_df <- tibble("id" = ids, "text" = texts)
-```
-
-In this case, we prepared the two datasets. The first one is **metadata**, which is directly extracted from the paper database; the second one is **full text**, which is extracted from PDF files.
+Next, we combine the **metadata** directly extracted from the paper database with the **full text** extracted from PDF files.
 
 ```{r}
 #| message: false
@@ -98,15 +61,13 @@ metadata <- read.csv("data/collection/savedrecs_wdoi.csv", header = TRUE, sep = 
 # take only the last name of first author
 metadata$refnames <- sapply(strsplit(metadata$Author.Full.Names, " "), function(x) x[1])
 metadata$ref <- paste(metadata$refnames, metadata$Year, sep = "")
-text_df <- read_csv(file = "data/collection/textdf.csv")
+text_df <- read_csv(file = "data/text_df.csv")
 data <- metadata |> left_join(text_df, by = c("id" = "id"))
 ```
 
-## 0. Basic exploration of the meta information
+## Basic exploration of the meta information
 
-Read the data.
-
-To explore the keywords, we need to extract the three columns "id", "Keywords.Plus", and "Year" from the data frame.
+Read the metadata. To explore the keywords, we need to extract the columns `id`, `Keywords.Plus`, `Year`, `Cited.Reference.Count`, and `ref` from the data frame.
 
 ```{r data, echo=FALSE, message=FALSE, warning=FALSE}
 # keep subset of relevant columns
@@ -116,12 +77,16 @@ meta_basics <- metadata[, c("id", "Keywords.Plus", "Year", "Cited.Reference.Coun
 names(meta_basics)[names(meta_basics) == "Keywords.Plus"] <- "Keywords"
 names(meta_basics)[names(meta_basics) == "Cited.Reference.Count"] <- "Cites"
 
-meta_basics
+head(meta_basics)
 ```
 
 Plot **the number of papers by year** overlayed with **high-citation papers**.
 
 ```{r}
+#| lst-label: lst-papers-per-year
+#| lst-cap: Number of papers per year
+#| warning: false
+
 # count the number of papers by year
 meta_basics_year <- meta_basics %>%
   group_by(Year) %>%
@@ -143,7 +108,7 @@ ggplot(meta_basics_year, aes(x = Year, y = count)) +
   theme_minimal()
 
 # save the plot
-ggsave("images/number_of_papers_by_year_high_citations.png")
+# ggsave("images/number_of_papers_by_year_high_citations.png")
 ```
 
 Find the high-citation papers in recent 5 years.
@@ -166,7 +131,7 @@ write.csv(papers_cites_recent_titles, "output/high_citation_papers_recent_5_year
 papers_cites_recent_titles
 ```
 
-## 1. Mapping case study locations
+## Mapping case study locations
 
 Objectives:
 
@@ -183,46 +148,28 @@ Input:
 - extracting location from abstract 
 - if multiple locations are mentioned, multiple records are created
 
-Output:\
+Output:
+
 - interactive map with Leaflet 
 - tiled grid map with template available for QGIS as well
 
-<!-- Required packages: `leaflet`, `rgdal`, `sp`, `rgeos`, `maptools`, `ggplot2`, `ggthemes`, `ggmap`, `gridExtra`, `grid`, `RColorBrewer`, `scales`, `viridis`, `viridisLite`, `mapview`, `tmap`, `tmaptools`, `tmapthemes`, `tmaputi` -->
-
 ### 1.1 Preparing the data
 
-The location information normally presented in the text. The computational method is to use the [world cities database](data/world-cities.csv) to conduct a text match from the abstract or full text.
-
-However the reality is there might be spelled in different way. Thus, it is recommended to collect them or, at least, manually check the accuracy of data collection.
-
-Getting the coordinates of the cities could help us easier
-
-```{r libraries, echo=FALSE, message=FALSE, warning=FALSE}
-#library(geojsonio)
-#install.packages("geojsonsf")
-library(geojsonsf)
-#library(ggplot2)
-#library(leaflet)
-# plot the selected are with sp
-library(sp)
-library(sf)
-# interactive map:
-library(mapview)
-```
+The location information normally presented in the text. The computational method is to use the [world cities database](data/world-cities.csv) to conduct a text match from the abstract or full text. However, the reality is there might be spelled in different way. Thus, it is recommended to collect them or, at least, manually check the accuracy of data collection.
 
 ```{r}
 mapping <- st_read("data/map.csv", options=c("X_POSSIBLE_NAMES=lng","Y_POSSIBLE_NAMES=lat"), crs=4326)
 ```
 
-1.2 Visulising the data
+### 1.2 Visualising the data
 
-mapping.1 Create a interactive maps with the package `mapview`
+#### 1. Create a interactive maps with the package `mapview`
 
 ```{r}
 mapview(mapping)
 ```
 
-mapping.2 Static map
+#### 2. Static map
 
 Plot the location of studied area on top of the world map (countries' boundary).
 
@@ -230,7 +177,6 @@ Load the world map, which will be the base map for the following mapping.
 
 ```{r}
 countries_bound <- geojson_sf("data/map_basis/WB_countries_Admin0_10m/WB_countries_Admin0_10m_small.geojson")
-countries_bound <- st_make_valid(countries_bound)
  
 # If you wish to plot the boundaries of countries on the canvas
 ggplot(countries_bound) + 
@@ -245,25 +191,26 @@ ggplot() +
   guides(fill = guide_none())
 
 # Save the plot
-# ggsave("direct_mapping.png")
+ggsave("images/direct_mapping.png")
 ```
 
-mapping.3 Tiled grid map
+#### 3. Tiled grid map
 
-mapping.3.1 Summarise the number of papers within different countries
+##### Summarise the number of papers within different countries
 
 Using the points to join with the countries' boundary
 
 ```{r}
 country_tiled_frame <- geojson_sf("data/map_basis/Tile-Grid-Map-Cleaned.geojson")
 
+countries_bound <- st_make_valid(countries_bound)
 summary <- st_join(mapping, countries_bound, join = st_within, left = TRUE)
 ```
 
 Because the tiled grid map does not contain all the countries in the world, we need to check which countries (values of `WB_A3`) are not included in the column `alpha-3` of country_tiled_frame.
 
 ```{r}
-summary$match <- ifelse(summary$WB_A3 %in% country_tiled_frame$"alpha.3", "yeah", "no")
+summary$match <- ifelse(summary$WB_A3 %in% country_tiled_frame$"alpha-3", "yeah", "no")
 ```
 
 ```{r}
@@ -275,18 +222,16 @@ summary %>%
 
 We can see that the geographical area "Downtown Jerusalem, Israeli", based on it's coordinates, is categorised as "West Bank and Gaza". However, based on the text of the original paper, regardless of the political status, it should be categorised as "Israel".
 
-In this case, we just recode it to Israel.
-
-Specifically, change the value of WB_A3 from "PSE" to ""ISR".
+In this case, we just recode it to Israel. Specifically, we change the value of WB_A3 from `"PSE"` to `"ISR"`.
 
 ```{r}
 summary$WB_A3[summary$WB_A3 == "PSE"] <- "ISR"
 ```
 
-recheck if there is unmatch in the data:
+We recheck if the match in the data:
 
 ```{r}
-summary$match <- ifelse(summary$WB_A3 %in% country_tiled_frame$"alpha.3", "yeah", "no")
+summary$match <- ifelse(summary$WB_A3 %in% country_tiled_frame$"alpha-3", "yeah", "no")
 
 summary %>%
   filter(match == "no") %>%
@@ -302,12 +247,11 @@ summary_2 <- as.data.frame(summary) %>%
   summarise(n = n())
 ```
 
-Read the prepared geojson into spatial dataframe:
+Read the prepared geojson into spatial data frame:
 
 ```{r}
 # join the summary_2 to country_tiled_frame based on the column `WB_A3` (left), and `alpha-3` (right)
 country_tiled_frame <- left_join(country_tiled_frame, summary_2, by = c("alpha-3" = "WB_A3"))
-
 
 # fill the NA with 0 in the column "n"
 country_tiled_frame$n[is.na(country_tiled_frame$n)] <- 0
@@ -364,20 +308,11 @@ ggplot(country_tiled_frame) +
 ggsave("images/tiled_grid_map.jpg", width = 10, height = 8, units = "in", dpi = 300)
 ```
 
-## 2. Keyword analysis (word cloud)
+## 2. Keyword analysis (wordcloud)
 
 Input: keywords
 
 Output: Word clouds - overall or per time period
-
-Required packages: wordcloud, (wordcloud2), RColorBrewer, tm
-
-```{r libraries, echo=FALSE, message=FALSE, warning=FALSE}
-library(wordcloud)
-library(RColorBrewer)
-library(wordcloud2)
-library(tm)
-```
 
 ### 2.1 Create a word cloud for all the keywords:
 
@@ -385,7 +320,7 @@ Make a list of stopwords to remove from the keywords:
 
 ```{r}
 # remove the rows with NA or empty in the column "Keywords"
-df_kw <- df_kw[!is.na(df_kw$Keywords) & df_kw$Keywords != "", ]
+df_kw <- data[!is.na(data$Keywords) & data$Keywords != "", ]
 
 # reset the row index
 rownames(df_kw) <- NULL
@@ -423,7 +358,7 @@ words <- sort(rowSums(m), decreasing = TRUE)
 dfkw_feq <- data.frame(word = names(words), freq = words)
 
 # delete intermedia variables
-rm(corpus, dtm, m, words)
+# rm(corpus, dtm, m, words)
 ```
 
 Generating the word cloud for all the years.
@@ -437,12 +372,12 @@ title(main = "Word Cloud of Keywords")
 dev.off()
 ```
 
-### 2.2 Create a word could for each time period
+### 2.2 Create a wordcould for each time period
 
 Divide the time range into 3 periods: before 2000, 2000-2010, and after 2010.
 
 ```{r}
-time_range <- range(df_kw$Year)
+time_range <- range(df_kw$Publication.Year)
 
 # Divide the time range into 3 periods: before 2000, 2000-2010, and after 2010
 periods <- cut(df_kw$Year, breaks = c(time_range[1]-1, 2000, 2010, time_range[2]), labels = c("before 2000", "2000-2010", "after 2010"))
@@ -452,7 +387,7 @@ df_kw$periods <- periods
 
 Generate the word cloud for each time period.
 
-```{r}
+```{r eval = FALSE}
 for (i in unique(df_kw$periods)) {
   dfkw_feq <- data.frame()
   corpus <- Corpus(VectorSource(df_kw[df_kw$periods == i, ]$Keywords))
@@ -465,7 +400,7 @@ for (i in unique(df_kw$periods)) {
   m <- as.matrix(dtm)
   words <- sort(rowSums(m), decreasing = TRUE)
   dfkw_feq <- data.frame(word = names(words), freq = words)
-  png(paste("images/wordcloud_", i, ".png", sep = ""), width=6,height=5, units='in', res=300)
+  png(paste("images/wordcloud_", i, ".png", sep = ""), width=6, height=5, units='in', res=300)
   set.seed(1234) # for reproducibility 
   wordcloud(words = dfkw_feq$word, freq = dfkw_feq$freq, min.freq = 2, max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
   title(main = paste("Word Cloud of Keywords in", i))
@@ -476,11 +411,11 @@ for (i in unique(df_kw$periods)) {
 ## 3. Text mining
 
 ```{r tokens, warning=FALSE}
-words <- unnest_tokens(df, word, text) |>
+words <- unnest_tokens(text_df, word, text) |>
   filter(is.na(readr::parse_number(word))) |>     # Remove numbers
-  anti_join(stop_words, by = "word") |>           # Remove English stop words
+  anti_join(tidytext::stop_words, by = "word") |>           # Remove English stop words
   # anti_join(custom_stop_words, by = "word") |>  # Remove custom stop words
-  dplyr::filter(nchar(word) > 3)                 # remove words of max. 3 characters
+  dplyr::filter(nchar(word) > 3)                  # remove words of max. 3 characters
 ```
 
 ```{r tokens-rank}
@@ -495,15 +430,9 @@ Input: Full text, machine readable, extracted from PDFs prior to analysis
 
 ### 3.1 Word Embeddings
 
-What questions co-occur with a specific word of interest, e.g., "segregation"?
+What questions co-occur with a specific word of interest, e.g., "income"?
 
 -   using the LDA model and top words
-
-```{r}
-# TODO
-# install irlba
-install.packages("irlba")
-```
 
 -   using word embeddings
 
@@ -553,11 +482,6 @@ slide_windows <- function(tbl, window_size) {
 ```
 
 The following code calculates the pointwise mutual information (PMI) between words and windows.
-
-```{r}
-library(widyr)
-library(furrr)
-```
 
 ```{r}
 plan(multisession)  # for parallel processing
@@ -659,9 +583,9 @@ custom_stop_words <- tibble(word = c("income", "incomes", "segregation",
                                      "neighbourhood", "neighborhood"))
 
 words <- data |>
-  select(id, text, "year" = `Publication Year`) |>
+  select(id, text, "year" = `Publication.Year`) |>
   unnest_tokens(output = word, input = text) |>  # remove punctuation, make lower case
-  anti_join(stop_words, by = "word") |>          # remove stop words
+  anti_join(tidytext::stop_words, by = "word") |>          # remove stop words
   anti_join(custom_stop_words, by = "word") |>   # remove custom stop words
   mutate(word = lemmatize_words(word)) |>        # lemmatise words
   filter(nchar(word) >= 3)                       # keep words longer than 3 letters
@@ -710,14 +634,28 @@ theta <- posterior(lda)$topics
 
 # Add pseudo-names to topics based on the top 5 words in each topic
 topic_names <- c()
+n_words <- 5
 for (i in 1:nrow(beta)) {
-  name <- paste(names(head(sort(beta[i, ], decreasing = TRUE), 5)), collapse = " ")
+  name <- paste(names(head(sort(beta[i, ], decreasing = TRUE), n_words)), collapse = " ")
   topic_names <- c(topic_names, name)
 }
 ```
 
+
 ```{r}
-mint::topic_words_to_ai_prompt(5, topic_names, 5)
+#| lst-label: lst-ai-prompt
+#| lst-cap: Promt generated from topic model parameters
+keywords <- vector(length = k)
+
+for (i in 1:k) {
+    keywords[i] <- paste0("- The words for Topic ", i, " are: ", 
+        topic_names[i], ".\n")
+}
+
+cat(paste0("I have ", k, " topics, each described by ", n_words, 
+    " words. The keywords are as follows:\n"), keywords, 
+    "How would you name these topics? Use maximum two words to name the topics and provide a one-sentence description for each.", 
+    sep = "")
 ```
 
 
@@ -783,7 +721,7 @@ LDAvis::serVis(json)
 
 #### 3.2.2 Evolution of topics
 
-Output: A line chart showing the change in relative importance of topics for a given period.
+Output: Plots showing the change in relative importance of topics and top words over the years.
 
 ```{r evolution-topics}
 topic_prop_per_year <- theta
@@ -798,7 +736,7 @@ viz_df_with_year <-
     cols = -document,
     names_to = "topic",
     values_to = "value") |> 
-  left_join(mutate(data, id = as.factor(id), "year" = `Publication Year`), by = c("document" = "id"))
+  left_join(mutate(data, id = as.factor(id), "year" = `Publication.Year`), by = c("document" = "id"))
 
 # Plot topic proportions per year
 viz_df_with_year |> 
@@ -808,6 +746,8 @@ viz_df_with_year |>
   xlab("Publication year") +
   ylab("Proportion of topics") +
   labs(title = "Topic proportions per year")
+
+ggsave("images/topics-over-years.png", width = 10, height = 7)
 ```
 
 ```{r evolution-top-terms}
@@ -816,7 +756,7 @@ top_terms <- words |>
   group_by(id) |>
   count(word, sort = TRUE) |>
   ungroup() |>
-  slice_max(n, n = 5)
+  slice_max(n, n = 12)
 
 word_order <- words |>
   group_by(word, year) |>
@@ -827,7 +767,7 @@ word_order <- words |>
   mutate(relative_frequency = n / sum(n) * 100) |>
   mutate(rank = round(rank(-n), 0)) |>
   ungroup() |>
-  filter(word %in% top_terms$word)
+  filter(word %in% top_terms$word & word != "lihtc")
 
 ggplot(word_order,
        aes(
@@ -845,8 +785,10 @@ ggplot(word_order,
   ggplot2::xlab("Year") + 
   ggplot2::ylab("Frequency (%)") +
   facet_wrap(~ word) +
-  theme(
-        title = element_blank(),
+  theme(title = element_blank(),
         axis.text = element_text(size = 12),
-        axis.title = element_text(size = 15))
+        axis.title = element_text(size = 15),
+        legend.position = "none")
+
+ggsave("images/words-over-years.png", width = 10, height = 7)
 ```
