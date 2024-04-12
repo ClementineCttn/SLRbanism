@@ -366,6 +366,7 @@ writeLines(unique_bib_text, here("data_output","all_unique_references.bib"))
 ```
 
 ## Suggesting new keywords {#sec-litsearchr}
+*NB: Parts of this section were adapted from the* `litsearchr` *package documentation available* [here](https://elizagrames.github.io/litsearchr/introduction_vignette_v010.html)
 
 Import .bib or .ris database
 
