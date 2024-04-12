@@ -32,7 +32,7 @@ for (package in packages) {
 
 ```
 We also need to organize our repository 
-```{r, echo=T, message=F}
+```{r, echo=T, eval=F}
 dir.create("data") #for raw data
 dir.create("data_output") #for the unique references 
 dir.create("figures")
@@ -221,7 +221,7 @@ all_references <- rbind(wos_selection, scopus_selection)
 
 ```
 
-### Locate and extract unique references {#sec-targets}
+## Locate and extract unique references {#sec-targets}
 
 In order to be able to identify if there are duplicates in our `all_references` dataframe and examine summary statistics of the references-dataset, we need to make sure that variables in the scopus and wos dataframes are represented in a similar way. Sometimes variables differ too much, such that comparison even after alteration becomes difficult (i.e. in our example the variable "author"). However,  for others we we can remove all punctuations and capital letters in order to make the variable structure of the wos refences and scopus refences more similar.
 
@@ -288,7 +288,7 @@ target_references <- c(
 ```
 The outcome (`FALSE` and `FALSE`) means that none of our target references is included in our `all_unique_references` dataframe. We should therefore modify our query so as to include them in the results. Please note that for the sake of simplicity and speed, we have restricted our search to 200 articles in each database, which is why it is most likely that we did not identify the target references in this particular example.  
 
-### Summarise references: 
+## Summarise references: 
 
 Distribution of publication years
 ```{r, echo=T, verbose=F, warning=F, message = FALSE}
