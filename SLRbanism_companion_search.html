@@ -6,7 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Cottineau C., Forgaci F., Janssen K., Li B., Zhang S., Zhang X.">
+<meta name="author" content="Clémentine Cottineau">
+<meta name="author" content="Kyri Janssen">
+<meta name="author" content="Shuyu Zhang">
+<meta name="author" content="Xioaxia Zhang">
 <meta name="dcterms.date" content="2024-04-12">
 
 <title>Companion code for section 2: Search strategy &amp; selection of references</title>
@@ -93,9 +96,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-title-meta">
 
     <div>
-    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-heading">Authors</div>
     <div class="quarto-title-meta-contents">
-             <p>Cottineau C., Forgaci F., Janssen K., Li B., Zhang S., Zhang X. </p>
+             <p>Clémentine Cottineau </p>
+             <p>Kyri Janssen </p>
+             <p>Shuyu Zhang </p>
+             <p>Xioaxia Zhang </p>
           </div>
   </div>
     
@@ -175,7 +181,7 @@ $view
 [1] "COMPLETE"
 
 Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%20TITLE%20%28%20govern%2A%20OR%20state%20OR%20decision-making%20OR%20policy-making%20OR%20stakeholder%20OR%20participat%2A%20%29%20%29%20AND%20%28%20TITLE-ABS-KEY%20%28%20impact%20OR%20outcome%20OR%20result%20OR%20differentiation%20OR%20consequence%20OR%20change%20OR%20transformation%20OR%20role%20%29%20%29%20%29%20OR%20%28%20TITLE-ABS-KEY%20%28%20governance%20W%2F0%20%28%20mode%20OR%20model%20OR%20process%20%29%20%29%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20effect%20OR%20caus%2A%20OR%20explain%2A%20OR%20influence%20OR%20affect%20OR%20mechanism%20OR%20restrict%20OR%20create%20OR%20impact%20OR%20drive%20OR%20role%20OR%20transform%2A%20OR%20relation%2A%20OR%20led%20OR%20improve%20OR%20interven%2A%20OR%20respon%2A%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20effect%20OR%20caus%2A%20OR%20explain%2A%20OR%20influence%20OR%20affect%20OR%20mechanism%20OR%20restrict%20OR%20create%20OR%20impact%20OR%20drive%20OR%20role%20OR%20transform%2A%20OR%20relation%2A%20OR%20led%20OR%20improve%20OR%20interven%2A%20OR%20respon%2A%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20urban%20OR%20neighborhood%20OR%20city%20OR%20residential%20OR%20regional%20OR%20housing%20%29%20W%2F0%20%28%20development%20OR%20redevelopment%20OR%20regeneration%20OR%20restructuring%20OR%20revitalization%20OR%20construction%20OR%20governance%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20LIMIT-TO%20%28%20DOCTYPE%20%2C%20%22ar%22%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20LIMIT-TO%20%28%20LANGUAGE%20%2C%20%22English%22%20%29%20%29&amp;count=10&amp;start=0&amp;view=COMPLETE]
-  Date: 2024-04-12 11:31
+  Date: 2024-04-12 13:00
   Status: 200
   Content-Type: application/json;charset=UTF-8
   Size: 54.3 kB</code></pre>
@@ -753,8 +759,8 @@ $no
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="fu">here</span>(<span class="st">"figures"</span>,<span class="st">"prisma_flowchart.png"</span>), <span class="at">width =</span> <span class="dv">800</span>, <span class="at">height =</span> <span class="dv">800</span>)</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>prismaplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-6522f467977df100c3db" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-6522f467977df100c3db">{"x":{"diagram":"digraph prisma {\n    node [shape=\"box\", fontsize = 20];\n    graph [splines=ortho, nodesep=1, dpi = 72]\n    a -> nodups;\n    b -> nodups;\n    a [label=\"Records identified through\ndatabase searching\n(n = 400)\"];\n    b [label=\"Additional records identified\nthrough other sources\n(n = 0)\"]\n    nodups -> incex;\n    nodups [label=\"Records after duplicates removed\n(n = 266)\"];\n    incex -> {ex; ft}\n    incex [label=\"Records screened\n(n = 266)\"];\n    ex [label=\"Records excluded\n(n = 0)\"];\n    {rank=same; incex ex}\n    ft -> {qual; ftex};\n    ft [label=\"Full-text articles assessed\nfor eligibility\n(n = 266)\"];\n    {rank=same; ft ftex}\n    ftex [label=\"Full-text articles excluded,\nwith reasons\n(n = 0)\"];\n    qual -> quant\n    qual [label=\"Studies included in qualitative synthesis\n(n = 266)\"];\n    quant [label=\"Studies included in\nquantitative synthesis\n(meta-analysis)\n(n = 266)\"];\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-5ab1276657bc42e14185" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-5ab1276657bc42e14185">{"x":{"diagram":"digraph prisma {\n    node [shape=\"box\", fontsize = 20];\n    graph [splines=ortho, nodesep=1, dpi = 72]\n    a -> nodups;\n    b -> nodups;\n    a [label=\"Records identified through\ndatabase searching\n(n = 400)\"];\n    b [label=\"Additional records identified\nthrough other sources\n(n = 0)\"]\n    nodups -> incex;\n    nodups [label=\"Records after duplicates removed\n(n = 266)\"];\n    incex -> {ex; ft}\n    incex [label=\"Records screened\n(n = 266)\"];\n    ex [label=\"Records excluded\n(n = 0)\"];\n    {rank=same; incex ex}\n    ft -> {qual; ftex};\n    ft [label=\"Full-text articles assessed\nfor eligibility\n(n = 266)\"];\n    {rank=same; ft ftex}\n    ftex [label=\"Full-text articles excluded,\nwith reasons\n(n = 0)\"];\n    qual -> quant\n    qual [label=\"Studies included in qualitative synthesis\n(n = 266)\"];\n    quant [label=\"Studies included in\nquantitative synthesis\n(meta-analysis)\n(n = 266)\"];\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">

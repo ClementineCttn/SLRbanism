@@ -1,20 +1,23 @@
 ---
 title: "Companion code for section 2: Search strategy & selection of references"
-author: "Cottineau C., Forgaci F., Janssen K., Li B., Zhang S., Zhang X."
+author:
+ - "Clémentine Cottineau"
+ - "Kyri Janssen"
+ - "Shuyu Zhang"
+ - "Xioaxia Zhang"
 date: "2024-04-12"
 format: html
 editor: visual
 number-sections: true
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 Your_scopus_api_key <- readLines(con = "personal_scopus_api_key.md")
 ```
 
-
 Let us first install and load the packages we will need.
+
 ```{r, echo=T, message=F}
 ## List pacakges used in the script
 packages <- c("rscopus", "RefManageR", "tidyverse","brio",
@@ -31,7 +34,9 @@ for (package in packages) {
 }
 
 ```
-We also need to organize our repository 
+
+We also need to organize our repository
+
 ```{r, echo=T, eval=F}
 dir.create("data") #for raw data
 dir.create("data_output") #for the unique references 
@@ -49,6 +54,7 @@ options(elsevier_api_key = Your_scopus_api_key)
 ```
 
 Set your research query:
+
 ```{r}
 query <- "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND 
           ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND 
@@ -68,6 +74,7 @@ if (have_api_key()) {
 ```
 
 Create an empty list to store search results
+
 ```{r}
 ids <- search_results$df$pii
 search_results_list <- list()
@@ -78,12 +85,14 @@ for (id in ids) {
 ```
 
 Convert the list to a data frame
+
 ```{r}
 results_df <- do.call(rbind, search_results$df)
 transposed_results_df <- t(results_df)
 ```
 
 What does it look like?
+
 ```{r}
 head(transposed_results_df)
 
@@ -96,6 +105,7 @@ write.csv(transposed_results_df, here("data", "scopus_api_results.csv"), row.nam
 ```
 
 Export a into a .bib file
+
 ```{r}
 df <- read.csv(here("data", "scopus_api_results.csv"))
 for (i in 1:nrow(df)) {
@@ -116,6 +126,7 @@ data <- data.frame(
 ```
 
 Create a list of BibEntry objects
+
 ```{r}
 # Format the Keywords field
 bib_entries <- lapply(1:nrow(data), function(i) {
@@ -136,23 +147,26 @@ bib_entries <- lapply(1:nrow(data), function(i) {
 ```
 
 Convert each BibEntry object to BibTeX format individually
+
 ```{r}
 bib_texts <- lapply(bib_entries, toBibtex)
 ```
 
 Combine the BibTeX texts into a single character vector
+
 ```{r}
 bib_text <- unlist(bib_texts, use.names = FALSE)
 ```
 
 Write BibTeX file
+
 ```{r}
 writeLines(bib_text, here("data","scopus_references.bib"))
 ```
 
 ## Combining tables, deduplicating references and summarising the results {#sec-revtools}
 
-Although a dedicated package exist to retrieve references from the Web of Science API (`wosr`), we have not been able to make it work. Instead, we used the web interface of the [Web of Science](https://www.webofscience.com/wos/woscc/summary/82f1ef9f-d361-4455-a556-cc37014e5f7a-de2281b0/relevance/1] (through our institutional access) to run the same query:
+Although a dedicated package exist to retrieve references from the Web of Science API (`wosr`), we have not been able to make it work. Instead, we used the web interface of the \[Web of Science\](https://www.webofscience.com/wos/woscc/summary/82f1ef9f-d361-4455-a556-cc37014e5f7a-de2281b0/relevance/1\] (through our institutional access) to run the same query:
 
 `( ( ( TI= ( govern*  OR  state  OR  decision-making  OR  policy-making OR participat* OR stakeholder ) )  AND  ( TS= ( impact  OR  outcome  OR performance OR  result  OR  differentiation  OR  consequence  OR  change  OR  transformation OR role ) ) )  OR  ( TS= ( governance  NEAR/0  ( mode  OR  model  OR role OR process  )) ) ) AND (TS= ( effect  OR  caus*  OR  explain*  OR  influence  OR  affect  OR  mechanism  OR  restrict  OR  create  OR  impact  OR  drive  OR  role  OR  transform*  OR  relation*  OR  led  OR  improve  OR  interven*  OR  respon* ) ) AND  ( TS= (( urban  OR  neighborhood  OR  city  OR  residential  OR  regional  OR  housing )  NEAR/0 (development  OR  redevelopment OR renewal OR  regeneration  OR  restructuring  OR  revitalization  OR governance ) )  )`
 
@@ -174,8 +188,8 @@ unique_vars_scopus <- colnames(scopus_data)
 
 ```
 
-
 Identify which columns the scopus and wos dataframes have in common
+
 ```{r}
 common_vars <- intersect(unique_vars_scopus, unique_vars_wos)
 print(common_vars)
@@ -183,6 +197,7 @@ print(common_vars)
 ```
 
 Identify which columns are unique for the scopus and wos references
+
 ```{r}
 unique_vars_only_scopus <- setdiff(unique_vars_scopus, unique_vars_wos)
 print(unique_vars_only_scopus)
@@ -191,7 +206,7 @@ print(unique_vars_only_wos)
 
 ```
 
-Select only the variables that appear in both dataframes and the ones you deem relevant. In our case, we select: `author`, `type`, `title`, `year`, `volume`,  `number`, `pages`, `doi`, `keywords`
+Select only the variables that appear in both dataframes and the ones you deem relevant. In our case, we select: `author`, `type`, `title`, `year`, `volume`, `number`, `pages`, `doi`, `keywords`
 
 ```{r}
 selected_vars <- c(
@@ -206,6 +221,7 @@ wos_selection <- wos_data %>%
   dplyr::select(all_of(selected_vars))
 
 ```
+
 Now lets check the number of variables (columns) in our dataframes
 
 ```{r}
@@ -223,7 +239,7 @@ all_references <- rbind(wos_selection, scopus_selection)
 
 ## Locate and extract unique references {#sec-targets}
 
-In order to be able to identify if there are duplicates in our `all_references` dataframe and examine summary statistics of the references-dataset, we need to make sure that variables in the scopus and wos dataframes are represented in a similar way. Sometimes variables differ too much, such that comparison even after alteration becomes difficult (i.e. in our example the variable "author"). However,  for others we we can remove all punctuations and capital letters in order to make the variable structure of the wos refences and scopus refences more similar.
+In order to be able to identify if there are duplicates in our `all_references` dataframe and examine summary statistics of the references-dataset, we need to make sure that variables in the scopus and wos dataframes are represented in a similar way. Sometimes variables differ too much, such that comparison even after alteration becomes difficult (i.e. in our example the variable "author"). However, for others we we can remove all punctuations and capital letters in order to make the variable structure of the wos refences and scopus refences more similar.
 
 Lets see how we can do that.
 
@@ -253,7 +269,7 @@ Examine the scopus_selection dataframe
 view(all_references)
 ```
 
-as you can see, all the capital and punctuations are removed from the assigned variables 
+as you can see, all the capital and punctuations are removed from the assigned variables
 
 ```{r}
 check_duplicates <- revtools::find_duplicates(all_references, match_variable = "doi")
@@ -271,7 +287,7 @@ nrow(all_unique_references)
 
 ```
 
-Something else we might want to consider, is if our literature search also identified one or more key articles that we know should be in the SLR. So, lets take a target article. In our case, the author of this specific literature review stated that the articles `Urban governance and social cohesion: Effects of urban restructuring policies in two Dutch cities` by `van Marissing et al. (2006)` and `Rethinking China’s urban governance: The role of the state in neighbourhoods, cities and regions` by `Wu and Zang (2022)` should be considered as a target references. So lets examine, if this article is present in our `all_unique_references` dataframe.  
+Something else we might want to consider, is if our literature search also identified one or more key articles that we know should be in the SLR. So, lets take a target article. In our case, the author of this specific literature review stated that the articles `Urban governance and social cohesion: Effects of urban restructuring policies in two Dutch cities` by `van Marissing et al. (2006)` and `Rethinking China’s urban governance: The role of the state in neighbourhoods, cities and regions` by `Wu and Zang (2022)` should be considered as a target references. So lets examine, if this article is present in our `all_unique_references` dataframe.\
 We do this copying doi from the target references and identifying if this doi is present in the `all_unique_references` dataframe
 
 ```{r}
@@ -286,11 +302,13 @@ target_references <- c(
  target_references %in% all_unique_references$doi
 
 ```
-The outcome (`FALSE` and `FALSE`) means that none of our target references is included in our `all_unique_references` dataframe. We should therefore modify our query so as to include them in the results. Please note that for the sake of simplicity and speed, we have restricted our search to 200 articles in each database, which is why it is most likely that we did not identify the target references in this particular example.  
 
-## Summarise references: 
+The outcome (`FALSE` and `FALSE`) means that none of our target references is included in our `all_unique_references` dataframe. We should therefore modify our query so as to include them in the results. Please note that for the sake of simplicity and speed, we have restricted our search to 200 articles in each database, which is why it is most likely that we did not identify the target references in this particular example.
+
+## Summarise references:
 
 Distribution of publication years
+
 ```{r, echo=T, verbose=F, warning=F, message = FALSE}
 
 all_unique_references$year <- as.numeric(all_unique_references$year)
@@ -307,8 +325,8 @@ head(summary(all_unique_references$journal),10)
 
 ```
 
-
 Export combined set of unique references into a .bib file:
+
 ```{r}
 unique_data <- data.frame(
     Author = all_unique_references$author,
@@ -349,8 +367,8 @@ writeLines(unique_bib_text, here("data_output","all_unique_references.bib"))
 
 ## Suggesting new keywords {#sec-litsearchr}
 
-
 Import .bib or .ris database
+
 ```{r, message=F, warning=F, echo=T, verbose=F}
 
 refs <- litsearchr::import_results(here("data_output"))
@@ -358,6 +376,7 @@ refs <- litsearchr::import_results(here("data_output"))
 ```
 
 Identify frequent terms
+
 ```{r, message=F, warning=F, verbose=F, echo=T}
 raked_terms <- extract_terms(text = refs,
                              method = "fakerake",
@@ -366,6 +385,7 @@ raked_terms <- extract_terms(text = refs,
 ```
 
 Identify frequent keywords tagged by authors
+
 ```{r}
 
 keywords <- extract_terms(text = refs,
@@ -376,6 +396,7 @@ keywords <- extract_terms(text = refs,
 ```
 
 Create document-feature matrix
+
 ```{r}
 dfm <- create_dfm(elements = refs$title,
                   features = c(raked_terms, keywords))
@@ -383,6 +404,7 @@ dfm <- create_dfm(elements = refs$title,
 ```
 
 Create a semantic network
+
 ```{r}
 net <- create_network(search_dfm = dfm,
                       min_studies = 3,
@@ -400,20 +422,22 @@ plot(reduced_graph)
 
 ```
 
-
 Identify the main keywords
+
 ```{r}
 search_terms <- litsearchr::get_keywords(reduced_graph)
 head(sort(search_terms), 20)
 ```
 
 Identify isolated components of graph to suggest new keywords
+
 ```{r}
 components(reduced_graph)
 grouped <- split(names(V(reduced_graph)), components(reduced_graph)$membership)
 ```
 
 Write a new query based on additional keywords
+
 ```{r}
 litsearchr::write_search(grouped,
                          API_key = NULL,
@@ -426,11 +450,10 @@ litsearchr::write_search(grouped,
                          closure = "left")
 ```
 
-
-
 ## Drawing the PRISMA figure {#sec-prisma}
 
 Call the prisma() function to generate the PRISMA flowchart and replace the values with the actual counts from your study.
+
 ```{r}
 prismaplot <- prisma(
   found = nrow(all_references), # Total number of references found
@@ -448,12 +471,10 @@ prismaplot <- prisma(
 
 ```
 
-
 Save the Prisma diagram as an object and export it as .png file
+
 ```{r, echo=T, message=F, warning=F, verbose=F}
 png(here("figures","prisma_flowchart.png"), width = 800, height = 800)
 prismaplot
 dev.off()
 ```
-
-
