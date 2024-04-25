@@ -136,9 +136,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We also need to organize our repository</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>) <span class="co">#for raw data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data_output"</span>) <span class="co">#for the unique references </span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"figures"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"raw-data"</span>) <span class="co">#for raw data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"processed-data"</span>) <span class="co">#for the unique references </span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"output"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="sec-rscopus" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="sec-rscopus"><span class="header-section-number">1</span> Retrieving references from Scopus</h2>
@@ -181,13 +181,13 @@ $view
 [1] "COMPLETE"
 
 Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%20TITLE%20%28%20govern%2A%20OR%20state%20OR%20decision-making%20OR%20policy-making%20OR%20stakeholder%20OR%20participat%2A%20%29%20%29%20AND%20%28%20TITLE-ABS-KEY%20%28%20impact%20OR%20outcome%20OR%20result%20OR%20differentiation%20OR%20consequence%20OR%20change%20OR%20transformation%20OR%20role%20%29%20%29%20%29%20OR%20%28%20TITLE-ABS-KEY%20%28%20governance%20W%2F0%20%28%20mode%20OR%20model%20OR%20process%20%29%20%29%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20effect%20OR%20caus%2A%20OR%20explain%2A%20OR%20influence%20OR%20affect%20OR%20mechanism%20OR%20restrict%20OR%20create%20OR%20impact%20OR%20drive%20OR%20role%20OR%20transform%2A%20OR%20relation%2A%20OR%20led%20OR%20improve%20OR%20interven%2A%20OR%20respon%2A%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20effect%20OR%20caus%2A%20OR%20explain%2A%20OR%20influence%20OR%20affect%20OR%20mechanism%20OR%20restrict%20OR%20create%20OR%20impact%20OR%20drive%20OR%20role%20OR%20transform%2A%20OR%20relation%2A%20OR%20led%20OR%20improve%20OR%20interven%2A%20OR%20respon%2A%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20urban%20OR%20neighborhood%20OR%20city%20OR%20residential%20OR%20regional%20OR%20housing%20%29%20W%2F0%20%28%20development%20OR%20redevelopment%20OR%20regeneration%20OR%20restructuring%20OR%20revitalization%20OR%20construction%20OR%20governance%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20LIMIT-TO%20%28%20DOCTYPE%20%2C%20%22ar%22%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20LIMIT-TO%20%28%20LANGUAGE%20%2C%20%22English%22%20%29%20%29&amp;count=10&amp;start=0&amp;view=COMPLETE]
-  Date: 2024-04-12 14:30
+  Date: 2024-04-25 10:41
   Status: 200
   Content-Type: application/json;charset=UTF-8
-  Size: 54.3 kB</code></pre>
+  Size: 57 kB</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Total Entries are 4915</code></pre>
+<pre><code>Total Entries are 4941</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Maximum Count is 200</code></pre>
@@ -261,51 +261,51 @@ Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%2
 [1,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85189521736"
 [2,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85187130405"
 [3,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85181753540"
-[4,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85189526618"
-[5,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85189547338"
-[6,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85188917408"
+[4,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85190321293"
+[5,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85189945016"
+[6,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85189526618"
      dc:identifier           eid                 
 [1,] "SCOPUS_ID:85189521736" "2-s2.0-85189521736"
 [2,] "SCOPUS_ID:85187130405" "2-s2.0-85187130405"
 [3,] "SCOPUS_ID:85181753540" "2-s2.0-85181753540"
-[4,] "SCOPUS_ID:85189526618" "2-s2.0-85189526618"
-[5,] "SCOPUS_ID:85189547338" "2-s2.0-85189547338"
-[6,] "SCOPUS_ID:85188917408" "2-s2.0-85188917408"
-     dc:title                                                                                                                                                       
-[1,] "Explaining Factors Affecting Flood Evacuation From the Point of View of Stakeholders: AContent Analysis Study"                                                
-[2,] "An Integrated Multi-Source Dataset for Measuring Settlement Evolution in the United States from 1810 to 2020"                                                 
-[3,] "De-bordering policies at the city scale: strategies for building resilience in Barcelona's migration governance"                                              
-[4,] "Empowering urban energy transition through data-driven decision-making: A statistical examination of technological innovations in transportation and mobility"
-[5,] "The dual organization services and governance for creative cities: A case of Hengdian World Studios"                                                          
-[6,] "Beyond funding: The moderating role of firms' R&amp;amp;D human capital on government support and venture capital for regional innovation in China"               
+[4,] "SCOPUS_ID:85190321293" "2-s2.0-85190321293"
+[5,] "SCOPUS_ID:85189945016" "2-s2.0-85189945016"
+[6,] "SCOPUS_ID:85189526618" "2-s2.0-85189526618"
+     dc:title                                                                                                                                                              
+[1,] "Explaining Factors Affecting Flood Evacuation From the Point of View of Stakeholders: AContent Analysis Study"                                                       
+[2,] "An Integrated Multi-Source Dataset for Measuring Settlement Evolution in the United States from 1810 to 2020"                                                        
+[3,] "De-bordering policies at the city scale: strategies for building resilience in Barcelona's migration governance"                                                     
+[4,] "Advancing equitable ‘resilience imaginaries’ in the Global South through dialogical participatory mapping: Experiences from informal communities in Brazil"          
+[5,] "Reconceiving China's urban economic transition through symbiotic state-firm dynamics: An integrated perspective from urban governance and global production networks"
+[6,] "Empowering urban energy transition through data-driven decision-making: A statistical examination of technological innovations in transportation and mobility"       
      dc:creator          prism:publicationName                          
 [1,] "Karampourian A."   "Health in Emergencies and Disasters Quarterly"
 [2,] "Ahn Y."            "Scientific Data"                              
 [3,] "Zapata-Barrero R." "Comparative Migration Studies"                
-[4,] "Zhang F."          "Sustainable Cities and Society"               
-[5,] "Liu F."            "Cities"                                       
-[6,] "Edeh J."           "Technological Forecasting and Social Change"  
+[4,] "Pitidis V."        "Cities"                                       
+[5,] "Wang K."           "Cities"                                       
+[6,] "Zhang F."          "Sustainable Cities and Society"               
      prism:eIssn prism:volume prism:issueIdentifier prism:pageRange
 [1,] "23454210"  "9"          "2"                   "115-124"      
 [2,] "20524463"  "11"         "1"                   NA             
 [3,] "2214594X"  "12"         "1"                   NA             
-[4,] NA          "106"        NA                    NA             
-[5,] NA          "149"        NA                    NA             
-[6,] NA          "203"        NA                    NA             
-     prism:coverDate prism:coverDisplayDate prism:doi                       
-[1,] "2024-12-01"    "Winter 2024"          "10.32598/hdq.9.2.494.4"        
-[2,] "2024-12-01"    "December 2024"        "10.1038/s41597-024-03081-x"    
-[3,] "2024-12-01"    "December 2024"        "10.1186/s40878-023-00361-0"    
-[4,] "2024-07-01"    "1 July 2024"          "10.1016/j.scs.2024.105374"     
-[5,] "2024-06-01"    "June 2024"            "10.1016/j.cities.2024.105001"  
-[6,] "2024-06-01"    "June 2024"            "10.1016/j.techfore.2024.123351"
-     dc:description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-[1,] "Background: Floods are a natural hydrological hazard that causes human and environmental damage. In the response phase, evacuation is necessary to reduce deterioration. This study explains the influential factors on flood evacuation based on the opinion of the stakeholders. Materials and Methods: This is a conventional content analysis study conducted in 2021. A total of 27 participants were selected using the purposive sampling method. Data collection was performed using semi-structured interviews. Interviews continued until information saturation was reached. The recorded interviews were handwritten word by word and then analyzed. The criteria for entering the study included flood experience, the ability to communicate, and willingness to participate. The period of the interview was 40 to 70 min. Written consent was obtained from the interviewees for audio recording. The Granheim and Lundman method was used for data analysis. This study’s reliability was based on the Goba and Lincoln method. Results: Data analysis extracted four main categories with ten sub-categories, including human factors (a subcategory of individual characteristics and risk perception), social factors (a subcategory of cultural conditions and financial status), geographical factors (a sub-category of urban location and climate conditions), and infrastructure factors (a sub-category of facilities related to transportation tools and routes, urban constructions, communication infrastructure, and meteorological facilities). Conclusion: Reaching a successful evacuation requires determining the relevant factors. These factors include human, social, geographic, and infrastructure factors. The findings of this study can help managers in flood management."
-[2,] "Understanding changes in the built environment is vital for sustainable urban development and disaster preparedness. Recent years have seen the emergence of a variety of global, continent-level, and nation-wide datasets related to the current state and the evolution of the built environment, human settlements or building stocks.&nbsp;However, such datasets may&nbsp;face limitations like incomplete coverage, sparse building information, coarse resolution, and limited timeframes. This study addresses these challenges by integrating three spatial datasets to create an extensive, attribute-rich sequence of settlement layers spanning 200 years for the contiguous U.S. This integration process involves complex data processing, merging property-level real estate, parcel, and remote sensing-based building footprint data, and creating gridded multi-temporal settlement layers. This effort unveils the latest edition (Version 2)&nbsp;of the Historical Settlement Data Compilation for the U.S. (HISDAC-US), which includes the latest land use and structural information as of the year 2021. It enables detailed research on urban form and structure, helps assess and map the built environment’s risk to natural hazards, assists in population modeling, supports land use analysis, and aids health studies."                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-[3,] "This article bridges the fields of urban politics, migration governance and border studies by exploring Barcelona as a case study. It raises a first critical question about what happens to so-called borderlands when \"borders\" move to other scales, such as cities that are not usually categorized as \"border cities\". Within this framing debate, this study explores two fundamental questions: (1) how border practices at the state level shape constrained relations between cities and migrants, and (2) how cities map de-bordering policies to resolve such constraints, which we conceptualise as an example of 'urban resilience'. The aim is to provide a focus that brings the analytical category of \"urban resilience\", recently proposed within the emerging debate on the \"local turn\" in migration studies, to bear on issues directly related to the social impacts of state bordering processes on urban systems. The article then argues that urban justice principles drive most cities to initiate resilient de-bordering policies, and can be seen as a distinctive normative factor underpinning urban resilience when applied to migration governance. After laying the groundwork for this theoretical framework and its application to the city of Barcelona, the final section briefly outlines the potential of this new and crucial critical area of migration research. This will provide yet another opportunity to highlight that we are likely to enter an era in which cities will increasingly become sovereign geopolitical entities within and beyond the traditional hierarchical reach of their own states."                                                                                                                                                     
-[4,] "Urban energy consumption is a critical aspect of sustainable urban development, with technological innovations playing a pivotal role in shaping energy usage patterns. This paper presents a comprehensive analysis of urban energy consumption dynamics in relation to the adoption of technology across various sectors, including transportation, residential, industrial, and commercial domains. Through extensive data collection and advanced statistical analyses, we investigate the correlation between technology adoption rates and energy consumption behaviors in urban areas. Our findings reveal a strong positive correlation between technology adoption rates and reduced energy consumption across sectors. We employ spatial analyses to identify localized successes, shedding light on regions where technology-driven initiatives have significantly lowered energy demands. These insights offer valuable guidance for urban planners and policymakers aiming to implement targeted interventions and replicate effective strategies. Furthermore, the paper emphasizes the transformative potential of innovative solutions, ranging from smart infrastructure to industrial automation, in promoting energy efficiency and environmental sustainability. By fostering the integration of such technologies, cities can mitigate their carbon footprint, enhance energy resilience, and create more livable environments for residents. This research contributes to the discourse on urban energy transitions and provides actionable insights for urban policymakers and stakeholders striving for a greener, more sustainable urban future."                                                                                                                                            
-[5,] "Creative industries have emerged as a powerful catalyst for urban development, prompting inquiries into how to foster the city attachment and subjective well-being of the creative class. This study develops a conceptual framework to elucidate the relationships among government public services, social organization services, city attachment, and subjective well-being. Through a case study of the Hengdian World Studios, a survey targeting the Hengpiao group (actors within the studio) was conducted, yielding 757 valid responses. The investigation revealed that both government public and social organization services exert a significant and positive influence on city attachment, with government services demonstrating a more pronounced effect. Furthermore, government public services notably impact subjective well-being, whereas social organization services do not exhibit a comparable influence. Additionally, city attachment serves as a crucial intermediary mechanism that elucidates the complex relationships among government public services, social organization services, and subjective well-being. This study contributes to the existing research on multi-subject urban governance and place-making, enriching the understanding of how urban managers can attract and enhance the place attachment of the creative class."                                                                                                                                                                                                                                                                                                                                                                                                                                         
-[6,] "Technological innovation is a cornerstone of economic growth. It is a crucial determinant of regions' competitiveness, especially for rapidly developing emerging economies. Past research remained inconclusive on whether venture capital and government subsidies to firms have a significant effect on innovation performance at the regional level. In this article, we show the determining role of investment by firms in R&amp;D human capital. We use panel data from 31 provinces in China, covering the period 1999–2015. The results reveal that government support for firms and venture capital do not have a significant direct impact on regional innovation performance. This effect is strongly moderated by R&amp;D human capital. The findings of this study offer practical implications for policymakers and private investors, guiding them on how to maximize the efficiency of their R&amp;D investments for regional economic growth. They also show the importance of investment in R&amp;D human capital for the management of technology and innovation at the firm level."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+[4,] NA          "150"        NA                    NA             
+[5,] NA          "150"        NA                    NA             
+[6,] NA          "106"        NA                    NA             
+     prism:coverDate prism:coverDisplayDate prism:doi                     
+[1,] "2024-12-01"    "Winter 2024"          "10.32598/hdq.9.2.494.4"      
+[2,] "2024-12-01"    "December 2024"        "10.1038/s41597-024-03081-x"  
+[3,] "2024-12-01"    "December 2024"        "10.1186/s40878-023-00361-0"  
+[4,] "2024-07-01"    "July 2024"            "10.1016/j.cities.2024.105015"
+[5,] "2024-07-01"    "July 2024"            "10.1016/j.cities.2024.104974"
+[6,] "2024-07-01"    "1 July 2024"          "10.1016/j.scs.2024.105374"   
+     dc:description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+[1,] "Background: Floods are a natural hydrological hazard that causes human and environmental damage. In the response phase, evacuation is necessary to reduce deterioration. This study explains the influential factors on flood evacuation based on the opinion of the stakeholders. Materials and Methods: This is a conventional content analysis study conducted in 2021. A total of 27 participants were selected using the purposive sampling method. Data collection was performed using semi-structured interviews. Interviews continued until information saturation was reached. The recorded interviews were handwritten word by word and then analyzed. The criteria for entering the study included flood experience, the ability to communicate, and willingness to participate. The period of the interview was 40 to 70 min. Written consent was obtained from the interviewees for audio recording. The Granheim and Lundman method was used for data analysis. This study’s reliability was based on the Goba and Lincoln method. Results: Data analysis extracted four main categories with ten sub-categories, including human factors (a subcategory of individual characteristics and risk perception), social factors (a subcategory of cultural conditions and financial status), geographical factors (a sub-category of urban location and climate conditions), and infrastructure factors (a sub-category of facilities related to transportation tools and routes, urban constructions, communication infrastructure, and meteorological facilities). Conclusion: Reaching a successful evacuation requires determining the relevant factors. These factors include human, social, geographic, and infrastructure factors. The findings of this study can help managers in flood management."                                                       
+[2,] "Understanding changes in the built environment is vital for sustainable urban development and disaster preparedness. Recent years have seen the emergence of a variety of global, continent-level, and nation-wide datasets related to the current state and the evolution of the built environment, human settlements or building stocks.&nbsp;However, such datasets may&nbsp;face limitations like incomplete coverage, sparse building information, coarse resolution, and limited timeframes. This study addresses these challenges by integrating three spatial datasets to create an extensive, attribute-rich sequence of settlement layers spanning 200 years for the contiguous U.S. This integration process involves complex data processing, merging property-level real estate, parcel, and remote sensing-based building footprint data, and creating gridded multi-temporal settlement layers. This effort unveils the latest edition (Version 2)&nbsp;of the Historical Settlement Data Compilation for the U.S. (HISDAC-US), which includes the latest land use and structural information as of the year 2021. It enables detailed research on urban form and structure, helps assess and map the built environment’s risk to natural hazards, assists in population modeling, supports land use analysis, and aids health studies."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+[3,] "This article bridges the fields of urban politics, migration governance and border studies by exploring Barcelona as a case study. It raises a first critical question about what happens to so-called borderlands when \"borders\" move to other scales, such as cities that are not usually categorized as \"border cities\". Within this framing debate, this study explores two fundamental questions: (1) how border practices at the state level shape constrained relations between cities and migrants, and (2) how cities map de-bordering policies to resolve such constraints, which we conceptualise as an example of 'urban resilience'. The aim is to provide a focus that brings the analytical category of \"urban resilience\", recently proposed within the emerging debate on the \"local turn\" in migration studies, to bear on issues directly related to the social impacts of state bordering processes on urban systems. The article then argues that urban justice principles drive most cities to initiate resilient de-bordering policies, and can be seen as a distinctive normative factor underpinning urban resilience when applied to migration governance. After laying the groundwork for this theoretical framework and its application to the city of Barcelona, the final section briefly outlines the potential of this new and crucial critical area of migration research. This will provide yet another opportunity to highlight that we are likely to enter an era in which cities will increasingly become sovereign geopolitical entities within and beyond the traditional hierarchical reach of their own states."                                                                                                                                                                                                            
+[4,] "Over recent years, and as a result of the recent global health pandemic, resilience has become increasingly central to contemporary policy discourses in urban planning and development in both the Global North and Global South. Drawing from ongoing empirical studies of community resilience and everyday practices that have been co-designed and co-produced alongside Brazilian marginalised communities which are highly vulnerable to a range of natural hazards, this paper highlights the growing importance of dialogical stakeholder engagement methodologies in designing alternative urban visions – so-called resilience imaginaries or counter-cities - across the Global South based on social diversity, equity and spatial justice. More specifically, the dialogical participatory mapping approach outlined in this paper utilises citizen science approaches to develop local resilience imaginaries, building on the pedagogical work of Brazilian educator Paulo Freire and the conceptualisation of dialogue as a comprehensive and progressively unfolding methodological approach. Practically, we adopted a range of community engagement approaches that allowed local citizens to become more aware of their own risk context and embed this tacit knowledge into the operation of civil protection programmes. Our empirical results highlight the potential of such dialogical participatory approaches to capture lay knowledge from local citizens and contribute to the development of enhanced resilience approaches. The paper concludes by reflecting on the role of formerly marginalised voices in the advancement of local urban policy and on the novelty and promise of critical pedagogical approaches to co-production within existing regimes of urban governance and the imagining of radically independent counter-cities."
+[5,] "China's urban economic transition since the 2000s has garnered considerable scholarly interest. Two distinct bodies of scholarship, namely urban governance and global production networks, have investigated this phenomenon, each offering unique insights either from an endogenous state-centric or exogenous firm-centric approach. The former has justifiably accentuated the centrality of the state in shaping Chinas urban-regional economic reconfiguration but lacks exploration of the multifaceted ways in which state apparatus engages with a spectrum of quotidian firm-level activities and the negotiation power these firms wield. The latter embraces an exogenous firm-centric perspective on the economic transition in East Asia latecomer regions, stressing forces of globalisation, foreign investment, and intra/inter/extra-firm networks, but tends to bracket the state into the institutional background and, therefore, downplays its agentic role. By initiating a dialogue between these two theoretical frameworks, this paper formulates a dialectical state-firm relational approach, offering a revitalised, integrative comprehension of China's urban economic transformation. Employing Dongguan - a globally recognised hub for ICT manufacturing - as an empirical focal point, it elucidates how the relational state-firm dynamics evolve temporally, differ spatially across territories and scales, and display distinct contrasts between high-value-added and labour-intensive sectors within the ICT industry."                                                                                                                                                                                                                                                                                                            
+[6,] "Urban energy consumption is a critical aspect of sustainable urban development, with technological innovations playing a pivotal role in shaping energy usage patterns. This paper presents a comprehensive analysis of urban energy consumption dynamics in relation to the adoption of technology across various sectors, including transportation, residential, industrial, and commercial domains. Through extensive data collection and advanced statistical analyses, we investigate the correlation between technology adoption rates and energy consumption behaviors in urban areas. Our findings reveal a strong positive correlation between technology adoption rates and reduced energy consumption across sectors. We employ spatial analyses to identify localized successes, shedding light on regions where technology-driven initiatives have significantly lowered energy demands. These insights offer valuable guidance for urban planners and policymakers aiming to implement targeted interventions and replicate effective strategies. Furthermore, the paper emphasizes the transformative potential of innovative solutions, ranging from smart infrastructure to industrial automation, in promoting energy efficiency and environmental sustainability. By fostering the integration of such technologies, cities can mitigate their carbon footprint, enhance energy resilience, and create more livable environments for residents. This research contributes to the discourse on urban energy transitions and provides actionable insights for urban policymakers and stakeholders striving for a greener, more sustainable urban future."                                                                                                                                                                                                   
      citedby-count prism:aggregationType subtype subtypeDescription
 [1,] "0"           "Journal"             "ar"    "Article"         
 [2,] "0"           "Journal"             "dp"    "Data Paper"      
@@ -317,46 +317,46 @@ Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%2
 [1,] "100"               "3"                 "3"           
 [2,] "100"               "4"                 "4"           
 [3,] "100"               "1"                 "1"           
-[4,] "100"               "8"                 "8"           
-[5,] "100"               "5"                 "5"           
-[6,] "100"               "2"                 "2"           
-     authkeywords                                                                                                             
-[1,] "Disaster planning | Disasters | Emergency shelter | Floods"                                                             
-[2,] NA                                                                                                                       
-[3,] "Barcelona | Bordering politics | De-bordering policies | Migration | Urban governance urban resilience | Urban justice" 
-[4,] "Energy efficiency | Spatial analysis | Sustainable urban development | Technology adoption | Urban energy consumption"  
-[5,] "Creative city | Creative class | Governance | Hengdian | Place-making | Social organization"                            
-[6,] "China | Emerging markets | Government support | R&amp;amp;D | R&amp;amp;D human capital | Regional innovation | Venture capital"
+[4,] "100"               "3"                 "3"           
+[5,] "100"               "4"                 "4"           
+[6,] "100"               "8"                 "8"           
+     authkeywords                                                                                                            
+[1,] "Disaster planning | Disasters | Emergency shelter | Floods"                                                            
+[2,] NA                                                                                                                      
+[3,] "Barcelona | Bordering politics | De-bordering policies | Migration | Urban governance urban resilience | Urban justice"
+[4,] "Co-production | Counter-cities | Dialogical methods | Participatory mapping | Resilience imaginaries"                  
+[5,] "China | Global production networks | State-firm relations | Urban economic transition | Urban governance"              
+[6,] "Energy efficiency | Spatial analysis | Sustainable urban development | Technology adoption | Urban energy consumption" 
      source-id     fund-no     fund-sponsor                                  
 [1,] "21101146384" "undefined" "Hamadan University of Medical Sciences"      
 [2,] "21100451321" "1924670"   "National Science Foundation"                 
 [3,] "21100899442" "101079254" NA                                            
-[4,] "19700194105" "undefined" NA                                            
-[5,] "16956"       "42071194"  "National Natural Science Foundation of China"
-[6,] "14704"       "undefined" NA                                            
+[4,] "16956"       "101019707" "Bundesministerium für Bildung und Forschung" 
+[5,] "16956"       "42201268"  "National Natural Science Foundation of China"
+[6,] "19700194105" "undefined" NA                                            
      openaccess openaccessFlag entry_number pubmed-id  article-number fund-acr
 [1,] "0"        "FALSE"        "1"          NA         NA             NA      
 [2,] "1"        "TRUE"         "2"          "38453937" "275"          "NSF"   
 [3,] "1"        "TRUE"         "3"          NA         "2"            NA      
-[4,] "0"        "FALSE"        "4"          NA         "105374"       NA      
-[5,] "0"        "FALSE"        "5"          NA         "105001"       "NSFC"  
-[6,] "0"        "FALSE"        "6"          NA         "123351"       NA      
+[4,] "0"        "FALSE"        "4"          NA         "105015"       "BMBF"  
+[5,] "1"        "TRUE"         "5"          NA         "104974"       "NSFC"  
+[6,] "0"        "FALSE"        "6"          NA         "105374"       NA      
      freetoread.value.$ freetoreadLabel.value.$ prism:issn pii                
 [1,] NA                 NA                      NA         NA                 
 [2,] "all"              "All Open Access"       NA         NA                 
 [3,] "all"              "All Open Access"       NA         NA                 
-[4,] NA                 NA                      "22106707" "S2210670724002026"
-[5,] NA                 NA                      "02642751" "S0264275124002154"
-[6,] NA                 NA                      "00401625" "S0040162524001471"</code></pre>
+[4,] NA                 NA                      "02642751" "S0264275124002294"
+[5,] "all"              "All Open Access"       "02642751" "S0264275124001884"
+[6,] NA                 NA                      "22106707" "S2210670724002026"</code></pre>
 </div>
 </div>
 <p>Write the details to a CSV file</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(transposed_results_df, <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"scopus_api_results.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(transposed_results_df, <span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"scopus_api_results.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Export a into a .bib file</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"scopus_api_results.csv"</span>))</span>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"scopus_api_results.csv"</span>))</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(df)) {</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>authkeywords[i] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">unlist</span>(<span class="fu">strsplit</span>(df<span class="sc">$</span>authkeywords[i], <span class="st">"</span><span class="sc">\\</span><span class="st">s*</span><span class="sc">\\</span><span class="st">|</span><span class="sc">\\</span><span class="st">s*"</span>)), <span class="at">collapse =</span> <span class="st">", "</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -402,17 +402,17 @@ Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%2
 </div>
 <p>Write BibTeX file</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(bib_text, <span class="fu">here</span>(<span class="st">"data"</span>,<span class="st">"scopus_references.bib"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(bib_text, <span class="fu">here</span>(<span class="st">"processed-data"</span>,<span class="st">"scopus_references.bib"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sec-revtools" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="sec-revtools"><span class="header-section-number">2</span> Combining tables, deduplicating references and summarising the results</h2>
 <p>Although a dedicated package exist to retrieve references from the Web of Science API (<code>wosr</code>), we have not been able to make it work. Instead, we used the web interface of the [Web of Science](https://www.webofscience.com/wos/woscc/summary/82f1ef9f-d361-4455-a556-cc37014e5f7a-de2281b0/relevance/1] (through our institutional access) to run the same query:</p>
 <p><code>( ( ( TI= ( govern*  OR  state  OR  decision-making  OR  policy-making OR participat* OR stakeholder ) )  AND  ( TS= ( impact  OR  outcome  OR performance OR  result  OR  differentiation  OR  consequence  OR  change  OR  transformation OR role ) ) )  OR  ( TS= ( governance  NEAR/0  ( mode  OR  model  OR role OR process  )) ) ) AND (TS= ( effect  OR  caus*  OR  explain*  OR  influence  OR  affect  OR  mechanism  OR  restrict  OR  create  OR  impact  OR  drive  OR  role  OR  transform*  OR  relation*  OR  led  OR  improve  OR  interven*  OR  respon* ) ) AND  ( TS= (( urban  OR  neighborhood  OR  city  OR  residential  OR  regional  OR  housing )  NEAR/0 (development  OR  redevelopment OR renewal OR  regeneration  OR  restructuring  OR  revitalization  OR governance ) )  )</code></p>
-<p>We then selected the articles written in English from the results and obtained 3180 results as of 11 April 2024. We downloaded the first 200 records in .bib format for this example: <code>wos_reference.bib</code>. Indeed, we want to show that this code can combine bibliographic data from different queries and or different databases.</p>
+<p>We then selected the articles written in English from the results and obtained 3180 results as of 11 April 2024. We downloaded the first 200 records in .bib format for this example: <code>wos_reference.bib</code>, and saved them in the <code>raw-data</code> folder of our project. Indeed, we want to show that this code can combine bibliographic data from different queries and or different databases.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>wos_data <span class="ot">&lt;-</span>synthesisr<span class="sc">::</span><span class="fu">read_refs</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"wos_reference.bib"</span>))</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>scopus_data <span class="ot">&lt;-</span> synthesisr<span class="sc">::</span><span class="fu">read_refs</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"scopus_references.bib"</span>))</span>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>wos_data <span class="ot">&lt;-</span>synthesisr<span class="sc">::</span><span class="fu">read_refs</span>(<span class="fu">here</span>(<span class="st">"raw-data"</span>, <span class="st">"wos_reference.bib"</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>scopus_data <span class="ot">&lt;-</span> synthesisr<span class="sc">::</span><span class="fu">read_refs</span>(<span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"scopus_references.bib"</span>))</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remember we stored keywords into the url field, let's rename it now:</span></span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>scopus_data<span class="sc">$</span>keywords <span class="ot">&lt;-</span> scopus_data<span class="sc">$</span>url</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -567,7 +567,7 @@ We do this copying doi from the target references and identifying if this doi is
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">summary</span>(all_unique_references<span class="sc">$</span>journal),<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                             urban studies 
-                                         8 
+                                         9 
                       urban affairs review 
                                          6 
                   journal of urban affairs 
@@ -623,7 +623,13 @@ abe architecture and the built environment
 <span id="cb50-31"><a href="#cb50-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-32"><a href="#cb50-32" aria-hidden="true" tabindex="-1"></a>unique_bib_texts <span class="ot">&lt;-</span> <span class="fu">lapply</span>(unique_bib_entries, toBibtex)</span>
 <span id="cb50-33"><a href="#cb50-33" aria-hidden="true" tabindex="-1"></a>unique_bib_text <span class="ot">&lt;-</span> <span class="fu">unlist</span>(unique_bib_texts, <span class="at">use.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb50-34"><a href="#cb50-34" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(unique_bib_text, <span class="fu">here</span>(<span class="st">"data_output"</span>,<span class="st">"all_unique_references.bib"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-34"><a href="#cb50-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-35"><a href="#cb50-35" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"processed-data/unique_refs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in dir.create("processed-data/unique_refs"):
+'processed-data/unique_refs' already exists</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(unique_bib_text, <span class="fu">here</span>(<span class="st">"processed-data"</span>,<span class="st">"unique_refs"</span>,<span class="st">"all_unique_references.bib"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sec-litsearchr" class="level2" data-number="5">
@@ -631,68 +637,67 @@ abe architecture and the built environment
 <p><em>NB: Parts of this section were adapted from the</em> <code>litsearchr</code> <em>package documentation available</em> <a href="https://elizagrames.github.io/litsearchr/introduction_vignette_v010.html">here</a></p>
 <p>Import .bib or .ris database</p>
 <div class="cell" data-verbose="false">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>refs <span class="ot">&lt;-</span> litsearchr<span class="sc">::</span><span class="fu">import_results</span>(<span class="fu">here</span>(<span class="st">"data_output"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>refs <span class="ot">&lt;-</span> litsearchr<span class="sc">::</span><span class="fu">import_results</span>(<span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"unique_refs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Reading file /Users/ccottineau/Library/CloudStorage/OneDrive-DelftUniversityofTechnology/Documents/GitHub/SLRbanism/data_output/all_unique_references.bib ... done</code></pre>
+<pre><code>Reading file /Users/ccottineau/GitHub/SLRbanism/processed-data/unique_refs/all_unique_references.bib ... done</code></pre>
 </div>
 </div>
 <p>Identify frequent terms</p>
 <div class="cell" data-verbose="false">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>raked_terms <span class="ot">&lt;-</span> <span class="fu">extract_terms</span>(<span class="at">text =</span> refs,</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">method =</span> <span class="st">"fakerake"</span>,</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">min_freq=</span><span class="dv">2</span>,</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">min_n=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>raked_terms <span class="ot">&lt;-</span> <span class="fu">extract_terms</span>(<span class="at">text =</span> refs,</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">method =</span> <span class="st">"fakerake"</span>,</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">min_freq=</span><span class="dv">2</span>,</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">min_n=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Identify frequent keywords tagged by authors</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>keywords <span class="ot">&lt;-</span> <span class="fu">extract_terms</span>(<span class="at">text =</span> refs,</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">method =</span> <span class="st">"tagged"</span>,</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">keywords =</span> refs<span class="sc">$</span>url, <span class="co"># remember: we stored keywords into the url field...</span></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ngrams=</span>T,</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">min_n=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>keywords <span class="ot">&lt;-</span> <span class="fu">extract_terms</span>(<span class="at">text =</span> refs,</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">method =</span> <span class="st">"tagged"</span>,</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">keywords =</span> refs<span class="sc">$</span>url, <span class="co"># remember: we stored keywords into the url field...</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ngrams=</span>T,</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">min_n=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Create document-feature matrix</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> <span class="fu">create_dfm</span>(<span class="at">elements =</span> refs<span class="sc">$</span>title,</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">features =</span> <span class="fu">c</span>(raked_terms, keywords))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> <span class="fu">create_dfm</span>(<span class="at">elements =</span> refs<span class="sc">$</span>title,</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">features =</span> <span class="fu">c</span>(raked_terms, keywords))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Create a semantic network</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>net <span class="ot">&lt;-</span> <span class="fu">create_network</span>(<span class="at">search_dfm =</span> dfm,</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">min_studies =</span> <span class="dv">3</span>,</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">min_occ =</span> <span class="dv">3</span>)</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(igraph<span class="sc">::</span><span class="fu">strength</span>(net),</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Histogram of node strengths"</span>,</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Node strength"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>net <span class="ot">&lt;-</span> <span class="fu">create_network</span>(<span class="at">search_dfm =</span> dfm,</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">min_studies =</span> <span class="dv">3</span>,</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">min_occ =</span> <span class="dv">3</span>)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(igraph<span class="sc">::</span><span class="fu">strength</span>(net),</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Histogram of node strengths"</span>,</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Node strength"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="SLRbanism_companion_search_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>cutoffs_cumulative <span class="ot">&lt;-</span> <span class="fu">find_cutoff</span>(net, <span class="at">method =</span> <span class="st">"cumulative"</span>)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>reduced_graph <span class="ot">&lt;-</span> <span class="fu">reduce_graph</span>(net, <span class="at">cutoff_strength =</span> cutoffs_cumulative)</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reduced_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>cutoffs_cumulative <span class="ot">&lt;-</span> <span class="fu">find_cutoff</span>(net, <span class="at">method =</span> <span class="st">"cumulative"</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>reduced_graph <span class="ot">&lt;-</span> <span class="fu">reduce_graph</span>(net, <span class="at">cutoff_strength =</span> cutoffs_cumulative)</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reduced_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="SLRbanism_companion_search_files/figure-html/unnamed-chunk-35-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Identify the main keywords</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>search_terms <span class="ot">&lt;-</span> litsearchr<span class="sc">::</span><span class="fu">get_keywords</span>(reduced_graph)</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(search_terms), <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>search_terms <span class="ot">&lt;-</span> litsearchr<span class="sc">::</span><span class="fu">get_keywords</span>(reduced_graph)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(search_terms), <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "development projects"       "local government"          
  [3] "public participation"       "regional development"      
  [5] "regional governance"        "spatial planning"          
- [7] "sustainable urban"          "urban development"         
- [9] "urban development projects" "urban governance"          
-[11] "urban planning"             "urban regeneration"        
-[13] "urban renewal"             </code></pre>
+ [7] "urban development"          "urban development projects"
+ [9] "urban governance"           "urban planning"            
+[11] "urban regeneration"         "urban renewal"             </code></pre>
 </div>
 </div>
 <p>Identify isolated components of graph to suggest new keywords</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">components</span>(reduced_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">components</span>(reduced_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$membership
       development projects           local government 
@@ -701,39 +706,37 @@ abe architecture and the built environment
                          1                          1 
        regional governance           spatial planning 
                          1                          1 
-         sustainable urban          urban development 
+         urban development urban development projects 
                          1                          1 
-urban development projects           urban governance 
+          urban governance             urban planning 
                          1                          1 
-            urban planning         urban regeneration 
-                         1                          2 
-             urban renewal 
-                         1 
+        urban regeneration              urban renewal 
+                         2                          1 
 
 $csize
-[1] 12  1
+[1] 11  1
 
 $no
 [1] 2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>grouped <span class="ot">&lt;-</span> <span class="fu">split</span>(<span class="fu">names</span>(<span class="fu">V</span>(reduced_graph)), <span class="fu">components</span>(reduced_graph)<span class="sc">$</span>membership)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>grouped <span class="ot">&lt;-</span> <span class="fu">split</span>(<span class="fu">names</span>(<span class="fu">V</span>(reduced_graph)), <span class="fu">components</span>(reduced_graph)<span class="sc">$</span>membership)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Write a new query based on additional keywords</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>litsearchr<span class="sc">::</span><span class="fu">write_search</span>(grouped,</span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">API_key =</span> <span class="cn">NULL</span>,</span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">languages =</span> <span class="st">"English"</span>,</span>
-<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">exactphrase =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">stemming =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">directory =</span> <span class="st">"./"</span>,</span>
-<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">writesearch =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">verbose =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">closure =</span> <span class="st">"left"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>litsearchr<span class="sc">::</span><span class="fu">write_search</span>(grouped,</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">API_key =</span> <span class="cn">NULL</span>,</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">languages =</span> <span class="st">"English"</span>,</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">exactphrase =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">stemming =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">directory =</span> <span class="st">"./"</span>,</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">writesearch =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">verbose =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">closure =</span> <span class="st">"left"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "English is written"</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "(((develop* project*) OR (local* govern*) OR (public* particip*) OR (region* develop*) OR (region* govern*) OR (spatial* plan*) OR (sustain* urban*) OR (urban* develop*) OR (urban* govern*) OR (urban* plan*) OR (urban* renew*)) AND ((urban* regener*)))"</code></pre>
+<pre><code>[1] "(((develop* project*) OR (local* govern*) OR (public* particip*) OR (region* develop*) OR (region* govern*) OR (spatial* plan*) OR (urban* develop*) OR (urban* govern*) OR (urban* plan*) OR (urban* renew*)) AND ((urban* regener*)))"</code></pre>
 </div>
 </div>
 </section>
@@ -741,32 +744,24 @@ $no
 <h2 data-number="6" class="anchored" data-anchor-id="sec-prisma"><span class="header-section-number">6</span> Drawing the PRISMA figure</h2>
 <p>Call the prisma() function to generate the PRISMA flowchart and replace the values with the actual counts from your study.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>prismaplot <span class="ot">&lt;-</span> <span class="fu">prisma</span>(</span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">found =</span> <span class="fu">nrow</span>(all_references), <span class="co"># Total number of references found</span></span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">found_other =</span> <span class="dv">0</span>,               <span class="co"># Number of additional references found through other sources (if any)</span></span>
-<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">no_dupes =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of unique references after removing duplicates</span></span>
-<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">screened =</span> <span class="fu">nrow</span>(all_unique_references),  <span class="co"># Number of references screened</span></span>
-<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">screen_exclusions =</span> <span class="dv">0</span>,         <span class="co"># Number of references excluded during screening</span></span>
-<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_text =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of references obtained in full text</span></span>
-<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_text_exclusions =</span> <span class="dv">0</span>,      <span class="co"># Number of references excluded during full-text assessment</span></span>
-<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">qualitative =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of studies included in qualitative synthesis</span></span>
-<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantitative =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of studies included in quantitative synthesis</span></span>
-<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">800</span>, <span class="at">height =</span> <span class="dv">800</span>  ,    <span class="co"># Specify width and height for the generated PRISMA flowchart</span></span>
-<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">font_size =</span> <span class="dv">20</span></span>
-<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Save the Prisma diagram as an object and export it as .png file</p>
-<div class="cell" data-verbose="false">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">png</span>(<span class="fu">here</span>(<span class="st">"figures"</span>,<span class="st">"prisma_flowchart.png"</span>), <span class="at">width =</span> <span class="dv">800</span>, <span class="at">height =</span> <span class="dv">800</span>)</span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>prismaplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>prismaplot <span class="ot">&lt;-</span> <span class="fu">prisma</span>(</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">found =</span> <span class="fu">nrow</span>(all_references), <span class="co"># Total number of references found</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">found_other =</span> <span class="dv">0</span>,               <span class="co"># Number of additional references found through other sources (if any)</span></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">no_dupes =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of unique references after removing duplicates</span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">screened =</span> <span class="fu">nrow</span>(all_unique_references),  <span class="co"># Number of references screened</span></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">screen_exclusions =</span> <span class="dv">0</span>,         <span class="co"># Number of references excluded during screening</span></span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_text =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of references obtained in full text</span></span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_text_exclusions =</span> <span class="dv">0</span>,      <span class="co"># Number of references excluded during full-text assessment</span></span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">qualitative =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of studies included in qualitative synthesis</span></span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantitative =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of studies included in quantitative synthesis</span></span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">800</span>, <span class="at">height =</span> <span class="dv">800</span>  ,    <span class="co"># Specify width and height for the generated PRISMA flowchart</span></span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">font_size =</span> <span class="dv">20</span></span>
+<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>prismaplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-56a3b65f0bf6069594b2" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-56a3b65f0bf6069594b2">{"x":{"diagram":"digraph prisma {\n    node [shape=\"box\", fontsize = 20];\n    graph [splines=ortho, nodesep=1, dpi = 72]\n    a -> nodups;\n    b -> nodups;\n    a [label=\"Records identified through\ndatabase searching\n(n = 400)\"];\n    b [label=\"Additional records identified\nthrough other sources\n(n = 0)\"]\n    nodups -> incex;\n    nodups [label=\"Records after duplicates removed\n(n = 266)\"];\n    incex -> {ex; ft}\n    incex [label=\"Records screened\n(n = 266)\"];\n    ex [label=\"Records excluded\n(n = 0)\"];\n    {rank=same; incex ex}\n    ft -> {qual; ftex};\n    ft [label=\"Full-text articles assessed\nfor eligibility\n(n = 266)\"];\n    {rank=same; ft ftex}\n    ftex [label=\"Full-text articles excluded,\nwith reasons\n(n = 0)\"];\n    qual -> quant\n    qual [label=\"Studies included in qualitative synthesis\n(n = 266)\"];\n    quant [label=\"Studies included in\nquantitative synthesis\n(meta-analysis)\n(n = 266)\"];\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
-</div>
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>quartz_off_screen 
-                2 </code></pre>
+<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-8699878667a10ea06bfc" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-8699878667a10ea06bfc">{"x":{"diagram":"digraph prisma {\n    node [shape=\"box\", fontsize = 20];\n    graph [splines=ortho, nodesep=1, dpi = 72]\n    a -> nodups;\n    b -> nodups;\n    a [label=\"Records identified through\ndatabase searching\n(n = 400)\"];\n    b [label=\"Additional records identified\nthrough other sources\n(n = 0)\"]\n    nodups -> incex;\n    nodups [label=\"Records after duplicates removed\n(n = 266)\"];\n    incex -> {ex; ft}\n    incex [label=\"Records screened\n(n = 266)\"];\n    ex [label=\"Records excluded\n(n = 0)\"];\n    {rank=same; incex ex}\n    ft -> {qual; ftex};\n    ft [label=\"Full-text articles assessed\nfor eligibility\n(n = 266)\"];\n    {rank=same; ft ftex}\n    ftex [label=\"Full-text articles excluded,\nwith reasons\n(n = 0)\"];\n    qual -> quant\n    qual [label=\"Studies included in qualitative synthesis\n(n = 266)\"];\n    quant [label=\"Studies included in\nquantitative synthesis\n(meta-analysis)\n(n = 266)\"];\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>

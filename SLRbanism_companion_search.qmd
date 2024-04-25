@@ -38,9 +38,9 @@ for (package in packages) {
 We also need to organize our repository
 
 ```{r, echo=T, eval=F}
-dir.create("data") #for raw data
-dir.create("data_output") #for the unique references 
-dir.create("figures")
+dir.create("raw-data") #for raw data
+dir.create("processed-data") #for the unique references 
+dir.create("output")
 ```
 
 ## Retrieving references from Scopus {#sec-rscopus}
@@ -101,13 +101,13 @@ head(transposed_results_df)
 Write the details to a CSV file
 
 ```{r}
-write.csv(transposed_results_df, here("data", "scopus_api_results.csv"), row.names = FALSE)
+write.csv(transposed_results_df, here("processed-data", "scopus_api_results.csv"), row.names = FALSE)
 ```
 
 Export a into a .bib file
 
 ```{r}
-df <- read.csv(here("data", "scopus_api_results.csv"))
+df <- read.csv(here("processed-data", "scopus_api_results.csv"))
 for (i in 1:nrow(df)) {
   df$authkeywords[i] <- paste(unlist(strsplit(df$authkeywords[i], "\\s*\\|\\s*")), collapse = ", ")
 }
@@ -161,7 +161,7 @@ bib_text <- unlist(bib_texts, use.names = FALSE)
 Write BibTeX file
 
 ```{r}
-writeLines(bib_text, here("data","scopus_references.bib"))
+writeLines(bib_text, here("processed-data","scopus_references.bib"))
 ```
 
 ## Combining tables, deduplicating references and summarising the results {#sec-revtools}
@@ -170,11 +170,11 @@ Although a dedicated package exist to retrieve references from the Web of Scienc
 
 `( ( ( TI= ( govern*  OR  state  OR  decision-making  OR  policy-making OR participat* OR stakeholder ) )  AND  ( TS= ( impact  OR  outcome  OR performance OR  result  OR  differentiation  OR  consequence  OR  change  OR  transformation OR role ) ) )  OR  ( TS= ( governance  NEAR/0  ( mode  OR  model  OR role OR process  )) ) ) AND (TS= ( effect  OR  caus*  OR  explain*  OR  influence  OR  affect  OR  mechanism  OR  restrict  OR  create  OR  impact  OR  drive  OR  role  OR  transform*  OR  relation*  OR  led  OR  improve  OR  interven*  OR  respon* ) ) AND  ( TS= (( urban  OR  neighborhood  OR  city  OR  residential  OR  regional  OR  housing )  NEAR/0 (development  OR  redevelopment OR renewal OR  regeneration  OR  restructuring  OR  revitalization  OR governance ) )  )`
 
-We then selected the articles written in English from the results and obtained 3180 results as of 11 April 2024. We downloaded the first 200 records in .bib format for this example: `wos_reference.bib`. Indeed, we want to show that this code can combine bibliographic data from different queries and or different databases.
+We then selected the articles written in English from the results and obtained 3180 results as of 11 April 2024. We downloaded the first 200 records in .bib format for this example: `wos_reference.bib`, and saved them in the `raw-data` folder of our project. Indeed, we want to show that this code can combine bibliographic data from different queries and or different databases.
 
 ```{r, echo=T, message=F}
-wos_data <-synthesisr::read_refs(here("data", "wos_reference.bib"))
-scopus_data <- synthesisr::read_refs(here("data", "scopus_references.bib"))
+wos_data <-synthesisr::read_refs(here("raw-data", "wos_reference.bib"))
+scopus_data <- synthesisr::read_refs(here("processed-data", "scopus_references.bib"))
 
 # Remember we stored keywords into the url field, let's rename it now:
 scopus_data$keywords <- scopus_data$url
@@ -361,18 +361,21 @@ unique_bib_entries <- lapply(1:nrow(unique_data)
 
 unique_bib_texts <- lapply(unique_bib_entries, toBibtex)
 unique_bib_text <- unlist(unique_bib_texts, use.names = FALSE)
-writeLines(unique_bib_text, here("data_output","all_unique_references.bib"))
+
+dir.create("processed-data/unique_refs")
+writeLines(unique_bib_text, here("processed-data","unique_refs","all_unique_references.bib"))
 
 ```
 
 ## Suggesting new keywords {#sec-litsearchr}
+
 *NB: Parts of this section were adapted from the* `litsearchr` *package documentation available* [here](https://elizagrames.github.io/litsearchr/introduction_vignette_v010.html)
 
 Import .bib or .ris database
 
 ```{r, message=F, warning=F, echo=T, verbose=F}
 
-refs <- litsearchr::import_results(here("data_output"))
+refs <- litsearchr::import_results(here("processed-data", "unique_refs"))
 
 ```
 
@@ -470,12 +473,6 @@ prismaplot <- prisma(
   font_size = 20
 )
 
-```
-
-Save the Prisma diagram as an object and export it as .png file
-
-```{r, echo=T, message=F, warning=F, verbose=F}
-png(here("figures","prisma_flowchart.png"), width = 800, height = 800)
 prismaplot
-dev.off()
 ```
+
