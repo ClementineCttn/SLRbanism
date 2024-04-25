@@ -108,7 +108,7 @@ ggplot(meta_basics_year, aes(x = Year, y = count)) +
   theme_minimal()
 
 # save the plot
-# ggsave("images/number_of_papers_by_year_high_citations.png")
+# ggsave("output/number_of_papers_by_year_high_citations.png")
 ```
 
 Find the high-citation papers in recent 5 years.
@@ -191,7 +191,7 @@ ggplot() +
   guides(fill = guide_none())
 
 # Save the plot
-ggsave("images/direct_mapping.png")
+ggsave("output/direct_mapping.png")
 ```
 
 #### 3. Tiled grid map
@@ -305,7 +305,7 @@ ggplot(country_tiled_frame) +
   labs(title = "Number of papers within different countries") +
   theme_void()
 
-ggsave("images/tiled_grid_map.jpg", width = 10, height = 8, units = "in", dpi = 300)
+ggsave("output/tiled_grid_map.jpg", width = 10, height = 8, units = "in", dpi = 300)
 ```
 
 ## 2. Keyword analysis (wordcloud)
@@ -364,7 +364,7 @@ dfkw_feq <- data.frame(word = names(words), freq = words)
 Generating the word cloud for all the years.
 
 ```{r}
-png("images/wordcloud_total.png", width=6,height=5, units='in', res=300)
+png("output/wordcloud_total.png", width=6,height=5, units='in', res=300)
 set.seed(1234) # for reproducibility 
 wordcloud(words = dfkw_feq$word, freq = dfkw_feq$freq, min.freq = 2, max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
 # add a title
@@ -400,7 +400,7 @@ for (i in unique(df_kw$periods)) {
   m <- as.matrix(dtm)
   words <- sort(rowSums(m), decreasing = TRUE)
   dfkw_feq <- data.frame(word = names(words), freq = words)
-  png(paste("images/wordcloud_", i, ".png", sep = ""), width=6, height=5, units='in', res=300)
+  png(paste("output/wordcloud_", i, ".png", sep = ""), width=6, height=5, units='in', res=300)
   set.seed(1234) # for reproducibility 
   wordcloud(words = dfkw_feq$word, freq = dfkw_feq$freq, min.freq = 2, max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
   title(main = paste("Word Cloud of Keywords in", i))
@@ -564,7 +564,7 @@ top_10_words <- tidy_word_vectors %>%
 ```
 
 ```{r}
-#png("images/wordcloud_test.png", width=6,height=5, units='in', res=300)
+#png("output/wordcloud_test.png", width=6,height=5, units='in', res=300)
 set.seed(1234) # for reproducibility 
 wordcloud(words = top_10_words$item1, freq = top_10_words$freq, max.words=400, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
 # add a title
@@ -747,7 +747,7 @@ viz_df_with_year |>
   ylab("Proportion of topics") +
   labs(title = "Topic proportions per year")
 
-ggsave("images/topics-over-years.png", width = 10, height = 7)
+ggsave("output/topics-over-years.png", width = 10, height = 7)
 ```
 
 ```{r evolution-top-terms}
@@ -790,5 +790,5 @@ ggplot(word_order,
         axis.title = element_text(size = 15),
         legend.position = "none")
 
-ggsave("images/words-over-years.png", width = 10, height = 7)
+ggsave("output/words-over-years.png", width = 10, height = 7)
 ```
