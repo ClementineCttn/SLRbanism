@@ -25,8 +25,11 @@ In order to run part 2 (RENAME), you need to replace the API key with your own. 
 In order to run part 3 (RENAME), you need to download the example data from the [Open Science Framework](https://osf.io/ds83p) and save it in the "raw-data/" folder.
 
 
-## Related document and citation
-This repository is a companion notebook to our written [guidelines on systematic literature reviews for urbanists with R]().
+## License and citation
+This repository is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).
+
+It works as a companion notebook to our written [guidelines on systematic literature reviews for urbanists with R]().
+
 Please cite the guidelines as:
 @ TO DO
 Please cite this notebook as:
