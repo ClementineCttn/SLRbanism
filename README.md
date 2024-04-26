@@ -1,5 +1,13 @@
 # A guide and toolbox for conducting systematic literature reviews in urbanism
 
+- [Clémentine Cottineau](https://github.com/ClementineCttn)
+- [Claudiu Forgaci](https://github.com/cforgaci)
+- [Kyri Janssen](https://github.com/KyriJanssen)
+- [Bayi Li](https://github.com/BayiLi081)
+- [Shuyu Zhang](https://github.com/hadyyu)
+- [Xiaoxia Zhang](https://github.com/valaneila)
+
+  
 ## Context
 Literature reviews are key components of academic research. Indeed, before taking on new research, it is necessary to gather, examine and assess existing knowledge on the topic, so as to position where new findings can take place, how they compare with existing evidence, and the level of novelty they bring. Literature reviews consist in selecting relevant publications related to a particular topic and summarising, analysing and interpreting their content in an organised and critical way. 
 In this guide and toolbox, we offer guidance on how to choose the optimal type of review for a given aim and which tools to use to conduct the review itself (including selection, analysis and reporting). We aim to instrumentalise our guidelines with tools, recent examplesand reusable snippets of code, which should be accessible to an audience of urbanists and urban scholars. Our tool of choice is the open-source statistical software R because of the possibilities it offers for an open and reproducible workflow. It is by no means the only option available and we often point out tools that may complement R in specific steps of the workflow. 
