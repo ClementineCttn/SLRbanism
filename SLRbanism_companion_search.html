@@ -10,7 +10,7 @@
 <meta name="author" content="Kyri Janssen">
 <meta name="author" content="Shuyu Zhang">
 <meta name="author" content="Xioaxia Zhang">
-<meta name="dcterms.date" content="2024-04-12">
+<meta name="dcterms.date" content="2024-04-26">
 
 <title>Companion code for section 2: Search strategy &amp; selection of references</title>
 <style>
@@ -127,7 +127,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 12, 2024</p>
+      <p class="date">April 26, 2024</p>
     </div>
   </div>
   
@@ -143,7 +143,7 @@ div.csl-indent {
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"rscopus"</span>, <span class="st">"RefManageR"</span>, <span class="st">"tidyverse"</span>,<span class="st">"brio"</span>,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"stringr"</span>, <span class="st">"bibtex"</span>, <span class="st">"glue"</span>, <span class="st">"here"</span>, <span class="st">"litsearchr"</span>,</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"revtools"</span>, <span class="st">"remotes"</span>, <span class="st">"igraph"</span>, <span class="st">"remotes"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">"PRISMAstatement"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">"PRISMAstatement"</span>, <span class="st">"synthesisr"</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Load packages and install them if needed</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (package <span class="cf">in</span> packages) {</span>
@@ -200,7 +200,7 @@ $view
 [1] "COMPLETE"
 
 Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%20TITLE%20%28%20govern%2A%20OR%20state%20OR%20decision-making%20OR%20policy-making%20OR%20stakeholder%20OR%20participat%2A%20%29%20%29%20AND%20%28%20TITLE-ABS-KEY%20%28%20impact%20OR%20outcome%20OR%20result%20OR%20differentiation%20OR%20consequence%20OR%20change%20OR%20transformation%20OR%20role%20%29%20%29%20%29%20OR%20%28%20TITLE-ABS-KEY%20%28%20governance%20W%2F0%20%28%20mode%20OR%20model%20OR%20process%20%29%20%29%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20effect%20OR%20caus%2A%20OR%20explain%2A%20OR%20influence%20OR%20affect%20OR%20mechanism%20OR%20restrict%20OR%20create%20OR%20impact%20OR%20drive%20OR%20role%20OR%20transform%2A%20OR%20relation%2A%20OR%20led%20OR%20improve%20OR%20interven%2A%20OR%20respon%2A%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20effect%20OR%20caus%2A%20OR%20explain%2A%20OR%20influence%20OR%20affect%20OR%20mechanism%20OR%20restrict%20OR%20create%20OR%20impact%20OR%20drive%20OR%20role%20OR%20transform%2A%20OR%20relation%2A%20OR%20led%20OR%20improve%20OR%20interven%2A%20OR%20respon%2A%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20urban%20OR%20neighborhood%20OR%20city%20OR%20residential%20OR%20regional%20OR%20housing%20%29%20W%2F0%20%28%20development%20OR%20redevelopment%20OR%20regeneration%20OR%20restructuring%20OR%20revitalization%20OR%20construction%20OR%20governance%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20LIMIT-TO%20%28%20DOCTYPE%20%2C%20%22ar%22%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20LIMIT-TO%20%28%20LANGUAGE%20%2C%20%22English%22%20%29%20%29&amp;count=10&amp;start=0&amp;view=COMPLETE]
-  Date: 2024-04-26 08:16
+  Date: 2024-04-26 08:48
   Status: 200
   Content-Type: application/json;charset=UTF-8
   Size: 57 kB</code></pre>
@@ -586,9 +586,9 @@ Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%2
                                          6 
                   journal of urban affairs 
                                          5 
-                            sustainability 
-                                         5 
                           regional studies 
+                                         4 
+                            sustainability 
                                          4 
                   urban research  practice 
                                          4 
@@ -702,11 +702,11 @@ abe architecture and the built environment
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(search_terms), <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "development projects"       "local government"          
- [3] "public participation"       "regional development"      
- [5] "regional governance"        "spatial planning"          
- [7] "urban development"          "urban development projects"
- [9] "urban governance"           "urban planning"            
-[11] "urban regeneration"         "urban renewal"             </code></pre>
+ [3] "regional development"       "regional governance"       
+ [5] "spatial planning"           "urban development"         
+ [7] "urban development projects" "urban governance"          
+ [9] "urban planning"             "urban regeneration"        
+[11] "urban renewal"             </code></pre>
 </div>
 </div>
 <p>Identify isolated components of graph to suggest new keywords</p>
@@ -716,19 +716,19 @@ abe architecture and the built environment
 <pre><code>$membership
       development projects           local government 
                          1                          1 
-      public participation       regional development 
+      regional development        regional governance 
                          1                          1 
-       regional governance           spatial planning 
+          spatial planning          urban development 
                          1                          1 
-         urban development urban development projects 
+urban development projects           urban governance 
                          1                          1 
-          urban governance             urban planning 
-                         1                          1 
-        urban regeneration              urban renewal 
-                         2                          1 
+            urban planning         urban regeneration 
+                         1                          2 
+             urban renewal 
+                         1 
 
 $csize
-[1] 11  1
+[1] 10  1
 
 $no
 [1] 2</code></pre>
@@ -750,7 +750,7 @@ $no
 <pre><code>[1] "English is written"</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "(((develop* project*) OR (local* govern*) OR (public* particip*) OR (region* develop*) OR (region* govern*) OR (spatial* plan*) OR (urban* develop*) OR (urban* govern*) OR (urban* plan*) OR (urban* renew*)) AND ((urban* regener*)))"</code></pre>
+<pre><code>[1] "(((develop* project*) OR (local* govern*) OR (region* develop*) OR (region* govern*) OR (spatial* plan*) OR (urban* develop*) OR (urban* govern*) OR (urban* plan*) OR (urban* renew*)) AND ((urban* regener*)))"</code></pre>
 </div>
 </div>
 </section>
@@ -774,8 +774,8 @@ $no
 <span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>prismaplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-5080c8c16f8adb0ab617" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-5080c8c16f8adb0ab617">{"x":{"diagram":"digraph prisma {\n    node [shape=\"box\", fontsize = 20];\n    graph [splines=ortho, nodesep=1, dpi = 72]\n    a -> nodups;\n    b -> nodups;\n    a [label=\"Records identified through\ndatabase searching\n(n = 400)\"];\n    b [label=\"Additional records identified\nthrough other sources\n(n = 0)\"]\n    nodups -> incex;\n    nodups [label=\"Records after duplicates removed\n(n = 266)\"];\n    incex -> {ex; ft}\n    incex [label=\"Records screened\n(n = 266)\"];\n    ex [label=\"Records excluded\n(n = 0)\"];\n    {rank=same; incex ex}\n    ft -> {qual; ftex};\n    ft [label=\"Full-text articles assessed\nfor eligibility\n(n = 266)\"];\n    {rank=same; ft ftex}\n    ftex [label=\"Full-text articles excluded,\nwith reasons\n(n = 0)\"];\n    qual -> quant\n    qual [label=\"Studies included in qualitative synthesis\n(n = 266)\"];\n    quant [label=\"Studies included in\nquantitative synthesis\n(meta-analysis)\n(n = 266)\"];\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-17ad6066750da08a121e" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-17ad6066750da08a121e">{"x":{"diagram":"digraph prisma {\n    node [shape=\"box\", fontsize = 20];\n    graph [splines=ortho, nodesep=1, dpi = 72]\n    a -> nodups;\n    b -> nodups;\n    a [label=\"Records identified through\ndatabase searching\n(n = 400)\"];\n    b [label=\"Additional records identified\nthrough other sources\n(n = 0)\"]\n    nodups -> incex;\n    nodups [label=\"Records after duplicates removed\n(n = 266)\"];\n    incex -> {ex; ft}\n    incex [label=\"Records screened\n(n = 266)\"];\n    ex [label=\"Records excluded\n(n = 0)\"];\n    {rank=same; incex ex}\n    ft -> {qual; ftex};\n    ft [label=\"Full-text articles assessed\nfor eligibility\n(n = 266)\"];\n    {rank=same; ft ftex}\n    ftex [label=\"Full-text articles excluded,\nwith reasons\n(n = 0)\"];\n    qual -> quant\n    qual [label=\"Studies included in qualitative synthesis\n(n = 266)\"];\n    quant [label=\"Studies included in\nquantitative synthesis\n(meta-analysis)\n(n = 266)\"];\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>

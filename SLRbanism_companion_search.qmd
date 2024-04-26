@@ -5,7 +5,7 @@ author:
  - "Kyri Janssen"
  - "Shuyu Zhang"
  - "Xioaxia Zhang"
-date: "2024-04-12"
+date: today
 format: html
 editor: visual
 number-sections: true
