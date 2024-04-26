@@ -294,9 +294,8 @@ nrow(all_unique_references)
 Something else we might want to consider, is if our literature search also identified one or more key articles that we know should be in the SLR. So, lets take a target article. In our case, the author of this specific literature review stated that [@van2006urban] and [@wu2022rethinking] should be considered as a target references. So let's examine, if they are included in our `all_unique_references` dataframe.
 We do this copying doi from the target references and identifying if this doi is present in the `all_unique_references` dataframe
 
-```{r}
+```{r,echo=T, message=F}
 #Read target papers's bib file and extract doi information
-library(synthesisr)
 target_references <-synthesisr::read_refs(here("raw-data", "targetPapers.bib"))
 
 # Let's test whether they are present or not our reference list
