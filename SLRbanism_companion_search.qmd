@@ -27,7 +27,7 @@ Let us first install and load the packages we will need.
 packages <- c("rscopus", "RefManageR", "tidyverse","brio",
               "stringr", "bibtex", "glue", "here", "litsearchr",
               "revtools", "remotes", "igraph", "remotes",
-              "PRISMAstatement")
+              "PRISMAstatement", "synthesisr")
 
 ## Load packages and install them if needed
 for (package in packages) {
