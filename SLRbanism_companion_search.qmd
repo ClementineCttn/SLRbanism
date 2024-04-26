@@ -9,6 +9,10 @@ date: "2024-04-12"
 format: html
 editor: visual
 number-sections: true
+bibliography: raw-data/targetPapers.bib 
+csl: apa.csl
+link-citations: true
+theme: minty 
 ---
 
 ```{r setup, include=FALSE}
@@ -287,19 +291,16 @@ nrow(all_unique_references)
 
 ```
 
-Something else we might want to consider, is if our literature search also identified one or more key articles that we know should be in the SLR. So, lets take a target article. In our case, the author of this specific literature review stated that the articles `Urban governance and social cohesion: Effects of urban restructuring policies in two Dutch cities` by `van Marissing et al. (2006)` and `Rethinking China’s urban governance: The role of the state in neighbourhoods, cities and regions` by `Wu and Zang (2022)` should be considered as a target references. So lets examine, if this article is present in our `all_unique_references` dataframe.\
+Something else we might want to consider, is if our literature search also identified one or more key articles that we know should be in the SLR. So, lets take a target article. In our case, the author of this specific literature review stated that [@van2006urban] and [@wu2022rethinking] should be considered as a target references. So let's examine, if they are included in our `all_unique_references` dataframe.
 We do this copying doi from the target references and identifying if this doi is present in the `all_unique_references` dataframe
 
 ```{r}
-#create a vector with the doi's of 
-# van Marissing et al. (2006) and Wu and Zang (2022)
-target_references <- c(
-  "doi.org/10.1016/j.cities.2005.11.001",
-  "doi.org/10.1177/03091325211062171"
-  )
+#Read target papers's bib file and extract doi information
+library(synthesisr)
+target_references <-synthesisr::read_refs(here("raw-data", "targetPapers.bib"))
 
 # Let's test whether they are present or not our reference list
- target_references %in% all_unique_references$doi
+ target_references$doi %in% all_unique_references$doi
 
 ```
 
@@ -475,4 +476,6 @@ prismaplot <- prisma(
 
 prismaplot
 ```
-
+## References
+::: {#refs}
+:::
