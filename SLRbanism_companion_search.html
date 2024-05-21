@@ -10,7 +10,7 @@
 <meta name="author" content="Kyri Janssen">
 <meta name="author" content="Shuyu Zhang">
 <meta name="author" content="Xioaxia Zhang">
-<meta name="dcterms.date" content="2024-04-26">
+<meta name="dcterms.date" content="2024-05-21">
 
 <title>Companion code for section 2: Search strategy &amp; selection of references</title>
 <style>
@@ -91,7 +91,8 @@ div.csl-indent {
 <script src="SLRbanism_companion_search_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="SLRbanism_companion_search_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="SLRbanism_companion_search_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-<script src="SLRbanism_companion_search_files/libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="SLRbanism_companion_search_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="SLRbanism_companion_search_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
 <script src="SLRbanism_companion_search_files/libs/viz-1.8.2/viz.js"></script>
 <link href="SLRbanism_companion_search_files/libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
 <script src="SLRbanism_companion_search_files/libs/grViz-binding-1.0.11/grViz.js"></script>
@@ -127,7 +128,7 @@ div.csl-indent {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">April 26, 2024</p>
+      <p class="date">May 21, 2024</p>
     </div>
   </div>
   
@@ -170,10 +171,7 @@ div.csl-indent {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>query <span class="ot">&lt;-</span> <span class="st">"( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND </span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND </span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND </span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">          ( TITLE-ABS-KEY ( urban OR neighborhood OR city OR residential OR regional OR housing ) W/0 ( development OR redevelopment OR regeneration OR restructuring OR revitalization OR construction OR governance ) ) AND </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">          ( LIMIT-TO ( DOCTYPE , </span><span class="sc">\"</span><span class="st">ar</span><span class="sc">\"</span><span class="st"> ) ) AND </span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">          ( LIMIT-TO ( LANGUAGE , </span><span class="sc">\"</span><span class="st">English</span><span class="sc">\"</span><span class="st"> ) )"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">          ( TITLE-ABS-KEY ( urban OR neighborhood OR city OR residential OR regional OR housing ) W/0 ( development OR redevelopment OR regeneration OR restructuring OR revitalization OR construction OR governance ) ) "</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Query scopus if you get the api key. Note that you can modify the max_count for each searching:</p>
 <div class="cell">
@@ -185,10 +183,10 @@ div.csl-indent {
 <pre><code>The query list is: </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>list(query = "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND \n          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND \n          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND \n          ( TITLE-ABS-KEY ( urban OR neighborhood OR city OR residential OR regional OR housing ) W/0 ( development OR redevelopment OR regeneration OR restructuring OR revitalization OR construction OR governance ) ) AND \n          ( LIMIT-TO ( DOCTYPE , \"ar\" ) ) AND \n          ( LIMIT-TO ( LANGUAGE , \"English\" ) )", 
+<pre><code>list(query = "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND \n          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND \n          ( TITLE-ABS-KEY ( urban OR neighborhood OR city OR residential OR regional OR housing ) W/0 ( development OR redevelopment OR regeneration OR restructuring OR revitalization OR construction OR governance ) ) ", 
     count = 10, start = 0, view = "COMPLETE")
 $query
-[1] "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND \n          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND \n          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND \n          ( TITLE-ABS-KEY ( urban OR neighborhood OR city OR residential OR regional OR housing ) W/0 ( development OR redevelopment OR regeneration OR restructuring OR revitalization OR construction OR governance ) ) AND \n          ( LIMIT-TO ( DOCTYPE , \"ar\" ) ) AND \n          ( LIMIT-TO ( LANGUAGE , \"English\" ) )"
+[1] "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND \n          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND \n          ( TITLE-ABS-KEY ( urban OR neighborhood OR city OR residential OR regional OR housing ) W/0 ( development OR redevelopment OR regeneration OR restructuring OR revitalization OR construction OR governance ) ) "
 
 $count
 [1] 10
@@ -199,14 +197,14 @@ $start
 $view
 [1] "COMPLETE"
 
-Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%20TITLE%20%28%20govern%2A%20OR%20state%20OR%20decision-making%20OR%20policy-making%20OR%20stakeholder%20OR%20participat%2A%20%29%20%29%20AND%20%28%20TITLE-ABS-KEY%20%28%20impact%20OR%20outcome%20OR%20result%20OR%20differentiation%20OR%20consequence%20OR%20change%20OR%20transformation%20OR%20role%20%29%20%29%20%29%20OR%20%28%20TITLE-ABS-KEY%20%28%20governance%20W%2F0%20%28%20mode%20OR%20model%20OR%20process%20%29%20%29%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20effect%20OR%20caus%2A%20OR%20explain%2A%20OR%20influence%20OR%20affect%20OR%20mechanism%20OR%20restrict%20OR%20create%20OR%20impact%20OR%20drive%20OR%20role%20OR%20transform%2A%20OR%20relation%2A%20OR%20led%20OR%20improve%20OR%20interven%2A%20OR%20respon%2A%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20effect%20OR%20caus%2A%20OR%20explain%2A%20OR%20influence%20OR%20affect%20OR%20mechanism%20OR%20restrict%20OR%20create%20OR%20impact%20OR%20drive%20OR%20role%20OR%20transform%2A%20OR%20relation%2A%20OR%20led%20OR%20improve%20OR%20interven%2A%20OR%20respon%2A%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20urban%20OR%20neighborhood%20OR%20city%20OR%20residential%20OR%20regional%20OR%20housing%20%29%20W%2F0%20%28%20development%20OR%20redevelopment%20OR%20regeneration%20OR%20restructuring%20OR%20revitalization%20OR%20construction%20OR%20governance%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20LIMIT-TO%20%28%20DOCTYPE%20%2C%20%22ar%22%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20LIMIT-TO%20%28%20LANGUAGE%20%2C%20%22English%22%20%29%20%29&amp;count=10&amp;start=0&amp;view=COMPLETE]
-  Date: 2024-04-26 08:48
+Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%20TITLE%20%28%20govern%2A%20OR%20state%20OR%20decision-making%20OR%20policy-making%20OR%20stakeholder%20OR%20participat%2A%20%29%20%29%20AND%20%28%20TITLE-ABS-KEY%20%28%20impact%20OR%20outcome%20OR%20result%20OR%20differentiation%20OR%20consequence%20OR%20change%20OR%20transformation%20OR%20role%20%29%20%29%20%29%20OR%20%28%20TITLE-ABS-KEY%20%28%20governance%20W%2F0%20%28%20mode%20OR%20model%20OR%20process%20%29%20%29%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20effect%20OR%20caus%2A%20OR%20explain%2A%20OR%20influence%20OR%20affect%20OR%20mechanism%20OR%20restrict%20OR%20create%20OR%20impact%20OR%20drive%20OR%20role%20OR%20transform%2A%20OR%20relation%2A%20OR%20led%20OR%20improve%20OR%20interven%2A%20OR%20respon%2A%20%29%20%29%20AND%20%0A%20%20%20%20%20%20%20%20%20%20%28%20TITLE-ABS-KEY%20%28%20urban%20OR%20neighborhood%20OR%20city%20OR%20residential%20OR%20regional%20OR%20housing%20%29%20W%2F0%20%28%20development%20OR%20redevelopment%20OR%20regeneration%20OR%20restructuring%20OR%20revitalization%20OR%20construction%20OR%20governance%20%29%20%29%20&amp;count=10&amp;start=0&amp;view=COMPLETE]
+  Date: 2024-05-21 07:08
   Status: 200
   Content-Type: application/json;charset=UTF-8
   Size: 57 kB</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Total Entries are 4941</code></pre>
+<pre><code>Total Entries are 4983</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Maximum Count is 200</code></pre>
@@ -270,158 +268,96 @@ Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%2
 <p>Convert the list to a data frame</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>results_df <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, search_results<span class="sc">$</span>df)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>transposed_results_df <span class="ot">&lt;-</span> <span class="fu">t</span>(results_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>transposed_results_df <span class="ot">&lt;-</span> <span class="fu">t</span>(results_df)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(transposed_results_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 200  36</code></pre>
+</div>
+</div>
+<p>Add filter to keep only articles”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>articles_df <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(transposed_results_df) <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(subtype <span class="sc">==</span> <span class="st">"ar"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(articles_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 176  36</code></pre>
+</div>
 </div>
 <p>What does it look like?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(transposed_results_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(articles_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     @_fa   prism:url                                                        
-[1,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85189521736"
-[2,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85187130405"
-[3,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85181753540"
-[4,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85190321293"
-[5,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85189945016"
-[6,] "true" "https://api.elsevier.com/content/abstract/scopus_id/85189526618"
-     dc:identifier           eid                 
-[1,] "SCOPUS_ID:85189521736" "2-s2.0-85189521736"
-[2,] "SCOPUS_ID:85187130405" "2-s2.0-85187130405"
-[3,] "SCOPUS_ID:85181753540" "2-s2.0-85181753540"
-[4,] "SCOPUS_ID:85190321293" "2-s2.0-85190321293"
-[5,] "SCOPUS_ID:85189945016" "2-s2.0-85189945016"
-[6,] "SCOPUS_ID:85189526618" "2-s2.0-85189526618"
-     dc:title                                                                                                                                                              
-[1,] "Explaining Factors Affecting Flood Evacuation From the Point of View of Stakeholders: AContent Analysis Study"                                                       
-[2,] "An Integrated Multi-Source Dataset for Measuring Settlement Evolution in the United States from 1810 to 2020"                                                        
-[3,] "De-bordering policies at the city scale: strategies for building resilience in Barcelona's migration governance"                                                     
-[4,] "Advancing equitable ‘resilience imaginaries’ in the Global South through dialogical participatory mapping: Experiences from informal communities in Brazil"          
-[5,] "Reconceiving China's urban economic transition through symbiotic state-firm dynamics: An integrated perspective from urban governance and global production networks"
-[6,] "Empowering urban energy transition through data-driven decision-making: A statistical examination of technological innovations in transportation and mobility"       
-     dc:creator          prism:publicationName                          
-[1,] "Karampourian A."   "Health in Emergencies and Disasters Quarterly"
-[2,] "Ahn Y."            "Scientific Data"                              
-[3,] "Zapata-Barrero R." "Comparative Migration Studies"                
-[4,] "Pitidis V."        "Cities"                                       
-[5,] "Wang K."           "Cities"                                       
-[6,] "Zhang F."          "Sustainable Cities and Society"               
-     prism:eIssn prism:volume prism:issueIdentifier prism:pageRange
-[1,] "23454210"  "9"          "2"                   "115-124"      
-[2,] "20524463"  "11"         "1"                   NA             
-[3,] "2214594X"  "12"         "1"                   NA             
-[4,] NA          "150"        NA                    NA             
-[5,] NA          "150"        NA                    NA             
-[6,] NA          "106"        NA                    NA             
-     prism:coverDate prism:coverDisplayDate prism:doi                     
-[1,] "2024-12-01"    "Winter 2024"          "10.32598/hdq.9.2.494.4"      
-[2,] "2024-12-01"    "December 2024"        "10.1038/s41597-024-03081-x"  
-[3,] "2024-12-01"    "December 2024"        "10.1186/s40878-023-00361-0"  
-[4,] "2024-07-01"    "July 2024"            "10.1016/j.cities.2024.105015"
-[5,] "2024-07-01"    "July 2024"            "10.1016/j.cities.2024.104974"
-[6,] "2024-07-01"    "1 July 2024"          "10.1016/j.scs.2024.105374"   
-     dc:description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-[1,] "Background: Floods are a natural hydrological hazard that causes human and environmental damage. In the response phase, evacuation is necessary to reduce deterioration. This study explains the influential factors on flood evacuation based on the opinion of the stakeholders. Materials and Methods: This is a conventional content analysis study conducted in 2021. A total of 27 participants were selected using the purposive sampling method. Data collection was performed using semi-structured interviews. Interviews continued until information saturation was reached. The recorded interviews were handwritten word by word and then analyzed. The criteria for entering the study included flood experience, the ability to communicate, and willingness to participate. The period of the interview was 40 to 70 min. Written consent was obtained from the interviewees for audio recording. The Granheim and Lundman method was used for data analysis. This study’s reliability was based on the Goba and Lincoln method. Results: Data analysis extracted four main categories with ten sub-categories, including human factors (a subcategory of individual characteristics and risk perception), social factors (a subcategory of cultural conditions and financial status), geographical factors (a sub-category of urban location and climate conditions), and infrastructure factors (a sub-category of facilities related to transportation tools and routes, urban constructions, communication infrastructure, and meteorological facilities). Conclusion: Reaching a successful evacuation requires determining the relevant factors. These factors include human, social, geographic, and infrastructure factors. The findings of this study can help managers in flood management."                                                       
-[2,] "Understanding changes in the built environment is vital for sustainable urban development and disaster preparedness. Recent years have seen the emergence of a variety of global, continent-level, and nation-wide datasets related to the current state and the evolution of the built environment, human settlements or building stocks.&nbsp;However, such datasets may&nbsp;face limitations like incomplete coverage, sparse building information, coarse resolution, and limited timeframes. This study addresses these challenges by integrating three spatial datasets to create an extensive, attribute-rich sequence of settlement layers spanning 200 years for the contiguous U.S. This integration process involves complex data processing, merging property-level real estate, parcel, and remote sensing-based building footprint data, and creating gridded multi-temporal settlement layers. This effort unveils the latest edition (Version 2)&nbsp;of the Historical Settlement Data Compilation for the U.S. (HISDAC-US), which includes the latest land use and structural information as of the year 2021. It enables detailed research on urban form and structure, helps assess and map the built environment’s risk to natural hazards, assists in population modeling, supports land use analysis, and aids health studies."                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-[3,] "This article bridges the fields of urban politics, migration governance and border studies by exploring Barcelona as a case study. It raises a first critical question about what happens to so-called borderlands when \"borders\" move to other scales, such as cities that are not usually categorized as \"border cities\". Within this framing debate, this study explores two fundamental questions: (1) how border practices at the state level shape constrained relations between cities and migrants, and (2) how cities map de-bordering policies to resolve such constraints, which we conceptualise as an example of 'urban resilience'. The aim is to provide a focus that brings the analytical category of \"urban resilience\", recently proposed within the emerging debate on the \"local turn\" in migration studies, to bear on issues directly related to the social impacts of state bordering processes on urban systems. The article then argues that urban justice principles drive most cities to initiate resilient de-bordering policies, and can be seen as a distinctive normative factor underpinning urban resilience when applied to migration governance. After laying the groundwork for this theoretical framework and its application to the city of Barcelona, the final section briefly outlines the potential of this new and crucial critical area of migration research. This will provide yet another opportunity to highlight that we are likely to enter an era in which cities will increasingly become sovereign geopolitical entities within and beyond the traditional hierarchical reach of their own states."                                                                                                                                                                                                            
-[4,] "Over recent years, and as a result of the recent global health pandemic, resilience has become increasingly central to contemporary policy discourses in urban planning and development in both the Global North and Global South. Drawing from ongoing empirical studies of community resilience and everyday practices that have been co-designed and co-produced alongside Brazilian marginalised communities which are highly vulnerable to a range of natural hazards, this paper highlights the growing importance of dialogical stakeholder engagement methodologies in designing alternative urban visions – so-called resilience imaginaries or counter-cities - across the Global South based on social diversity, equity and spatial justice. More specifically, the dialogical participatory mapping approach outlined in this paper utilises citizen science approaches to develop local resilience imaginaries, building on the pedagogical work of Brazilian educator Paulo Freire and the conceptualisation of dialogue as a comprehensive and progressively unfolding methodological approach. Practically, we adopted a range of community engagement approaches that allowed local citizens to become more aware of their own risk context and embed this tacit knowledge into the operation of civil protection programmes. Our empirical results highlight the potential of such dialogical participatory approaches to capture lay knowledge from local citizens and contribute to the development of enhanced resilience approaches. The paper concludes by reflecting on the role of formerly marginalised voices in the advancement of local urban policy and on the novelty and promise of critical pedagogical approaches to co-production within existing regimes of urban governance and the imagining of radically independent counter-cities."
-[5,] "China's urban economic transition since the 2000s has garnered considerable scholarly interest. Two distinct bodies of scholarship, namely urban governance and global production networks, have investigated this phenomenon, each offering unique insights either from an endogenous state-centric or exogenous firm-centric approach. The former has justifiably accentuated the centrality of the state in shaping Chinas urban-regional economic reconfiguration but lacks exploration of the multifaceted ways in which state apparatus engages with a spectrum of quotidian firm-level activities and the negotiation power these firms wield. The latter embraces an exogenous firm-centric perspective on the economic transition in East Asia latecomer regions, stressing forces of globalisation, foreign investment, and intra/inter/extra-firm networks, but tends to bracket the state into the institutional background and, therefore, downplays its agentic role. By initiating a dialogue between these two theoretical frameworks, this paper formulates a dialectical state-firm relational approach, offering a revitalised, integrative comprehension of China's urban economic transformation. Employing Dongguan - a globally recognised hub for ICT manufacturing - as an empirical focal point, it elucidates how the relational state-firm dynamics evolve temporally, differ spatially across territories and scales, and display distinct contrasts between high-value-added and labour-intensive sectors within the ICT industry."                                                                                                                                                                                                                                                                                                            
-[6,] "Urban energy consumption is a critical aspect of sustainable urban development, with technological innovations playing a pivotal role in shaping energy usage patterns. This paper presents a comprehensive analysis of urban energy consumption dynamics in relation to the adoption of technology across various sectors, including transportation, residential, industrial, and commercial domains. Through extensive data collection and advanced statistical analyses, we investigate the correlation between technology adoption rates and energy consumption behaviors in urban areas. Our findings reveal a strong positive correlation between technology adoption rates and reduced energy consumption across sectors. We employ spatial analyses to identify localized successes, shedding light on regions where technology-driven initiatives have significantly lowered energy demands. These insights offer valuable guidance for urban planners and policymakers aiming to implement targeted interventions and replicate effective strategies. Furthermore, the paper emphasizes the transformative potential of innovative solutions, ranging from smart infrastructure to industrial automation, in promoting energy efficiency and environmental sustainability. By fostering the integration of such technologies, cities can mitigate their carbon footprint, enhance energy resilience, and create more livable environments for residents. This research contributes to the discourse on urban energy transitions and provides actionable insights for urban policymakers and stakeholders striving for a greener, more sustainable urban future."                                                                                                                                                                                                   
-     citedby-count prism:aggregationType subtype subtypeDescription
-[1,] "0"           "Journal"             "ar"    "Article"         
-[2,] "0"           "Journal"             "dp"    "Data Paper"      
-[3,] "0"           "Journal"             "ar"    "Article"         
-[4,] "0"           "Journal"             "ar"    "Article"         
-[5,] "0"           "Journal"             "ar"    "Article"         
-[6,] "0"           "Journal"             "ar"    "Article"         
-     author-count.@limit author-count.@total author-count.$
-[1,] "100"               "3"                 "3"           
-[2,] "100"               "4"                 "4"           
-[3,] "100"               "1"                 "1"           
-[4,] "100"               "3"                 "3"           
-[5,] "100"               "4"                 "4"           
-[6,] "100"               "8"                 "8"           
-     authkeywords                                                                                                            
-[1,] "Disaster planning | Disasters | Emergency shelter | Floods"                                                            
-[2,] NA                                                                                                                      
-[3,] "Barcelona | Bordering politics | De-bordering policies | Migration | Urban governance urban resilience | Urban justice"
-[4,] "Co-production | Counter-cities | Dialogical methods | Participatory mapping | Resilience imaginaries"                  
-[5,] "China | Global production networks | State-firm relations | Urban economic transition | Urban governance"              
-[6,] "Energy efficiency | Spatial analysis | Sustainable urban development | Technology adoption | Urban energy consumption" 
-     source-id     fund-no     fund-sponsor                                  
-[1,] "21101146384" "undefined" "Hamadan University of Medical Sciences"      
-[2,] "21100451321" "1924670"   "National Science Foundation"                 
-[3,] "21100899442" "101079254" NA                                            
-[4,] "16956"       "101019707" "Bundesministerium für Bildung und Forschung" 
-[5,] "16956"       "42201268"  "National Natural Science Foundation of China"
-[6,] "19700194105" "undefined" NA                                            
-     openaccess openaccessFlag entry_number pubmed-id  article-number fund-acr
-[1,] "0"        "FALSE"        "1"          NA         NA             NA      
-[2,] "1"        "TRUE"         "2"          "38453937" "275"          "NSF"   
-[3,] "1"        "TRUE"         "3"          NA         "2"            NA      
-[4,] "0"        "FALSE"        "4"          NA         "105015"       "BMBF"  
-[5,] "1"        "TRUE"         "5"          NA         "104974"       "NSFC"  
-[6,] "0"        "FALSE"        "6"          NA         "105374"       NA      
-     freetoread.value.$ freetoreadLabel.value.$ prism:issn pii                
-[1,] NA                 NA                      NA         NA                 
-[2,] "all"              "All Open Access"       NA         NA                 
-[3,] "all"              "All Open Access"       NA         NA                 
-[4,] NA                 NA                      "02642751" "S0264275124002294"
-[5,] "all"              "All Open Access"       "02642751" "S0264275124001884"
-[6,] NA                 NA                      "22106707" "S2210670724002026"</code></pre>
+<pre><code># A tibble: 6 × 36
+  `@_fa` `prism:url`               `dc:identifier` eid   `dc:title` `dc:creator`
+  &lt;chr&gt;  &lt;chr&gt;                     &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;      &lt;chr&gt;       
+1 true   https://api.elsevier.com… SCOPUS_ID:8519… 2-s2… Decomposi… Wu Y.       
+2 true   https://api.elsevier.com… SCOPUS_ID:8518… 2-s2… Explainin… Karampouria…
+3 true   https://api.elsevier.com… SCOPUS_ID:8518… 2-s2… De-border… Zapata-Barr…
+4 true   https://api.elsevier.com… SCOPUS_ID:8519… 2-s2… Artificia… Bibri S.E.  
+5 true   https://api.elsevier.com… SCOPUS_ID:8519… 2-s2… Decipheri… Abedin J.   
+6 true   https://api.elsevier.com… SCOPUS_ID:8519… 2-s2… Blockchai… Zhu X.      
+# ℹ 30 more variables: `prism:publicationName` &lt;chr&gt;, `prism:eIssn` &lt;chr&gt;,
+#   `prism:volume` &lt;chr&gt;, `prism:issueIdentifier` &lt;chr&gt;,
+#   `prism:coverDate` &lt;chr&gt;, `prism:coverDisplayDate` &lt;chr&gt;, `prism:doi` &lt;chr&gt;,
+#   `dc:description` &lt;chr&gt;, `citedby-count` &lt;chr&gt;,
+#   `prism:aggregationType` &lt;chr&gt;, subtype &lt;chr&gt;, subtypeDescription &lt;chr&gt;,
+#   `author-count.@limit` &lt;chr&gt;, `author-count.@total` &lt;chr&gt;,
+#   `author-count.$` &lt;chr&gt;, `article-number` &lt;chr&gt;, `source-id` &lt;chr&gt;, …</code></pre>
 </div>
 </div>
 <p>Write the details to a CSV file</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(transposed_results_df, <span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"scopus_api_results.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(articles_df, <span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"scopus_api_results.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Export a into a .bib file</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"scopus_api_results.csv"</span>))</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(df)) {</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>authkeywords[i] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">unlist</span>(<span class="fu">strsplit</span>(df<span class="sc">$</span>authkeywords[i], <span class="st">"</span><span class="sc">\\</span><span class="st">s*</span><span class="sc">\\</span><span class="st">|</span><span class="sc">\\</span><span class="st">s*"</span>)), <span class="at">collapse =</span> <span class="st">", "</span>)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Author =</span> df<span class="sc">$</span>dc.creator,</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Title =</span> df<span class="sc">$</span>dc.title,</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Year =</span> <span class="fu">sub</span>(<span class="st">".*</span><span class="sc">\\</span><span class="st">s(</span><span class="sc">\\</span><span class="st">d{4})$"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, df<span class="sc">$</span>prism.coverDisplayDate),</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Journal =</span> df<span class="sc">$</span>prism.publicationName,</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Volume =</span> df<span class="sc">$</span>prism.volume,</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">Number =</span> df<span class="sc">$</span>article.number,</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pages =</span> df<span class="sc">$</span>prism.pageRange,</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">DOI =</span> df<span class="sc">$</span>prism.doi,</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">Keyword =</span> df<span class="sc">$</span>authkeywords</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"scopus_api_results.csv"</span>))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(df)) {</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>authkeywords[i] <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">unlist</span>(<span class="fu">strsplit</span>(df<span class="sc">$</span>authkeywords[i], <span class="st">"</span><span class="sc">\\</span><span class="st">s*</span><span class="sc">\\</span><span class="st">|</span><span class="sc">\\</span><span class="st">s*"</span>)), <span class="at">collapse =</span> <span class="st">", "</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Author =</span> df<span class="sc">$</span>dc.creator,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Title =</span> df<span class="sc">$</span>dc.title,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Year =</span> <span class="fu">sub</span>(<span class="st">".*</span><span class="sc">\\</span><span class="st">s(</span><span class="sc">\\</span><span class="st">d{4})$"</span>, <span class="st">"</span><span class="sc">\\</span><span class="st">1"</span>, df<span class="sc">$</span>prism.coverDisplayDate),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Journal =</span> df<span class="sc">$</span>prism.publicationName,</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Volume =</span> df<span class="sc">$</span>prism.volume,</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">Number =</span> df<span class="sc">$</span>article.number,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pages =</span> df<span class="sc">$</span>prism.pageRange,</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">DOI =</span> df<span class="sc">$</span>prism.doi,</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">Keyword =</span> df<span class="sc">$</span>authkeywords</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Create a list of BibEntry objects</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Format the Keywords field</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>bib_entries <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data), <span class="cf">function</span>(i) {</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">BibEntry</span>(</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">bibtype =</span> <span class="st">"Article"</span>,        <span class="co"># Add the bibtype argument</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">key =</span> <span class="fu">paste0</span>(<span class="fu">substr</span>(data<span class="sc">$</span>Author[i], <span class="dv">1</span>, <span class="dv">1</span>), data<span class="sc">$</span>Year[i]),</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">author =</span> data<span class="sc">$</span>Author[i],    <span class="co"># Add author field</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> data<span class="sc">$</span>Title[i],      <span class="co"># Add title field</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> data<span class="sc">$</span>Year[i],        <span class="co"># Add year field</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">journal =</span> data<span class="sc">$</span>Journal[i],  <span class="co"># Add journal field</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">volume =</span> data<span class="sc">$</span>Volume[i],    <span class="co"># Add volume field</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">number =</span> data<span class="sc">$</span>Number[i],    <span class="co"># Add number field</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">pages =</span> data<span class="sc">$</span>Pages[i],      <span class="co"># Add pages field</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">doi =</span> data<span class="sc">$</span>DOI[i],         <span class="co"># Add DOI field</span></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">url =</span> data<span class="sc">$</span>Keyword[i]      <span class="co"># Add Keyword field (because BibEntry function does not provide keyword indicator, use url for keywords as an example.)</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Format the Keywords field</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>bib_entries <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data), <span class="cf">function</span>(i) {</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">BibEntry</span>(</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">bibtype =</span> <span class="st">"Article"</span>,        <span class="co"># Add the bibtype argument</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">key =</span> <span class="fu">paste0</span>(<span class="fu">substr</span>(data<span class="sc">$</span>Author[i], <span class="dv">1</span>, <span class="dv">1</span>), data<span class="sc">$</span>Year[i]),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">author =</span> data<span class="sc">$</span>Author[i],    <span class="co"># Add author field</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> data<span class="sc">$</span>Title[i],      <span class="co"># Add title field</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> data<span class="sc">$</span>Year[i],        <span class="co"># Add year field</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">journal =</span> data<span class="sc">$</span>Journal[i],  <span class="co"># Add journal field</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">volume =</span> data<span class="sc">$</span>Volume[i],    <span class="co"># Add volume field</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">number =</span> data<span class="sc">$</span>Number[i],    <span class="co"># Add number field</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">pages =</span> data<span class="sc">$</span>Pages[i],      <span class="co"># Add pages field</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">doi =</span> data<span class="sc">$</span>DOI[i],         <span class="co"># Add DOI field</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">url =</span> data<span class="sc">$</span>Keyword[i]      <span class="co"># Add Keyword field (because BibEntry function does not provide keyword indicator, use url for keywords as an example.)</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Convert each BibEntry object to BibTeX format individually</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>bib_texts <span class="ot">&lt;-</span> <span class="fu">lapply</span>(bib_entries, toBibtex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>bib_texts <span class="ot">&lt;-</span> <span class="fu">lapply</span>(bib_entries, toBibtex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Combine the BibTeX texts into a single character vector</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>bib_text <span class="ot">&lt;-</span> <span class="fu">unlist</span>(bib_texts, <span class="at">use.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>bib_text <span class="ot">&lt;-</span> <span class="fu">unlist</span>(bib_texts, <span class="at">use.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Write BibTeX file</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(bib_text, <span class="fu">here</span>(<span class="st">"processed-data"</span>,<span class="st">"scopus_references.bib"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(bib_text, <span class="fu">here</span>(<span class="st">"processed-data"</span>,<span class="st">"scopus_references.bib"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sec-revtools" class="level2" data-number="2">
@@ -430,35 +366,35 @@ Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%2
 <p><code>( ( ( TI= ( govern*  OR  state  OR  decision-making  OR  policy-making OR participat* OR stakeholder ) )  AND  ( TS= ( impact  OR  outcome  OR performance OR  result  OR  differentiation  OR  consequence  OR  change  OR  transformation OR role ) ) )  OR  ( TS= ( governance  NEAR/0  ( mode  OR  model  OR role OR process  )) ) ) AND (TS= ( effect  OR  caus*  OR  explain*  OR  influence  OR  affect  OR  mechanism  OR  restrict  OR  create  OR  impact  OR  drive  OR  role  OR  transform*  OR  relation*  OR  led  OR  improve  OR  interven*  OR  respon* ) ) AND  ( TS= (( urban  OR  neighborhood  OR  city  OR  residential  OR  regional  OR  housing )  NEAR/0 (development  OR  redevelopment OR renewal OR  regeneration  OR  restructuring  OR  revitalization  OR governance ) )  )</code></p>
 <p>We then selected the articles written in English from the results and obtained 3180 results as of 11 April 2024. We downloaded the first 200 records in .bib format for this example: <code>wos_reference.bib</code>, and saved them in the <code>raw-data</code> folder of our project. Indeed, we want to show that this code can combine bibliographic data from different queries and or different databases.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>wos_data <span class="ot">&lt;-</span>synthesisr<span class="sc">::</span><span class="fu">read_refs</span>(<span class="fu">here</span>(<span class="st">"raw-data"</span>, <span class="st">"wos_reference.bib"</span>))</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>scopus_data <span class="ot">&lt;-</span> synthesisr<span class="sc">::</span><span class="fu">read_refs</span>(<span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"scopus_references.bib"</span>))</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remember we stored keywords into the url field, let's rename it now:</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>scopus_data<span class="sc">$</span>keywords <span class="ot">&lt;-</span> scopus_data<span class="sc">$</span>url</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>wos_data <span class="ot">&lt;-</span> synthesisr<span class="sc">::</span><span class="fu">read_refs</span>(<span class="fu">here</span>(<span class="st">"raw-data"</span>, <span class="st">"wos_reference.bib"</span>))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>scopus_data <span class="ot">&lt;-</span> synthesisr<span class="sc">::</span><span class="fu">read_refs</span>(<span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"scopus_references.bib"</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Remember we stored keywords into the url field, let's rename it now:</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>scopus_data<span class="sc">$</span>keywords <span class="ot">&lt;-</span> scopus_data<span class="sc">$</span>url</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Save variable names of dataframes is object</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>unique_vars_scopus <span class="ot">&lt;-</span> <span class="fu">colnames</span>(scopus_data)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a> unique_vars_wos <span class="ot">&lt;-</span> <span class="fu">colnames</span>(wos_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>unique_vars_scopus <span class="ot">&lt;-</span> <span class="fu">colnames</span>(scopus_data)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a> unique_vars_wos <span class="ot">&lt;-</span> <span class="fu">colnames</span>(wos_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Identify which columns the scopus and wos dataframes have in common</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>common_vars <span class="ot">&lt;-</span> <span class="fu">intersect</span>(unique_vars_scopus, unique_vars_wos)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(common_vars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>common_vars <span class="ot">&lt;-</span> <span class="fu">intersect</span>(unique_vars_scopus, unique_vars_wos)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(common_vars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "type"     "author"   "title"    "year"     "journal"  "volume"  
- [7] "pages"    "doi"      "number"   "keywords"</code></pre>
+ [7] "number"   "doi"      "pages"    "keywords"</code></pre>
 </div>
 </div>
 <p>Identify which columns are unique for the scopus and wos references</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>unique_vars_only_scopus <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(unique_vars_scopus, unique_vars_wos)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(unique_vars_only_scopus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>unique_vars_only_scopus <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(unique_vars_scopus, unique_vars_wos)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(unique_vars_only_scopus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "url"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>unique_vars_only_wos <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(unique_vars_wos, unique_vars_scopus)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(unique_vars_only_wos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>unique_vars_only_wos <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(unique_vars_wos, unique_vars_scopus)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(unique_vars_only_wos)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "month"                      "abstract"                  
  [3] "publisher"                  "address"                   
@@ -483,31 +419,31 @@ Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%2
 </div>
 <p>Select only the variables that appear in both dataframes and the ones you deem relevant. In our case, we select: <code>author</code>, <code>type</code>, <code>title</code>, <code>year</code>, <code>volume</code>, <code>number</code>, <code>pages</code>, <code>doi</code>, <code>keywords</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>selected_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># "label",</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"author"</span>,  <span class="st">"title"</span>, <span class="st">"year"</span>, <span class="st">"journal"</span>, </span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"volume"</span>, <span class="st">"number"</span>, <span class="st">"pages"</span>, <span class="st">"doi"</span>, <span class="st">"keywords"</span>)</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>scopus_selection <span class="ot">&lt;-</span> scopus_data <span class="sc">%&gt;%</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">all_of</span>(selected_vars))</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>wos_selection <span class="ot">&lt;-</span> wos_data <span class="sc">%&gt;%</span></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">all_of</span>(selected_vars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>selected_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># "label",</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"author"</span>,  <span class="st">"title"</span>, <span class="st">"year"</span>, <span class="st">"journal"</span>, </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"volume"</span>, <span class="st">"number"</span>, <span class="st">"pages"</span>, <span class="st">"doi"</span>, <span class="st">"keywords"</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>scopus_selection <span class="ot">&lt;-</span> scopus_data <span class="sc">%&gt;%</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">all_of</span>(selected_vars))</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>wos_selection <span class="ot">&lt;-</span> wos_data <span class="sc">%&gt;%</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="fu">all_of</span>(selected_vars))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now lets check the number of variables (columns) in our dataframes</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(scopus_selection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(scopus_selection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 9</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(wos_selection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(wos_selection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 9</code></pre>
 </div>
 </div>
 <p>now lets combine the wos dataframe with the scopus dataframe</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>all_references <span class="ot">&lt;-</span> <span class="fu">rbind</span>(wos_selection, scopus_selection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>all_references <span class="ot">&lt;-</span> <span class="fu">rbind</span>(wos_selection, scopus_selection)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sec-targets" class="level2" data-number="3">
@@ -516,47 +452,47 @@ Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%2
 <p>Lets see how we can do that.</p>
 <p>First create function called <code>preprocess</code> which removes all capital letters and punctuations</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>preprocess <span class="ot">&lt;-</span> <span class="cf">function</span>(text) {</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  text <span class="ot">&lt;-</span> <span class="fu">tolower</span>(text) <span class="co">#all characters are transformed to lower-case</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  text <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[[:punct:]]"</span>, <span class="st">""</span>, text) <span class="co">#all punctuations are removed from the characters</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(text)</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>preprocess <span class="ot">&lt;-</span> <span class="cf">function</span>(text) {</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  text <span class="ot">&lt;-</span> <span class="fu">tolower</span>(text) <span class="co">#all characters are transformed to lower-case</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  text <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[[:punct:]]"</span>, <span class="st">""</span>, text) <span class="co">#all punctuations are removed from the characters</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(text)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now lets apply this function on relevant variables in our <code>all_references</code> dataframe</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>all_references<span class="sc">$</span>journal <span class="ot">&lt;-</span> <span class="fu">sapply</span>(all_references<span class="sc">$</span>journal, preprocess)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>all_references<span class="sc">$</span>title <span class="ot">&lt;-</span> <span class="fu">sapply</span>(all_references<span class="sc">$</span>title, preprocess)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>all_references<span class="sc">$</span>author <span class="ot">&lt;-</span> <span class="fu">sapply</span>(all_references<span class="sc">$</span>author, preprocess)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>all_references<span class="sc">$</span>journal <span class="ot">&lt;-</span> <span class="fu">sapply</span>(all_references<span class="sc">$</span>journal, preprocess)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>all_references<span class="sc">$</span>title <span class="ot">&lt;-</span> <span class="fu">sapply</span>(all_references<span class="sc">$</span>title, preprocess)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>all_references<span class="sc">$</span>author <span class="ot">&lt;-</span> <span class="fu">sapply</span>(all_references<span class="sc">$</span>author, preprocess)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Examine the scopus_selection dataframe</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(all_references)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(all_references)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>as you can see, all the capital and punctuations are removed from the assigned variables</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>check_duplicates <span class="ot">&lt;-</span> revtools<span class="sc">::</span><span class="fu">find_duplicates</span>(all_references, <span class="at">match_variable =</span> <span class="st">"doi"</span>)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>all_unique_references <span class="ot">&lt;-</span> <span class="fu">extract_unique_references</span>(all_references, <span class="at">matches =</span> check_duplicates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>check_duplicates <span class="ot">&lt;-</span> revtools<span class="sc">::</span><span class="fu">find_duplicates</span>(all_references, <span class="at">match_variable =</span> <span class="st">"doi"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>all_unique_references <span class="ot">&lt;-</span> <span class="fu">extract_unique_references</span>(all_references, <span class="at">matches =</span> check_duplicates)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compare the total number of references to the total number of unique references</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#count the number of rows in the all_references dataframe</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(all_references)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#count the number of rows in the all_references dataframe</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(all_references)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 400</code></pre>
+<pre><code>[1] 376</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">#do the same for the references_unique dataframe</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(all_unique_references)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#do the same for the references_unique dataframe</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(all_unique_references)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 266</code></pre>
+<pre><code>[1] 245</code></pre>
 </div>
 </div>
 <p>Something else we might want to consider, is if our literature search also identified one or more key articles that we know should be in the SLR. So, lets take a target article. In our case, the author of this specific literature review stated that <span class="citation" data-cites="van2006urban">(<a href="#ref-van2006urban" role="doc-biblioref">Van Marissing et al., 2006</a>)</span> and <span class="citation" data-cites="wu2022rethinking">(<a href="#ref-wu2022rethinking" role="doc-biblioref">Wu &amp; Zhang, 2022</a>)</span> should be considered as a target references. So let’s examine, if they are included in our <code>all_unique_references</code> dataframe. We do this copying doi from the target references and identifying if this doi is present in the <code>all_unique_references</code> dataframe</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Read target papers's bib file and extract doi information</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>target_references <span class="ot">&lt;-</span>synthesisr<span class="sc">::</span><span class="fu">read_refs</span>(<span class="fu">here</span>(<span class="st">"raw-data"</span>, <span class="st">"targetPapers.bib"</span>))</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's test whether they are present or not our reference list</span></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a> target_references<span class="sc">$</span>doi <span class="sc">%in%</span> all_unique_references<span class="sc">$</span>doi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Read target papers's bib file and extract doi information</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>target_references <span class="ot">&lt;-</span> synthesisr<span class="sc">::</span><span class="fu">read_refs</span>(<span class="fu">here</span>(<span class="st">"raw-data"</span>, <span class="st">"targetPapers.bib"</span>))</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's test whether they are present or not our reference list</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a> target_references<span class="sc">$</span>doi <span class="sc">%in%</span> all_unique_references<span class="sc">$</span>doi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE FALSE</code></pre>
 </div>
@@ -567,83 +503,73 @@ Response [https://api.elsevier.com/content/search/scopus?query=%28%20%28%20%28%2
 <h2 data-number="4" class="anchored" data-anchor-id="summarise-references"><span class="header-section-number">4</span> Summarise references:</h2>
 <p>Distribution of publication years</p>
 <div class="cell" data-verbose="false">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>all_unique_references<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(all_unique_references<span class="sc">$</span>year)</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(all_unique_references) <span class="sc">+</span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x=</span>year), <span class="at">fill =</span> <span class="st">"orange"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>all_unique_references<span class="sc">$</span>year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(all_unique_references<span class="sc">$</span>year)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(all_unique_references) <span class="sc">+</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x=</span>year), <span class="at">fill =</span> <span class="st">"orange"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="SLRbanism_companion_search_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+<p><img src="SLRbanism_companion_search_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Top 10 journals publishing on topic:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>all_unique_references<span class="sc">$</span>journal <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(all_unique_references<span class="sc">$</span>journal)</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">summary</span>(all_unique_references<span class="sc">$</span>journal),<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>all_unique_references<span class="sc">$</span>journal <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(all_unique_references<span class="sc">$</span>journal)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">summary</span>(all_unique_references<span class="sc">$</span>journal),<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                             urban studies 
-                                         9 
-                      urban affairs review 
-                                         6 
-                  journal of urban affairs 
-                                         5 
-                          regional studies 
-                                         4 
-                            sustainability 
-                                         4 
-                  urban research  practice 
-                                         4 
-abe architecture and the built environment 
-                                         3 
-                                    cities 
-                                         3 
-                                      land 
-                                         3 
-                   professional geographer 
-                                         3 </code></pre>
+<pre><code>             urban studies       urban affairs review 
+                         9                          6 
+  journal of urban affairs   urban research  practice 
+                         4                          4 
+                    cities                       land 
+                         3                          3 
+   professional geographer           regional studies 
+                         3                          3 
+            sustainability sustainability switzerland 
+                         3                          3 </code></pre>
 </div>
 </div>
 <p>Export combined set of unique references into a .bib file:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>unique_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">Author =</span> all_unique_references<span class="sc">$</span>author,</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Title =</span> all_unique_references<span class="sc">$</span>title,</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Year =</span> all_unique_references<span class="sc">$</span>year,</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Journal =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(all_unique_references<span class="sc">$</span>journal), </span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Unknown"</span>,all_unique_references<span class="sc">$</span>journal),</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Volume =</span> all_unique_references<span class="sc">$</span>volume,</span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Number =</span> all_unique_references<span class="sc">$</span>number,</span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pages =</span> all_unique_references<span class="sc">$</span>pages,</span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">DOI =</span> all_unique_references<span class="sc">$</span>doi,</span>
-<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Keywords =</span> all_unique_references<span class="sc">$</span>keywords</span>
-<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Format the Keywords field</span></span>
-<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>unique_bib_entries <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(unique_data)</span>
-<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>                             , <span class="cf">function</span>(i) {</span>
-<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">BibEntry</span>(</span>
-<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">bibtype =</span> <span class="st">"Article"</span>,        <span class="co"># Add the bibtype argument</span></span>
-<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">key =</span> i,</span>
-<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">author =</span> unique_data<span class="sc">$</span>Author[i],    <span class="co"># Add author field</span></span>
-<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> unique_data<span class="sc">$</span>Title[i],      <span class="co"># Add title field</span></span>
-<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> unique_data<span class="sc">$</span>Year[i],        <span class="co"># Add year field</span></span>
-<span id="cb50-23"><a href="#cb50-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">journal =</span> unique_data<span class="sc">$</span>Journal[i],  <span class="co"># Add journal field</span></span>
-<span id="cb50-24"><a href="#cb50-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">volume =</span> unique_data<span class="sc">$</span>Volume[i],    <span class="co"># Add volume field</span></span>
-<span id="cb50-25"><a href="#cb50-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">number =</span> unique_data<span class="sc">$</span>Number[i],    <span class="co"># Add number field</span></span>
-<span id="cb50-26"><a href="#cb50-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">pages =</span> unique_data<span class="sc">$</span>Pages[i],      <span class="co"># Add pages field</span></span>
-<span id="cb50-27"><a href="#cb50-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">doi =</span> unique_data<span class="sc">$</span>DOI[i],         <span class="co"># Add DOI field</span></span>
-<span id="cb50-28"><a href="#cb50-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">url =</span> unique_data<span class="sc">$</span>Keywords[i]</span>
-<span id="cb50-29"><a href="#cb50-29" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb50-30"><a href="#cb50-30" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb50-31"><a href="#cb50-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-32"><a href="#cb50-32" aria-hidden="true" tabindex="-1"></a>unique_bib_texts <span class="ot">&lt;-</span> <span class="fu">lapply</span>(unique_bib_entries, toBibtex)</span>
-<span id="cb50-33"><a href="#cb50-33" aria-hidden="true" tabindex="-1"></a>unique_bib_text <span class="ot">&lt;-</span> <span class="fu">unlist</span>(unique_bib_texts, <span class="at">use.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb50-34"><a href="#cb50-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-35"><a href="#cb50-35" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"processed-data/unique_refs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>unique_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">Author =</span> all_unique_references<span class="sc">$</span>author,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Title =</span> all_unique_references<span class="sc">$</span>title,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Year =</span> all_unique_references<span class="sc">$</span>year,</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Journal =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(all_unique_references<span class="sc">$</span>journal), </span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Unknown"</span>,all_unique_references<span class="sc">$</span>journal),</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Volume =</span> all_unique_references<span class="sc">$</span>volume,</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Number =</span> all_unique_references<span class="sc">$</span>number,</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Pages =</span> all_unique_references<span class="sc">$</span>pages,</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">DOI =</span> all_unique_references<span class="sc">$</span>doi,</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">Keywords =</span> all_unique_references<span class="sc">$</span>keywords</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Format the Keywords field</span></span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>unique_bib_entries <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(unique_data)</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>                             , <span class="cf">function</span>(i) {</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">BibEntry</span>(</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">bibtype =</span> <span class="st">"Article"</span>,        <span class="co"># Add the bibtype argument</span></span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">key =</span> i,</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">author =</span> unique_data<span class="sc">$</span>Author[i],    <span class="co"># Add author field</span></span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> unique_data<span class="sc">$</span>Title[i],      <span class="co"># Add title field</span></span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> unique_data<span class="sc">$</span>Year[i],        <span class="co"># Add year field</span></span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">journal =</span> unique_data<span class="sc">$</span>Journal[i],  <span class="co"># Add journal field</span></span>
+<span id="cb53-24"><a href="#cb53-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">volume =</span> unique_data<span class="sc">$</span>Volume[i],    <span class="co"># Add volume field</span></span>
+<span id="cb53-25"><a href="#cb53-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">number =</span> unique_data<span class="sc">$</span>Number[i],    <span class="co"># Add number field</span></span>
+<span id="cb53-26"><a href="#cb53-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">pages =</span> unique_data<span class="sc">$</span>Pages[i],      <span class="co"># Add pages field</span></span>
+<span id="cb53-27"><a href="#cb53-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">doi =</span> unique_data<span class="sc">$</span>DOI[i],         <span class="co"># Add DOI field</span></span>
+<span id="cb53-28"><a href="#cb53-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">url =</span> unique_data<span class="sc">$</span>Keywords[i]</span>
+<span id="cb53-29"><a href="#cb53-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb53-30"><a href="#cb53-30" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb53-31"><a href="#cb53-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-32"><a href="#cb53-32" aria-hidden="true" tabindex="-1"></a>unique_bib_texts <span class="ot">&lt;-</span> <span class="fu">lapply</span>(unique_bib_entries, toBibtex)</span>
+<span id="cb53-33"><a href="#cb53-33" aria-hidden="true" tabindex="-1"></a>unique_bib_text <span class="ot">&lt;-</span> <span class="fu">unlist</span>(unique_bib_texts, <span class="at">use.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb53-34"><a href="#cb53-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-35"><a href="#cb53-35" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"processed-data/unique_refs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning in dir.create("processed-data/unique_refs"):
 'processed-data/unique_refs' already exists</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(unique_bib_text, <span class="fu">here</span>(<span class="st">"processed-data"</span>,<span class="st">"unique_refs"</span>,<span class="st">"all_unique_references.bib"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(unique_bib_text, <span class="fu">here</span>(<span class="st">"processed-data"</span>,<span class="st">"unique_refs"</span>,<span class="st">"all_unique_references.bib"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="sec-litsearchr" class="level2" data-number="5">
@@ -651,59 +577,54 @@ abe architecture and the built environment
 <p><em>NB: Parts of this section were adapted from the</em> <code>litsearchr</code> <em>package documentation available</em> <a href="https://elizagrames.github.io/litsearchr/introduction_vignette_v010.html">here</a></p>
 <p>Import .bib or .ris database</p>
 <div class="cell" data-verbose="false">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>refs <span class="ot">&lt;-</span> litsearchr<span class="sc">::</span><span class="fu">import_results</span>(<span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"unique_refs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>refs <span class="ot">&lt;-</span> litsearchr<span class="sc">::</span><span class="fu">import_results</span>(<span class="fu">here</span>(<span class="st">"processed-data"</span>, <span class="st">"unique_refs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading file /Users/ccottineau/GitHub/SLRbanism/processed-data/unique_refs/all_unique_references.bib ... done</code></pre>
 </div>
 </div>
 <p>Identify frequent terms</p>
 <div class="cell" data-verbose="false">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>raked_terms <span class="ot">&lt;-</span> <span class="fu">extract_terms</span>(<span class="at">text =</span> refs,</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">method =</span> <span class="st">"fakerake"</span>,</span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">min_freq=</span><span class="dv">2</span>,</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">min_n=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>raked_terms <span class="ot">&lt;-</span> <span class="fu">extract_terms</span>(<span class="at">text =</span> refs,</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">method =</span> <span class="st">"fakerake"</span>,</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">min_freq=</span><span class="dv">2</span>,</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">min_n=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Identify frequent keywords tagged by authors</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>keywords <span class="ot">&lt;-</span> <span class="fu">extract_terms</span>(<span class="at">text =</span> refs,</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">method =</span> <span class="st">"tagged"</span>,</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">keywords =</span> refs<span class="sc">$</span>url, <span class="co"># remember: we stored keywords into the url field...</span></span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ngrams=</span>T,</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">min_n=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>keywords <span class="ot">&lt;-</span> <span class="fu">extract_terms</span>(<span class="at">text =</span> refs,</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">method =</span> <span class="st">"tagged"</span>,</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">keywords =</span> refs<span class="sc">$</span>url, <span class="co"># remember: we stored keywords into the url field...</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ngrams=</span>T,</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">min_n=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Create document-feature matrix</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> <span class="fu">create_dfm</span>(<span class="at">elements =</span> refs<span class="sc">$</span>title,</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">features =</span> <span class="fu">c</span>(raked_terms, keywords))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>dfm <span class="ot">&lt;-</span> <span class="fu">create_dfm</span>(<span class="at">elements =</span> refs<span class="sc">$</span>title,</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">features =</span> <span class="fu">c</span>(raked_terms, keywords))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Create a semantic network</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>net <span class="ot">&lt;-</span> <span class="fu">create_network</span>(<span class="at">search_dfm =</span> dfm,</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">min_studies =</span> <span class="dv">3</span>,</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">min_occ =</span> <span class="dv">3</span>)</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(igraph<span class="sc">::</span><span class="fu">strength</span>(net),</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Histogram of node strengths"</span>,</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"Node strength"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>net <span class="ot">&lt;-</span> <span class="fu">create_network</span>(<span class="at">search_dfm =</span> dfm,</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">min_studies =</span> <span class="dv">3</span>,</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">min_occ =</span> <span class="dv">3</span>)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>cutoffs_cumulative <span class="ot">&lt;-</span> <span class="fu">find_cutoff</span>(net, <span class="at">method =</span> <span class="st">"cumulative"</span>)</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>reduced_graph <span class="ot">&lt;-</span> <span class="fu">reduce_graph</span>(net, <span class="at">cutoff_strength =</span> cutoffs_cumulative)</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reduced_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="SLRbanism_companion_search_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>cutoffs_cumulative <span class="ot">&lt;-</span> <span class="fu">find_cutoff</span>(net, <span class="at">method =</span> <span class="st">"cumulative"</span>)</span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>reduced_graph <span class="ot">&lt;-</span> <span class="fu">reduce_graph</span>(net, <span class="at">cutoff_strength =</span> cutoffs_cumulative)</span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(reduced_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="SLRbanism_companion_search_files/figure-html/unnamed-chunk-35-2.png" class="img-fluid" width="672"></p>
+<p><img src="SLRbanism_companion_search_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Identify the main keywords</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>search_terms <span class="ot">&lt;-</span> litsearchr<span class="sc">::</span><span class="fu">get_keywords</span>(reduced_graph)</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(search_terms), <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>search_terms <span class="ot">&lt;-</span> litsearchr<span class="sc">::</span><span class="fu">get_keywords</span>(reduced_graph)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(search_terms), <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] "development projects"       "local government"          
- [3] "regional development"       "regional governance"       
- [5] "spatial planning"           "urban development"         
+<pre><code> [1] "development projects"       "local governance"          
+ [3] "local government"           "regional development"      
+ [5] "regional governance"        "urban development"         
  [7] "urban development projects" "urban governance"          
  [9] "urban planning"             "urban regeneration"        
 [11] "urban renewal"             </code></pre>
@@ -711,46 +632,46 @@ abe architecture and the built environment
 </div>
 <p>Identify isolated components of graph to suggest new keywords</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">components</span>(reduced_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">components</span>(reduced_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$membership
-      development projects           local government 
+      development projects           local governance 
                          1                          1 
-      regional development        regional governance 
+          local government       regional development 
                          1                          1 
-          spatial planning          urban development 
+       regional governance          urban development 
                          1                          1 
 urban development projects           urban governance 
                          1                          1 
             urban planning         urban regeneration 
-                         1                          2 
+                         1                          1 
              urban renewal 
                          1 
 
 $csize
-[1] 10  1
+[1] 11
 
 $no
-[1] 2</code></pre>
+[1] 1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>grouped <span class="ot">&lt;-</span> <span class="fu">split</span>(<span class="fu">names</span>(<span class="fu">V</span>(reduced_graph)), <span class="fu">components</span>(reduced_graph)<span class="sc">$</span>membership)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>grouped <span class="ot">&lt;-</span> <span class="fu">split</span>(<span class="fu">names</span>(<span class="fu">V</span>(reduced_graph)), <span class="fu">components</span>(reduced_graph)<span class="sc">$</span>membership)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Write a new query based on additional keywords</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>litsearchr<span class="sc">::</span><span class="fu">write_search</span>(grouped,</span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">API_key =</span> <span class="cn">NULL</span>,</span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">languages =</span> <span class="st">"English"</span>,</span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">exactphrase =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">stemming =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">directory =</span> <span class="st">"./"</span>,</span>
-<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">writesearch =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">verbose =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">closure =</span> <span class="st">"left"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>litsearchr<span class="sc">::</span><span class="fu">write_search</span>(grouped,</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">API_key =</span> <span class="cn">NULL</span>,</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">languages =</span> <span class="st">"English"</span>,</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">exactphrase =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">stemming =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">directory =</span> <span class="st">"./"</span>,</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">writesearch =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>                         <span class="at">verbose =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>                         <span class="at">closure =</span> <span class="st">"left"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "English is written"</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "(((develop* project*) OR (local* govern*) OR (region* develop*) OR (region* govern*) OR (spatial* plan*) OR (urban* develop*) OR (urban* govern*) OR (urban* plan*) OR (urban* renew*)) AND ((urban* regener*)))"</code></pre>
+<pre><code>[1] "(((develop* project*) OR (local* govern*) OR (region* develop*) OR (region* govern*) OR (urban* develop*) OR (urban* govern*) OR (urban* plan*) OR (urban* regener*) OR (urban* renew*)))"</code></pre>
 </div>
 </div>
 </section>
@@ -758,24 +679,24 @@ $no
 <h2 data-number="6" class="anchored" data-anchor-id="sec-prisma"><span class="header-section-number">6</span> Drawing the PRISMA figure</h2>
 <p>Call the prisma() function to generate the PRISMA flowchart and replace the values with the actual counts from your study.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>prismaplot <span class="ot">&lt;-</span> <span class="fu">prisma</span>(</span>
-<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">found =</span> <span class="fu">nrow</span>(all_references), <span class="co"># Total number of references found</span></span>
-<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">found_other =</span> <span class="dv">0</span>,               <span class="co"># Number of additional references found through other sources (if any)</span></span>
-<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">no_dupes =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of unique references after removing duplicates</span></span>
-<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">screened =</span> <span class="fu">nrow</span>(all_unique_references),  <span class="co"># Number of references screened</span></span>
-<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">screen_exclusions =</span> <span class="dv">0</span>,         <span class="co"># Number of references excluded during screening</span></span>
-<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_text =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of references obtained in full text</span></span>
-<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_text_exclusions =</span> <span class="dv">0</span>,      <span class="co"># Number of references excluded during full-text assessment</span></span>
-<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">qualitative =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of studies included in qualitative synthesis</span></span>
-<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantitative =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of studies included in quantitative synthesis</span></span>
-<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">800</span>, <span class="at">height =</span> <span class="dv">800</span>  ,    <span class="co"># Specify width and height for the generated PRISMA flowchart</span></span>
-<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">font_size =</span> <span class="dv">20</span></span>
-<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>prismaplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>prismaplot <span class="ot">&lt;-</span> <span class="fu">prisma</span>(</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">found =</span> <span class="fu">nrow</span>(all_references), <span class="co"># Total number of references found</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">found_other =</span> <span class="dv">0</span>,               <span class="co"># Number of additional references found through other sources (if any)</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">no_dupes =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of unique references after removing duplicates</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">screened =</span> <span class="fu">nrow</span>(all_unique_references),  <span class="co"># Number of references screened</span></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">screen_exclusions =</span> <span class="dv">0</span>,         <span class="co"># Number of references excluded during screening</span></span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_text =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of references obtained in full text</span></span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">full_text_exclusions =</span> <span class="dv">0</span>,      <span class="co"># Number of references excluded during full-text assessment</span></span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">qualitative =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of studies included in qualitative synthesis</span></span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantitative =</span> <span class="fu">nrow</span>(all_unique_references), <span class="co"># Number of studies included in quantitative synthesis</span></span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">800</span>, <span class="at">height =</span> <span class="dv">800</span>  ,    <span class="co"># Specify width and height for the generated PRISMA flowchart</span></span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">font_size =</span> <span class="dv">20</span></span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a>prismaplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-17ad6066750da08a121e" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-17ad6066750da08a121e">{"x":{"diagram":"digraph prisma {\n    node [shape=\"box\", fontsize = 20];\n    graph [splines=ortho, nodesep=1, dpi = 72]\n    a -> nodups;\n    b -> nodups;\n    a [label=\"Records identified through\ndatabase searching\n(n = 400)\"];\n    b [label=\"Additional records identified\nthrough other sources\n(n = 0)\"]\n    nodups -> incex;\n    nodups [label=\"Records after duplicates removed\n(n = 266)\"];\n    incex -> {ex; ft}\n    incex [label=\"Records screened\n(n = 266)\"];\n    ex [label=\"Records excluded\n(n = 0)\"];\n    {rank=same; incex ex}\n    ft -> {qual; ftex};\n    ft [label=\"Full-text articles assessed\nfor eligibility\n(n = 266)\"];\n    {rank=same; ft ftex}\n    ftex [label=\"Full-text articles excluded,\nwith reasons\n(n = 0)\"];\n    qual -> quant\n    qual [label=\"Studies included in qualitative synthesis\n(n = 266)\"];\n    quant [label=\"Studies included in\nquantitative synthesis\n(meta-analysis)\n(n = 266)\"];\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-45927040c97615a80115" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-45927040c97615a80115">{"x":{"diagram":"digraph prisma {\n    node [shape=\"box\", fontsize = 20];\n    graph [splines=ortho, nodesep=1, dpi = 72]\n    a -> nodups;\n    b -> nodups;\n    a [label=\"Records identified through\ndatabase searching\n(n = 376)\"];\n    b [label=\"Additional records identified\nthrough other sources\n(n = 0)\"]\n    nodups -> incex;\n    nodups [label=\"Records after duplicates removed\n(n = 245)\"];\n    incex -> {ex; ft}\n    incex [label=\"Records screened\n(n = 245)\"];\n    ex [label=\"Records excluded\n(n = 0)\"];\n    {rank=same; incex ex}\n    ft -> {qual; ftex};\n    ft [label=\"Full-text articles assessed\nfor eligibility\n(n = 245)\"];\n    {rank=same; ft ftex}\n    ftex [label=\"Full-text articles excluded,\nwith reasons\n(n = 0)\"];\n    qual -> quant\n    qual [label=\"Studies included in qualitative synthesis\n(n = 245)\"];\n    quant [label=\"Studies included in\nquantitative synthesis\n(meta-analysis)\n(n = 245)\"];\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
