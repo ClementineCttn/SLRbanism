@@ -1,0 +1,125 @@
+---
+title: "Systematic Literature Reviews for quantitative urban studies"
+author: "Clémentine Cottineau <br>
+Assistant Professor of Urban Studies  <br> TU Delft / Rbanism"
+format: revealjs
+editor: visual
+bibliography: SLR_references.bib 
+csl: apa.csl
+link-citations: true
+---
+
+## Literature reviews for Rbanists
+
+Literature reviews are key components of academic research. Their goal is to **inform** the reader about existing knowledge, to highlight which areas remain **unexplored**, and/or to set an agenda for future research or action.
+
+Literature reviews consist in **selecting** relevant publications related to a particular topic and **summarising, analysing and interpreting** their content in an organised and critical way.
+
+## Literature reviews for Rbanists {.scrollable .smaller}
+
++----------------------+------------------------------------------------------------------+------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| Summary              | **NR - Traditional**                                             | **SLR - content analysis**                                                                     | **SR - Scoping**                                                                                         |
++----------------------+------------------------------------------------------------------+------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| Aim                  | Provide a comprehensive narrative on a particular research topic | Provide a comprehensive, transparent, and reproducible synthesis on a specified research topic | Provide a wide exploratory literature overview of a research field                                       |
++----------------------+------------------------------------------------------------------+------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| Pros                 | Easy to read and understand                                      | Answers a clear research question                                                              | Gives an overview of literature                                                                          |
+|                      |                                                                  |                                                                                                |                                                                                                          |
+|                      | Selective about concepts and authors                             | Transparent and reproducible                                                                   | Systematic selection process                                                                             |
++----------------------+------------------------------------------------------------------+------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| Cons                 | Lack of methodology                                              | Superficial analysis of content                                                                | Problem of quality assessment                                                                            |
+|                      |                                                                  |                                                                                                |                                                                                                          |
+|                      | Opaque selection of studies                                      | Problem of quality assessment                                                                  | Lack of in-depth knowledge added                                                                         |
+|                      |                                                                  |                                                                                                |                                                                                                          |
+|                      | Subjective data extraction                                       | Long and difficult to read/understand                                                          | Limited by language-based search                                                                         |
+|                      |                                                                  |                                                                                                |                                                                                                          |
+|                      |                                                                  | Interpretation of results can remain subjective                                                |                                                                                                          |
++----------------------+------------------------------------------------------------------+------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+| Research Question(s) | Open-ended research question                                     | Specific research question\                                                                    | Exploratory research question:                                                                           |
+|                      |                                                                  | e.g: What is the importance of researched effect X on Y in difference contexts?                |                                                                                                          |
+|                      | e.g. "What is the current state of knowledge on X?"              |                                                                                                | e.g. What are the key concepts, approaches, types of evidence, and gaps in the literature related to X?" |
++----------------------+------------------------------------------------------------------+------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------+
+
+## Literature reviews for Rbanists
+
+<br>
+
+![](decisionTree.png)
+
+[@Cottineau_SLRbanism]
+
+## Literature reviews for Rbanists
+
+Support the search strategy:
+
+-   write a query
+-   use Scopus & Web of Science APIs
+-   screen references
+-   summarise records
+-   report on search
+
+[Companion notebook](https://clementinecttn.github.io/SLRbanism/SLRbanism_companion_search.html)
+
+## Literature reviews for Rbanists
+
+Support the analysis phase:
+
+-   metadata analysis (keywords, topics)
+-   location geocoding and spatial analysis
+-   modelling of results
+-   visualisation
+
+[Companion notebook](https://clementinecttn.github.io/SLRbanism/SLRbanism_companion_analysis.html)
+
+## Literature reviews for Rbanists {.scrollable .smaller}
+
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| **SLR step**      | **Search** | **Screening** | **Data extraction** | **Scoping** | **Analysis** | **Reporting** |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| rscopus           | **X**      |               |                     |             |              |               |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| revtools          | **X**      |               |                     |             |              |               |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| litsearchr        | **X**      |               |                     |             |              |               |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| bibliometrix      |            | **X**         |                     | **X**       |              | **X**         |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| ggwordcloud       |            |               | **X**               | **X**       |              | **X**         |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| SnowballC         | **X**      |               |                     |             | **X**        |               |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| tidytext          |            |               |                     |             | **X**        |               |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| topicmodels       |            |               |                     |             | **X**        |               |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| textstem          |            |               | **X**               | **X**       | **X**        |               |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| spacyR            |            |               |                     |             | **X**        |               |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| METAGEAR /Metafor |            |               |                     |             | **X**        |               |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| FactorMineR       |            |               |                     |             | **X**        |               |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| PRISMAStatement   |            |               |                     |             | **X**        | **X**         |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| ggVennDiagram     |            |               |                     |             |              | **X**         |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| Quarto            |            |               |                     |             |              | **X**         |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| Shiny             |            | **X**         |                     |             | **X**        | **X**         |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| tidyverse         | **X**      |               | **X**               | **X**       | **X**        | **X**         |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+| sf                |            |               |                     | **X**       | **X**        | **X**         |
++-------------------+------------+---------------+---------------------+-------------+--------------+---------------+
+
+## Reference {.scrollable style="font-size: 40px"}
+
+::: {#refs}
+:::
+
+<br>
+
+-   **Would you like to use our guidelines for your own review?**
+-   **Do you this the companion notebooks might be useful?**
+
+> Reach out: [c.cottineau\@tudelft.nl](mail-to:c.cottineau@tudelft.nl)
