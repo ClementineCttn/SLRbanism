@@ -45,12 +45,12 @@ To run the analyses in the computational notebooks on your computer, you will ne
 
 ### Scopus API keys
 
-In order to run part 2 (RENAME), you need to replace the API key with your own. To get your own Scopus API key, you need to apply for a personal key on the [Elsevier Developer Portal](https://dev.elsevier.com/) 
+In order to run the [code related to the search strategy](https://clementinecttn.github.io/SLRbanism/SLRbanism_companion_search.html), you need to replace the API key with your own. To get your own Scopus API key, you need to apply for a personal key on the [Elsevier Developer Portal](https://dev.elsevier.com/) 
 
 
 ### Data
 
-In order to run part 3 (RENAME), you need to download the example data from the [Open Science Framework](https://osf.io/ds83p) and save it in the "raw-data/" folder.
+In order to run the [code related to the records' analysis](https://clementinecttn.github.io/SLRbanism/SLRbanism_companion_analysis.html), you need to download the example data from the [Open Science Framework](https://osf.io/ds83p) and save it in the "raw-data/" folder.
 
 
 ## License and citation
