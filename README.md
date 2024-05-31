@@ -59,7 +59,8 @@ This repository is licensed under [CC-BY-4.0](https://creativecommons.org/licens
 It works as a companion notebook to our written [guidelines on systematic literature reviews for urbanists with R]().
 
 Please cite the guidelines as:
-@ TO DO
+Cottineau C., Forgaci C., Janssen K., Li B., Zhang S., Zhang X. (2024), Guidelines and programming toolbox for systematic literature reviews in Urbanism, Unpublished Working Paper.
+
 Please cite this notebook as:
-@ TO DO
+Cottineau C., Forgaci C., Janssen K., Li B., Zhang S., Zhang X. (2024), A guide and toolbox for conducting systematic literature reviews in urbanism,[Computer software]. https://github.com/ClementineCttn/SLRbanism
 
