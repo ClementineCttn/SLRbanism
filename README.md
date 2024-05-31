@@ -21,7 +21,27 @@ This repository is composed of:
 
 ## How to use this repository
 
-Use the computational notebooks to run the analysis. For
+This repository contains two computational notebooks, `SLRbanism_companion_search.qmd` and `SLRbanism_companion_analysis.qmd`. Computational notebooks are environments that combine:
+
+- **narrative** written in [Markdown](https://www.markdowntutorial.com/), a markup language with a simple syntax for text formatting,
+- **executable code** written in the R programming language, and
+- **output**, such as plots and tables generated from data, all in one place. 
+
+### Setup
+
+To run the analyses in the computational notebooks on your computer, you will need to: 
+
+1.  Install [R, RStudio Desktop](https://posit.co/download/rstudio-desktop/), [Python](https://www.python.org/downloads/) and [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for your operating system.
+
+2.  Create an RStudio project from `File > New Project... > Version Control > Git` with the URL `[https://github.com/ClementineCttn/SLRbanism.git](https://github.com/ClementineCttn/SLRbanism.git)` and project directory name `SLRbanism`. Browse to a location of your choice on your computer and click on `Create Project`. This will create a project directory populated with the all files from this repository.
+
+3.  Open `SLRbanism_companion_search.qmd` or `SLRbanism_companion_analysis.qmd` from the Files tab in Rstudio. These two files are the computational notebooks corresponding to the guideline chapters 2 and 3, respectively.
+
+4.  When you first open the document, RStudio will display a message at the top of the document asking you to install missing packages. Make sure you install those packages as suggested in that message. If, for some reason, the installation of those packages fails, make sure you install each missing package by executing the command `install.packages("REPLACE_WITH_MISSING_PACKAGE_NAME")` in the R console found in the bottom left of RStudio.
+
+5.  After all packages are installed, execute each code chunk of the computational notebook from top to bottom in sequence by clicking on the green arrow in the top right of the code chunk.
+
+6.  If you want to see a rendered HTML version of the document, click on the Render button in RStudio.
 
 ### Scopus API keys
 
