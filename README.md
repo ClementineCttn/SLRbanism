@@ -56,7 +56,7 @@ In order to run the [code related to the records' analysis](https://clementinect
 ## License and citation
 This repository is licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).
 
-It works as a companion notebook to our written [guidelines on systematic literature reviews for urbanists with R]().
+It works as a companion notebook to our written guidelines on systematic literature reviews for urbanists with R.
 
 Please cite the guidelines as:
 Cottineau C., Forgaci C., Janssen K., Li B., Zhang S., Zhang X. (2024), Guidelines and programming toolbox for systematic literature reviews in Urbanism, Unpublished Working Paper.
