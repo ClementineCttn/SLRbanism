@@ -780,10 +780,12 @@ viz_df_with_year |>
   ylab("Proportion of topics") +
   labs(title = "Topic proportions per year")
 
-ggsave("output/topics-over-years.png", width = 10, height = 7)
+# ggsave("output/topics-over-years.png", width = 10, height = 7)
 ```
 
 ```{r evolution-top-terms}
+#| lst-label: lst-words-per-year
+#| lst-cap: Evolution of words over the years
 #| warning: false
 top_terms <- words |>
   group_by(id) |>
