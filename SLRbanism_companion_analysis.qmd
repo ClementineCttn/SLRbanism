@@ -28,13 +28,17 @@ for (package in packages) {
 
 In this notebook we will work with a set of full papers in PDF format and their metadata obtained from Web of Science. The full papers are stored in `data/collection/PDFs/` and the metadata is available in `data/collection/savedrecs_wdoi.csv` of this repository.
 
-If you want to run the code from this notebook on your computer, please follow our [setup instructions]().
+If you want to run the code from this notebook on your computer, please follow our [setup instructions](https://github.com/ClementineCttn/SLRbanism?tab=readme-ov-file#setup).
 
 ::: note
-The same workflow applies to data obtained from other platforms such as Scopus. Note that the column names need to be adjusted accordingly.
+The same workflow applies to data obtained from other platforms such as Scopus. Note that variable names need to be adjusted accordingly.
 :::
 
-## Pre-processing task 1: Extracting text from PDF files
+## Pre-processing
+
+In this section, we demonstrate a few relevant pre-processing tasks for the data. The pre-processing tasks include: extracting text from PDF files, combining text data with metadata, subsetting and cleaning the data.
+
+### Task 1: Extract text from PDF files {#extract-pdf-text}
 
 Most journal articles are available in PDF format, which is not well suited for quantitative text analysis. Therefore, a common pre-processing task is the extraction of text from PDFs an its storage in a more structured form suitable for analysis. As tools for PDF processing are scarce in the R ecosystem, we rely on Python for this task. The text extraction can be carried out in Python directly or from R via the `reticulate` package. We adopt the latter approach.
 
@@ -66,6 +70,8 @@ text_df <- tibble(id = str_sub(doc_names, 1, -5L), text) |>
   mutate(text = str_replace_all(text, "^[0-9]*$", ""))
 ```
 
+### Task 2: Combine text data with metadata {#metadata}
+
 Next, we combine the **metadata** directly extracted from the paper database with the **full text** extracted from PDF files, using the `id` column to join them.
 
 ```{r}
@@ -80,9 +86,9 @@ metadata$ref <- paste(metadata$refnames, metadata$Year, sep = "")
 data <- metadata |> left_join(text_df, by = c("id" = "id"))
 ```
 
-## Basic exploration of the meta information
+### Task 3: Subset and clean the data {#subset-clean-data}
 
-Read the metadata. To explore the keywords, we need to extract the columns `id`, `Keywords.Plus`, `Year`, `Cited.Reference.Count`, and `ref` from the data frame.
+We only need the columns `id`, `Keywords.Plus`, `Year`, `Cited.Reference.Count`, and `ref` from the data frame. We will also rename some columns for better readability.
 
 ```{r data, echo=FALSE, message=FALSE, warning=FALSE}
 # keep subset of relevant columns
@@ -95,7 +101,13 @@ names(meta_basics)[names(meta_basics) == "Cited.Reference.Count"] <- "Cites"
 head(meta_basics)
 ```
 
-Plot **the number of papers by year** overlayed with **high-citation papers**.
+## Basic exploration of the metadata  
+
+Before looking into we want to gain an overview of the metadata. We will look at the distribution of the number of papers over the years and identify the most cited papers. We do so by asking the following questions:
+
+### Question 1: What is the distribution of number of papers over the years and when were the most cited papers published?  
+
+To answer this question, we plot **the number of papers by year** overlayed with **high-citation papers**. Note the use of two y axes. We can see that the number of papers has been increasing over the years, with most high-citation papers published in recent years. 
 
 ```{r}
 #| lst-label: lst-papers-per-year
@@ -126,7 +138,9 @@ ggplot(meta_basics_year, aes(x = Year, y = count)) +
 # ggsave("output/number_of_papers_by_year_high_citations.png")
 ```
 
-Find the high-citation papers in recent 5 years.
+### Question 2: Which are the top 10 most cited papers between 2017-2023?
+
+We might also want to focus on the most cited papers, assuming that they are the most influential.
 
 ```{r}
 # get the high-citation papers in recent 5 years
@@ -168,9 +182,8 @@ Output:
 -   interactive map with Leaflet
 -   tiled grid map with template available for QGIS as well
 
-### 1.1 Preparing the data
-
-The location information normally presented in the text. The computational method is to use the [world cities database](data/world-cities.csv) to conduct a text match from the abstract or full text. However, the reality is there might be spelled in different way. Thus, it is recommended to collect them or, at least, manually check the accuracy of data collection.
+### Preparing the data  
+Location information is normally presented in the text. The computational method is to use the [world cities database](data/world-cities.csv) to conduct a text match from the abstract or full text. However, the reality is there might be spelled in different way. Thus, it is recommended to collect them or, at least, manually check the accuracy of data collection.
 
 ```{r}
 mapping <- st_read("data/map.csv", options=c("X_POSSIBLE_NAMES=lng","Y_POSSIBLE_NAMES=lat"), crs=4326)
@@ -323,15 +336,13 @@ ggplot(country_tiled_frame) +
 ggsave("output/tiled_grid_map.jpg", width = 10, height = 8, units = "in", dpi = 300)
 ```
 
-## 2. Keyword analysis (wordcloud)
+## Keyword analysis (wordcloud)
 
-Input: keywords
+Looking at the keywords is a quick way to understand the main topics of the literature. We will create a word cloud for all the keywords and for each time period.
 
-Output: Word clouds - overall or per time period
+### Question 1: What are the main topics in the literature as seen in the keywords?
 
-### 2.1 Create a word cloud for all the keywords:
-
-Make a list of stopwords to remove from the keywords:
+We will create a word cloud to visualise the most frequent keywords in the literature. We start by removing rows with missing keyword values, as well as stopwords, numbers, extra white spaces and punctuation from the keywords. We then create a document term matrix and calculate the frequency of each word.
 
 ```{r}
 # remove the rows with NA or empty in the column "Keywords"
@@ -376,7 +387,7 @@ dfkw_feq <- data.frame(word = names(words), freq = words)
 # rm(corpus, dtm, m, words)
 ```
 
-Generating the word cloud for all the years.
+Using the keyword frequencies, we can create a word cloud to visualise the most frequent keywords in the literature.
 
 ```{r}
 png("output/wordcloud_total.png", width=6,height=5, units='in', res=300)
@@ -387,9 +398,9 @@ title(main = "Word Cloud of Keywords")
 dev.off()
 ```
 
-### 2.2 Create a wordcould for each time period
+### Question 2: What are the main topics in the literature in different time periods as seen in the keywords?
 
-Divide the time range into 3 periods: before 2000, 2000-2010, and after 2010.
+Looking at different time periods can help us understand the evolution of the literature. We will divide the time range into three periods: before 2000, 2000-2010, and after 2010.
 
 ```{r}
 time_range <- range(df_kw$Publication.Year)
@@ -423,7 +434,9 @@ for (i in unique(df_kw$periods)) {
 }
 ```
 
-## 3. Text mining
+## Text mining
+
+Text mining is a powerful tool for extracting insights from unstructured text data. In this section, we will demonstrate how to perform text mining on the full text of the papers extracted from PDFs. We start by splitting the text into words, a process called tokenisation, and then proceed with word context, word embeddings and topic modelling.
 
 ```{r tokens, warning=FALSE}
 words <- unnest_tokens(text_df, word, text) |>
@@ -441,21 +454,28 @@ words_count <- words |>
 words_count
 ```
 
-Input: Full text, machine readable, extracted from PDFs prior to analysis
+### Words in context: sentences around a specific word
 
-### 3.1 Word Embeddings
+We can extract sentences around a specific word of interest to understand the context in which it is used.
 
-What questions co-occur with a specific word of interest, e.g., "income"?
+```{r}
+# Define the word of interest
+word_of_interest <- "income"
 
--   using the LDA model and top words
+# Extract sentences around the word of interest
+sentences <- text_df |>
+  unnest_tokens(sentence, text, token = "sentences") |>
+  filter(str_detect(sentence, word_of_interest)) |>
+  select(sentence)
 
--   using word embeddings
+# Display the first few sentences
+head(pull(sentences), 10)
+```
+Note the high occurrence of the hyphenated "low-income" in the sentences. This is a common issue in text mining, where hyphenated words are treated as separate words. We can address this in two ways: by replacing hyphens with underscores to treat them as a single word (e.g., "low_income") or by re-running the analysis with "bigrams" as tokens instead of "words".
 
-Issues to consider:
+### Words in context: word embeddings
 
--   as a rule of thumb, the dataset should have above 1 mil. tokens for reliable results
-
-**The following code does not work**
+Word embeddings are dense vector representations of words that capture semantic relationships between words. We use word embeddings to find words that are similar to a word of interest such as "income"? As a rule of thumb, the dataset should have above 1 million tokens (words in this case) for reliable results. The following code chunks demonstrate the steps to calculate word embeddings.
 
 ```{r}
 tidy_data <- data %>% 
@@ -567,7 +587,7 @@ tidy_word_vectors %>%
   labs(x = NULL, y = "PMI", title = "Top words related to 'income'")
 ```
 
-Output: A word cloud with top words related to the word of interest
+Output: A wordcloud with top words related to the word of interest
 
 ```{r}
 top_10_words <- tidy_word_vectors %>% 
@@ -587,7 +607,7 @@ title(main = "Word Cloud of Keywords")
 #dev.off()
 ```
 
-### 3.2 Topic model
+### Topic model
 
 We use an LDA topic model to identify dominant topics in a corpus of papers. We start by pre-processing the data and splitting it into words.
 
@@ -672,7 +692,7 @@ cat(paste0("I have ", k, " topics, each described by ", n_words,
     sep = "")
 ```
 
-#### 3.2.1 Topics across the corpus
+#### Topics across the corpus
 
 Output: Bar charts showing top words in the corpus and in each topic
 
@@ -732,7 +752,7 @@ json <- createJSON(
 LDAvis::serVis(json)
 ```
 
-#### 3.2.2 Evolution of topics
+#### Evolution of topics
 
 Output: Plots showing the change in relative importance of topics and top words over the years.
 
@@ -803,5 +823,5 @@ ggplot(word_order,
         axis.title = element_text(size = 15),
         legend.position = "none")
 
-ggsave("output/words-over-years.png", width = 10, height = 7)
+# ggsave("output/words-over-years.png", width = 10, height = 7)
 ```
