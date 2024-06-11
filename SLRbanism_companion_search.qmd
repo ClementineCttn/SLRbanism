@@ -5,10 +5,14 @@ author:
  - "Kyri Janssen"
  - "Shuyu Zhang"
  - "Xioaxia Zhang"
-date: "2024-04-12"
+date: today
 format: html
 editor: visual
 number-sections: true
+bibliography: raw-data/targetPapers.bib 
+csl: apa.csl
+link-citations: true
+theme: minty 
 ---
 
 ```{r setup, include=FALSE}
@@ -23,7 +27,7 @@ Let us first install and load the packages we will need.
 packages <- c("rscopus", "RefManageR", "tidyverse","brio",
               "stringr", "bibtex", "glue", "here", "litsearchr",
               "revtools", "remotes", "igraph", "remotes",
-              "PRISMAstatement")
+              "PRISMAstatement", "synthesisr")
 
 ## Load packages and install them if needed
 for (package in packages) {
@@ -58,10 +62,7 @@ Set your research query:
 ```{r}
 query <- "( ( ( TITLE ( govern* OR state OR decision-making OR policy-making OR stakeholder OR participat* ) ) AND ( TITLE-ABS-KEY ( impact OR outcome OR result OR differentiation OR consequence OR change OR transformation OR role ) ) ) OR ( TITLE-ABS-KEY ( governance W/0 ( mode OR model OR process ) ) ) ) AND 
           ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND 
-          ( TITLE-ABS-KEY ( effect OR caus* OR explain* OR influence OR affect OR mechanism OR restrict OR create OR impact OR drive OR role OR transform* OR relation* OR led OR improve OR interven* OR respon* ) ) AND 
-          ( TITLE-ABS-KEY ( urban OR neighborhood OR city OR residential OR regional OR housing ) W/0 ( development OR redevelopment OR regeneration OR restructuring OR revitalization OR construction OR governance ) ) AND 
-          ( LIMIT-TO ( DOCTYPE , \"ar\" ) ) AND 
-          ( LIMIT-TO ( LANGUAGE , \"English\" ) )"
+          ( TITLE-ABS-KEY ( urban OR neighborhood OR city OR residential OR regional OR housing ) W/0 ( development OR redevelopment OR regeneration OR restructuring OR revitalization OR construction OR governance ) ) "
 ```
 
 Query scopus if you get the api key. Note that you can modify the max_count for each searching:
@@ -89,19 +90,28 @@ Convert the list to a data frame
 ```{r}
 results_df <- do.call(rbind, search_results$df)
 transposed_results_df <- t(results_df)
+dim(transposed_results_df)
 ```
+
+Add filter to keep only articles"
+
+```{r}
+articles_df <- as_tibble(transposed_results_df) |>
+  filter(subtype == "ar")
+dim(articles_df)
+```
+
 
 What does it look like?
 
 ```{r}
-head(transposed_results_df)
-
+head(articles_df)
 ```
 
 Write the details to a CSV file
 
 ```{r}
-write.csv(transposed_results_df, here("processed-data", "scopus_api_results.csv"), row.names = FALSE)
+write.csv(articles_df, here("processed-data", "scopus_api_results.csv"), row.names = FALSE)
 ```
 
 Export a into a .bib file
@@ -173,7 +183,7 @@ Although a dedicated package exist to retrieve references from the Web of Scienc
 We then selected the articles written in English from the results and obtained 3180 results as of 11 April 2024. We downloaded the first 200 records in .bib format for this example: `wos_reference.bib`, and saved them in the `raw-data` folder of our project. Indeed, we want to show that this code can combine bibliographic data from different queries and or different databases.
 
 ```{r, echo=T, message=F}
-wos_data <-synthesisr::read_refs(here("raw-data", "wos_reference.bib"))
+wos_data <- synthesisr::read_refs(here("raw-data", "wos_reference.bib"))
 scopus_data <- synthesisr::read_refs(here("processed-data", "scopus_references.bib"))
 
 # Remember we stored keywords into the url field, let's rename it now:
@@ -287,19 +297,14 @@ nrow(all_unique_references)
 
 ```
 
-Something else we might want to consider, is if our literature search also identified one or more key articles that we know should be in the SLR. So, lets take a target article. In our case, the author of this specific literature review stated that the articles `Urban governance and social cohesion: Effects of urban restructuring policies in two Dutch cities` by `van Marissing et al. (2006)` and `Rethinking China’s urban governance: The role of the state in neighbourhoods, cities and regions` by `Wu and Zang (2022)` should be considered as a target references. So lets examine, if this article is present in our `all_unique_references` dataframe.\
-We do this copying doi from the target references and identifying if this doi is present in the `all_unique_references` dataframe
+Something else we might want to consider, is if our literature search also identified one or more key articles that we know should be in the SLR. So, lets take a target article. In our case, the author of this specific literature review stated that [@van2006urban] and [@wu2022rethinking] should be considered as a target references. So let's examine, if they are included in our `all_unique_references` dataframe. We do this copying doi from the target references and identifying if this doi is present in the `all_unique_references` dataframe
 
-```{r}
-#create a vector with the doi's of 
-# van Marissing et al. (2006) and Wu and Zang (2022)
-target_references <- c(
-  "doi.org/10.1016/j.cities.2005.11.001",
-  "doi.org/10.1177/03091325211062171"
-  )
+```{r,echo=T, message=F}
+#Read target papers's bib file and extract doi information
+target_references <- synthesisr::read_refs(here("raw-data", "targetPapers.bib"))
 
 # Let's test whether they are present or not our reference list
- target_references %in% all_unique_references$doi
+ target_references$doi %in% all_unique_references$doi
 
 ```
 
@@ -413,10 +418,6 @@ Create a semantic network
 net <- create_network(search_dfm = dfm,
                       min_studies = 3,
                       min_occ = 3)
-hist(igraph::strength(net),
-     main="Histogram of node strengths",
-     xlab="Node strength")
-
 
 cutoffs_cumulative <- find_cutoff(net, method = "cumulative")
 
@@ -476,3 +477,7 @@ prismaplot <- prisma(
 prismaplot
 ```
 
+## References
+
+::: {#refs}
+:::
