@@ -24,9 +24,21 @@ for (package in packages) {
 }
 ```
 
-## Extract text from PDF files
+## The data
 
-The following code chunk will create a Python environment `myenv` and install the Python library `PyMuPDF` for extracting text from PDF files. In subsequent runs, this code chunk will automatically detect the installed environment. The Python script `extract-text-from-pdf.py` is used to extract text from PDF files. 
+In this notebook we will work with a set of full papers in PDF format and their metadata obtained from Web of Science. The full papers are stored in `data/collection/PDFs/` and the metadata is available in `data/collection/savedrecs_wdoi.csv` of this repository.
+
+If you want to run the code from this notebook on your computer, please follow our [setup instructions]().
+
+::: note
+The same workflow applies to data obtained from other platforms such as Scopus. Note that the column names need to be adjusted accordingly.
+:::
+
+## Pre-processing task 1: Extracting text from PDF files
+
+Most journal articles are available in PDF format, which is not well suited for quantitative text analysis. Therefore, a common pre-processing task is the extraction of text from PDFs an its storage in a more structured form suitable for analysis. As tools for PDF processing are scarce in the R ecosystem, we rely on Python for this task. The text extraction can be carried out in Python directly or from R via the `reticulate` package. We adopt the latter approach.
+
+The following code chunk will create a Python environment `myenv` and install the Python library `PyMuPDF` for extracting text from PDF files. In subsequent runs, this code chunk will automatically detect the installed environment. The Python script `extract-text-from-pdf.py` is used to extract text from PDF files.
 
 ```{r extract-text-from-pdf, message=FALSE, warning=FALSE}
 # Set up and use Python for PDF text extraction
@@ -36,24 +48,25 @@ use_virtualenv("myenv")
 source_python("py/extract-text-from-pdf.py")
 ```
 
-The following code block will extract text from PDF files and structure them into an R data frame. 
+The following code block will extract text from PDF files and structure them into an R data frame.
 
 ```{r}
-data_root <- "data/collection/PDFs/"
+# Specify the location of the data
+data_root <- "data/collection/PDFs"
 
 # Get PDF file paths
 pdf_paths <- list.files(data_root, full.names = TRUE, pattern = "*.pdf$")
 
-# Extract text from PDFs
+# Extract text from PDFs with the Python function `convert_pdf()`
 text <- convert_pdf(pdf_paths) |> unlist()
 
-# doc_names <- list.files(data_root, full.names = TRUE, pattern = "*.pdf")
-
-text_df <- tibble(doc = str_sub(list.files(data_root, pattern = "*.pdf"), 1, -5L), text) |> 
+# Create data frame with full text data
+doc_names <- list.files(data_root, pattern = "*.pdf")
+text_df <- tibble(id = str_sub(doc_names, 1, -5L), text) |> 
   mutate(text = str_replace_all(text, "^[0-9]*$", ""))
 ```
 
-Next, we combine the **metadata** directly extracted from the paper database with the **full text** extracted from PDF files.
+Next, we combine the **metadata** directly extracted from the paper database with the **full text** extracted from PDF files, using the `id` column to join them.
 
 ```{r}
 #| message: false
@@ -61,7 +74,9 @@ metadata <- read.csv("data/collection/savedrecs_wdoi.csv", header = TRUE, sep = 
 # take only the last name of first author
 metadata$refnames <- sapply(strsplit(metadata$Author.Full.Names, " "), function(x) x[1])
 metadata$ref <- paste(metadata$refnames, metadata$Year, sep = "")
-text_df <- read_csv(file = "data/text_df.csv")
+# uncomment the line below and load the text data from file if needed
+# text_df <- read_csv(file = "data/text_df.csv")
+# join the metadata with the text data
 data <- metadata |> left_join(text_df, by = c("id" = "id"))
 ```
 
@@ -143,15 +158,15 @@ Objectives:
 
 Input:
 
-- manual 
-- extracting location from title 
-- extracting location from abstract 
-- if multiple locations are mentioned, multiple records are created
+-   manual
+-   extracting location from title
+-   extracting location from abstract
+-   if multiple locations are mentioned, multiple records are created
 
 Output:
 
-- interactive map with Leaflet 
-- tiled grid map with template available for QGIS as well
+-   interactive map with Leaflet
+-   tiled grid map with template available for QGIS as well
 
 ### 1.1 Preparing the data
 
@@ -438,7 +453,7 @@ What questions co-occur with a specific word of interest, e.g., "income"?
 
 Issues to consider:
 
-- as a rule of thumb, the dataset should have above 1 mil. tokens for reliable results
+-   as a rule of thumb, the dataset should have above 1 mil. tokens for reliable results
 
 **The following code does not work**
 
@@ -641,7 +656,6 @@ for (i in 1:nrow(beta)) {
 }
 ```
 
-
 ```{r}
 #| lst-label: lst-ai-prompt
 #| lst-cap: Promt generated from topic model parameters
@@ -657,7 +671,6 @@ cat(paste0("I have ", k, " topics, each described by ", n_words,
     "How would you name these topics? Use maximum two words to name the topics and provide a one-sentence description for each.", 
     sep = "")
 ```
-
 
 #### 3.2.1 Topics across the corpus
 
