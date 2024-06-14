@@ -1,11 +1,13 @@
 ---
-title: "Systematic Literature Review for Urbanism"
-subtitle: "3. Analysing the corpus"
+title: "Companion code for section 2: Analysing the corpus"
 author:
  - "Bayi Li"
  - "Claudiu Forgaci"
-date: "`r Sys.Date()`"
-output: html
+date: today
+format: html
+editor: visual
+number-sections: true
+theme: minty 
 ---
 
 ```{r setup, include=FALSE}
@@ -56,7 +58,7 @@ The following code block will extract text from PDF files and structure them int
 
 ```{r}
 # Specify the location of the data
-data_root <- "data/collection/PDFs"
+data_root <- "raw-data/PDFs"
 
 # Get PDF file paths
 pdf_paths <- list.files(data_root, full.names = TRUE, pattern = "*.pdf$")
@@ -76,7 +78,7 @@ Next, we combine the **metadata** directly extracted from the paper database wit
 
 ```{r}
 #| message: false
-metadata <- read.csv("data/collection/savedrecs_wdoi.csv", header = TRUE, sep = ",")
+metadata <- read.csv("raw-data/savedrecs_wdoi.csv", header = TRUE, sep = ",")
 # take only the last name of first author
 metadata$refnames <- sapply(strsplit(metadata$Author.Full.Names, " "), function(x) x[1])
 metadata$ref <- paste(metadata$refnames, metadata$Year, sep = "")
@@ -101,13 +103,13 @@ names(meta_basics)[names(meta_basics) == "Cited.Reference.Count"] <- "Cites"
 head(meta_basics)
 ```
 
-## Basic exploration of the metadata  
+## Basic exploration of the metadata
 
 Before looking into we want to gain an overview of the metadata. We will look at the distribution of the number of papers over the years and identify the most cited papers. We do so by asking the following questions:
 
-### Question 1: What is the distribution of number of papers over the years and when were the most cited papers published?  
+### Question 1: What is the distribution of number of papers over the years and when were the most cited papers published?
 
-To answer this question, we plot **the number of papers by year** overlayed with **high-citation papers**. Note the use of two y axes. We can see that the number of papers has been increasing over the years, with most high-citation papers published in recent years. 
+To answer this question, we plot **the number of papers by year** overlayed with **high-citation papers**. Note the use of two y axes. We can see that the number of papers has been increasing over the years, with most high-citation papers published in recent years.
 
 ```{r}
 #| lst-label: lst-papers-per-year
@@ -154,8 +156,7 @@ papers_cites_recent_titles <- papers_cites_recent %>%
   left_join(metadata, by = "id") %>%
   select(id, Article.Title)
 
-# save it as excel
-write.csv(papers_cites_recent_titles, "output/high_citation_papers_recent_5_years.csv")
+# write.csv(papers_cites_recent_titles, "output/high_citation_papers_recent_5_years.csv")
 
 papers_cites_recent_titles
 ```
@@ -182,11 +183,12 @@ Output:
 -   interactive map with Leaflet
 -   tiled grid map with template available for QGIS as well
 
-### Preparing the data  
+### Preparing the data
+
 Location information is normally presented in the text. The computational method is to use the [world cities database](data/world-cities.csv) to conduct a text match from the abstract or full text. However, the reality is there might be spelled in different way. Thus, it is recommended to collect them or, at least, manually check the accuracy of data collection.
 
 ```{r}
-mapping <- st_read("data/map.csv", options=c("X_POSSIBLE_NAMES=lng","Y_POSSIBLE_NAMES=lat"), crs=4326)
+mapping <- st_read("raw-data/map.csv", options=c("X_POSSIBLE_NAMES=lng","Y_POSSIBLE_NAMES=lat"), crs=4326)
 ```
 
 ### 1.2 Visualising the data
@@ -204,7 +206,7 @@ Plot the location of studied area on top of the world map (countries' boundary).
 Load the world map, which will be the base map for the following mapping.
 
 ```{r}
-countries_bound <- geojson_sf("data/map_basis/WB_countries_Admin0_10m/WB_countries_Admin0_10m_small.geojson")
+countries_bound <- geojson_sf("raw-data/map_basis/WB_countries_Admin0_10m/WB_countries_Admin0_10m_small.geojson")
  
 # If you wish to plot the boundaries of countries on the canvas
 ggplot(countries_bound) + 
@@ -219,7 +221,7 @@ ggplot() +
   guides(fill = guide_none())
 
 # Save the plot
-ggsave("output/direct_mapping.png")
+# ggsave("output/direct_mapping.png")
 ```
 
 #### 3. Tiled grid map
@@ -229,7 +231,7 @@ ggsave("output/direct_mapping.png")
 Using the points to join with the countries' boundary
 
 ```{r}
-country_tiled_frame <- geojson_sf("data/map_basis/Tile-Grid-Map-Cleaned.geojson")
+country_tiled_frame <- geojson_sf("raw-data/map_basis/Tile-Grid-Map-Cleaned.geojson")
 
 countries_bound <- st_make_valid(countries_bound)
 summary <- st_join(mapping, countries_bound, join = st_within, left = TRUE)
@@ -287,7 +289,7 @@ country_tiled_frame$n[is.na(country_tiled_frame$n)] <- 0
 
 Save the tiled grid map as a geojson file:
 
-```{r}
+```{r eval=FALSE}
 writeLines(sf_geojson(country_tiled_frame), "output/tiled_grid_mapped.geojson")
 
 ```
@@ -333,7 +335,7 @@ ggplot(country_tiled_frame) +
   labs(title = "Number of papers within different countries") +
   theme_void()
 
-ggsave("output/tiled_grid_map.jpg", width = 10, height = 8, units = "in", dpi = 300)
+# ggsave("output/tiled_grid_map.jpg", width = 10, height = 8, units = "in", dpi = 300)
 ```
 
 ## Keyword analysis (wordcloud)
@@ -390,12 +392,12 @@ dfkw_feq <- data.frame(word = names(words), freq = words)
 Using the keyword frequencies, we can create a word cloud to visualise the most frequent keywords in the literature.
 
 ```{r}
-png("output/wordcloud_total.png", width=6,height=5, units='in', res=300)
+# png("output/wordcloud_total.png", width=6,height=5, units='in', res=300)
 set.seed(1234) # for reproducibility 
 wordcloud(words = dfkw_feq$word, freq = dfkw_feq$freq, min.freq = 2, max.words=200, random.order=FALSE, rot.per=0.35, colors=brewer.pal(8, "Dark2"))
 # add a title
 title(main = "Word Cloud of Keywords")
-dev.off()
+# dev.off()
 ```
 
 ### Question 2: What are the main topics in the literature in different time periods as seen in the keywords?
@@ -471,6 +473,7 @@ sentences <- text_df |>
 # Display the first few sentences
 head(pull(sentences), 10)
 ```
+
 Note the high occurrence of the hyphenated "low-income" in the sentences. This is a common issue in text mining, where hyphenated words are treated as separate words. We can address this in two ways: by replacing hyphens with underscores to treat them as a single word (e.g., "low_income") or by re-running the analysis with "bigrams" as tokens instead of "words".
 
 ### Words in context: word embeddings
