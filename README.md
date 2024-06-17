@@ -62,5 +62,5 @@ Please cite the **guidelines/article** as:
 Cottineau-Mugadza, C., Forgaci, C., Janssen, K. M. J., Li, B., Zhang, S., & Zhang, X. (2024). Guidelines and open-source toolbox for systematic literature reviews in the field of urbanism. [preprint] [osf.io/preprints/socarxiv/w5b8v](https://osf.io/preprints/socarxiv/w5b8v)
 
 Please cite this **notebook/code** as:
-Cottineau C., Forgaci C., Janssen K., Li B., Zhang S., Zhang X. (2024), A guide and toolbox for conducting systematic literature reviews in urbanism,[Computer software]. [https://github.com/ClementineCttn/SLRbanism](https://github.com/ClementineCttn/SLRbanism)
+Cottineau C., Forgaci C., Janssen K., Li B., Zhang S., Zhang X. (2024), A guide and toolbox for conducting systematic literature reviews in urbanism. [Computer software] [https://github.com/ClementineCttn/SLRbanism](https://github.com/ClementineCttn/SLRbanism)
 
