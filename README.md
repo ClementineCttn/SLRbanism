@@ -33,7 +33,7 @@ To run the analyses in the computational notebooks on your computer, you will ne
 
 1.  Install [R, RStudio Desktop](https://posit.co/download/rstudio-desktop/), [Python](https://www.python.org/downloads/) and [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for your operating system.
 
-2.  Create an RStudio project from `File > New Project... > Version Control > Git` with the URL `https://github.com/ClementineCttn/SLRbanism.git` and project directory name `SLRbanism`. Browse to a location of your choice on your computer and click on `Create Project`. This will create a project directory populated with the all files from this repository.
+2.  Create an RStudio project from `File > New Project... > Version Control > Git` with the URL `https://github.com/ClementineCttn/SLRbanism.git` and project directory name `SLRbanism`. Browse to a location of your choice on your computer and click on `Create Project`. This will create a project directory populated with all the files from this repository.
 
 3.  Open `SLRbanism_companion_search.qmd` or `SLRbanism_companion_analysis.qmd` from the Files tab in Rstudio. These two files are the computational notebooks corresponding to the guideline chapters 2 and 3, respectively.
 
